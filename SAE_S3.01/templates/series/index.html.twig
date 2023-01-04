@@ -8,36 +8,25 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Title</th>
-                <th>Plot</th>
-                <th>Imdb</th>
                 <th>Poster</th>
                 <th>Director</th>
                 <th>YoutubeTrailer</th>
-                <th>Awards</th>
-                <th>YearStart</th>
-                <th>YearEnd</th>
                 <th>actions</th>
-                <th>season</th>
             </tr>
         </thead>
         <tbody>
+
+        {#
         {% for series in series %}
             <tr>
-                <td>{{ series.id }}</td>
                 <td>{{ series.title }}</td>
-                <td>{{ series.plot }}</td>
-                <td>{{ series.imdb }}</td>
-                <td>{{ series.poster }}</td>
+                <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
                 <td>{{ series.director }}</td>
                 <td>{{ series.youtubeTrailer }}</td>
-                <td>{{ series.awards }}</td>
-                <td>{{ series.yearStart }}</td>
-                <td>{{ series.yearEnd }}</td>
                 <td>
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
-                    <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a>
+                    <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> 
                 </td>
             </tr>
         {% else %}
@@ -45,8 +34,21 @@
                 <td colspan="11">no records found</td>
             </tr>
         {% endfor %}
+        #}
+
+
+         {# Permet de gérer l'aleatoire #}
+            {% set randomSerie = random(series) %}
+            <td>{{ randomSerie.title }}</td>
+                <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
+                <td>{{ randomSerie.director }}</td>
+                <td>{{ randomSerie.youtubeTrailer }}</td>
+                <td>
+                    <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
+                    {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> #}
+                </td>
+            </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('app_series_new') }}">Create new</a>
+   {# <a href="{{ path('app_series_new') }}">Create new</a> #}
 {% endblock %}

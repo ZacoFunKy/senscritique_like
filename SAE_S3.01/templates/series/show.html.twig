@@ -7,11 +7,10 @@
 
     <table class="table">
         <tbody>
-            <tr>
-            {# A Changer#}
+            {# <tr>
                 <th>Id</th>
                 <td>{{ series.id }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th>Title</th>
                 <td>{{ series.title }}</td>
@@ -20,11 +19,10 @@
                 <th>Plot</th>
                 <td>{{ series.plot }}</td>
             </tr>
-            <tr>
-            {# A Changer#}
+            {#  <tr>
                 <th>Imdb</th>
                 <td>{{ series.imdb }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th>Poster</th>
                 <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
@@ -34,7 +32,6 @@
                 <td>{{ series.director }}</td>
             </tr>
             <tr>
-            {# A Changer#}
                 <th>YoutubeTrailer</th>
                 <td>{{ series.youtubeTrailer }}</td>
             </tr>
@@ -51,18 +48,21 @@
                 <td>{{ series.yearEnd }}</td>
             </tr>
             <tr>
-                <ul>Seasons
+                <ul> <th>Seasons</th>
+                <td>
                 {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-                        <li> {{ season.number }} </li>
+                        <li>Saison {{ season.number }} ({{ season.episodes|length }} épisodes)</li>
                 {% endfor %}
+                </td>
                 </ul>
+                
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_series_index') }}">back to list</a>
+    <a href="{{ path('app_series_index') }}">back to list</a> 
 
-    <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a>
+   {# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}
 
-    {{ include('series/_delete_form.html.twig') }}
+   {#  {{ include('series/_delete_form.html.twig') }} #} 
 {% endblock %}

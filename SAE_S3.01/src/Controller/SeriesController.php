@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Episode;
-use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +19,8 @@ class SeriesController extends AbstractController
         $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
+
+      
 
         return $this->render('series/index.html.twig', [
             'series' => $series,
