@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ExternalRating
  *
- * @ORM\Table(name="external_rating", indexes={@ORM\Index(name="IDX_AC0AB9CB953C1C61", columns={"source_id"}), @ORM\Index(name="IDX_AC0AB9CB5278319C", columns={"series_id"})})
+ * @ORM\Table(name="external_rating", indexes={@ORM\Index(name="IDX_AC0AB9CB5278319C", columns={"series_id"}), @ORM\Index(name="IDX_AC0AB9CB953C1C61", columns={"source_id"})})
  * @ORM\Entity
  */
 class ExternalRating

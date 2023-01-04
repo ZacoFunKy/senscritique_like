@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Rating
  *
- * @ORM\Table(name="rating", indexes={@ORM\Index(name="IDX_D88926225278319C", columns={"series_id"}), @ORM\Index(name="IDX_D8892622A76ED395", columns={"user_id"})})
+ * @ORM\Table(name="rating", indexes={@ORM\Index(name="IDX_D8892622A76ED395", columns={"user_id"}), @ORM\Index(name="IDX_D88926225278319C", columns={"series_id"})})
  * @ORM\Entity
  */
 class Rating
@@ -44,16 +44,6 @@ class Rating
     private $date;
 
     /**
-     * @var \Series
-     *
-     * @ORM\ManyToOne(targetEntity="Series")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="series_id", referencedColumnName="id")
-     * })
-     */
-    private $series;
-
-    /**
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -62,6 +52,16 @@ class Rating
      * })
      */
     private $user;
+
+    /**
+     * @var \Series
+     *
+     * @ORM\ManyToOne(targetEntity="Series")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="series_id", referencedColumnName="id")
+     * })
+     */
+    private $series;
 
     public function getId(): ?int
     {
@@ -104,18 +104,6 @@ class Rating
         return $this;
     }
 
-    public function getSeries(): ?Series
-    {
-        return $this->series;
-    }
-
-    public function setSeries(?Series $series): self
-    {
-        $this->series = $series;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -124,6 +112,18 @@ class Rating
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSeries(): ?Series
+    {
+        return $this->series;
+    }
+
+    public function setSeries(?Series $series): self
+    {
+        $this->series = $series;
 
         return $this;
     }

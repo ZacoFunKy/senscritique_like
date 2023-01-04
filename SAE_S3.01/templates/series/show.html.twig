@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Series{% endblock %}
+
+{% block body %}
+    <h1>Series</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+            {# A Changer#}
+                <th>Id</th>
+                <td>{{ series.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ series.title }}</td>
+            </tr>
+            <tr>
+                <th>Plot</th>
+                <td>{{ series.plot }}</td>
+            </tr>
+            <tr>
+            {# A Changer#}
+                <th>Imdb</th>
+                <td>{{ series.imdb }}</td>
+            </tr>
+            <tr>
+                <th>Poster</th>
+                <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+            </tr>
+            <tr>
+                <th>Director</th>
+                <td>{{ series.director }}</td>
+            </tr>
+            <tr>
+            {# A Changer#}
+                <th>YoutubeTrailer</th>
+                <td>{{ series.youtubeTrailer }}</td>
+            </tr>
+            <tr>
+                <th>Awards</th>
+                <td>{{ series.awards }}</td>
+            </tr>
+            <tr>
+                <th>YearStart</th>
+                <td>{{ series.yearStart }}</td>
+            </tr>
+            <tr>
+                <th>YearEnd</th>
+                <td>{{ series.yearEnd }}</td>
+            </tr>
+            <tr>
+                <ul>Seasons
+                {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+                        <li> {{ season.number }} </li>
+                {% endfor %}
+                </ul>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_series_index') }}">back to list</a>
+
+    <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a>
+
+    {{ include('series/_delete_form.html.twig') }}
+{% endblock %}
