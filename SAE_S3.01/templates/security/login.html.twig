@@ -1,42 +1,91 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Netflop - Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
+        @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
+        * {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin:0;
+        }
+        body {
+            background-image: url("fond.jpg");
+       }
+        #tout{
+            background-color: rgba(0, 0, 0, 0.534);
+            height: 100vh;
+        }
+        header {
+            display:flex;
+            align-items:center;
+            justify-content: left;
+            background: linear-gradient(black 10%, transparent);
+        }
+        header *{
+            margin: 2% 2%;
+        }
+        header a{
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3vw;
+            font-style: bold;
+            letter-spacing: 4px;
+            color: #f44336;
+            text-shadow: 5px 3px 10px rgb(0, 0, 0);
+            text-decoration: none;
+        }
+        #c{
+            display:flex;
+            justify-content: center;
+        }
+        #connection {
+            margin-top: 5%;
+            background-color: rgba(0, 0, 0, 0.63);
+            display: flex;
+            width: 400px;
+            height: fit-content;
+            flex-direction:column;
+            align-items: center;
+            padding-bottom: 2%;
+        }
+        #connection * {
+            margin-top: 2%;            
+            margin-left: 2%;
+            margin-bottom: 2%;
+
+        }
+        input {
+            color: black;
+        }
+    </style>
+
+<div id="tout">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            Vous êtes connectés en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
         </div>
     {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+    <header>
+        <a href="{{ path('app_default') }}">Netflop</a>
+    </header>
+    <div id="c">
+    <div id="connection">
+        <h1>Connexion</h1>
+        <form method="post">
+            <p>Login</p>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+            <p>Mot de Passe</p>
+            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+            <input type="hidden" name="_csrf_token"value="{{ csrf_token('authenticate') }}">
+            <input name="connexion" type="submit" value="Connexion">
+        </form>
+    </div>
+</div>
 {% endblock %}
