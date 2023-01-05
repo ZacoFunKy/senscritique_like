@@ -80,6 +80,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $country;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="json", nullable=false)
+     */
+    private $roles = ['ROLE_USER'];
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="super_admin", type="boolean", nullable=false)
+     */
+    private $isSuperAdmin = 0;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="Series", inversedBy="user")
