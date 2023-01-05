@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Series{% endblock %}
+
 
 {% block body %}
     <h1>Series</h1>
@@ -55,8 +57,9 @@
                 {% endfor %}
                 </td>
                 </ul>
-                
+                <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})">
             </tr>
+            <tr>
         </tbody>
     </table>
 
@@ -64,5 +67,19 @@
 
    {# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}
 
-   {#  {{ include('series/_delete_form.html.twig') }} #} 
+   {#  {{ include('series/_delete_form.html.twig') }}        #}  
+
+   <script>
+    function changerPage(idSerie, idUser) {
+        alert("oui");
+        if (document.getElementById("suivi").checked){
+            window.location.replace(idSerie+"/"+idUser+"/true");            
+        }
+        else {
+            window.location.replace(idSerie+"/"+idUser+"/false");
+        }
+    }
+    </script>
+
+
 {% endblock %}

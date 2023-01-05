@@ -70,6 +70,21 @@ class SeriesController extends AbstractController
         ]);
     }
 
+    #[Route('/{idSerie}/{idUser}/{bool}', name: 'app_series_show_adds', methods: ['GET'])]
+    public function addSerie(Series $series,$idSerie,$idUser, $bool, EntityManagerInterface $entityManager): Response
+    {
+        /*if ($bool=="true"){
+            $this->getUser()->addSeries($series);
+            $entityManager->flush();
+        }else{
+            $this->getUser()->deleteSeries($series);
+            $entityManager->flush();
+        }*/
+        return $this->render('series/show.html.twig', [
+            'series' => $series
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Series $series, EntityManagerInterface $entityManager): Response
     {
