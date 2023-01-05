@@ -73,10 +73,12 @@
     function changerPage(idSerie, idUser) {
         alert("oui");
         if (document.getElementById("suivi").checked){
-            window.location.replace(idSerie+"/"+idUser+"/true");            
+            window.location.replace(idSerie+"/set_following/"+"1");
+            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : 1}) }}); #}
         }
         else {
-            window.location.replace(idSerie+"/"+idUser+"/false");
+            window.location.replace(idSerie+"/set_following/"+"0");
+            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : 0}) }}); #}
         }
     }
     </script>

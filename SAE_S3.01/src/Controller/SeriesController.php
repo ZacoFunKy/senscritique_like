@@ -70,16 +70,17 @@ class SeriesController extends AbstractController
         ]);
     }
 
-    #[Route('/{idSerie}/{idUser}/{bool}', name: 'app_series_show_adds', methods: ['GET'])]
-    public function addSerie(Series $series,$idSerie,$idUser, $bool, EntityManagerInterface $entityManager): Response
+    #[Route('/{series}/set_following/{yesno}', name: 'app_series_show_adds', methods: ['GET'])]
+    public function addSerie(Series $series, $yesno, EntityManagerInterface $entityManager): Response
     {
-        /*if ($bool=="true"){
+        if ($yesno == "1"){
             $this->getUser()->addSeries($series);
             $entityManager->flush();
         }else{
-            $this->getUser()->deleteSeries($series);
+            $this->getUser()->removeSeries($series);
             $entityManager->flush();
-        }*/
+        }
+
         return $this->render('series/show.html.twig', [
             'series' => $series
         ]);
