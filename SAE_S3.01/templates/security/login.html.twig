@@ -1,91 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Netflop - Connexion{% endblock %}
+{% block title %}Netflop - Connexion
+{% endblock %}
 
 {% block body %}
-<style>
-        @import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
-        @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
-        * {
-            font-family: 'Poppins', sans-serif;
-            color: white;
-            margin:0;
-        }
-        body {
-            background-image: url("fond.jpg");
-       }
-        #tout{
-            background-color: rgba(0, 0, 0, 0.534);
-            height: 100vh;
-        }
-        header {
-            display:flex;
-            align-items:center;
-            justify-content: left;
-            background: linear-gradient(black 10%, transparent);
-        }
-        header *{
-            margin: 2% 2%;
-        }
-        header a{
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 3vw;
-            font-style: bold;
-            letter-spacing: 4px;
-            color: #f44336;
-            text-shadow: 5px 3px 10px rgb(0, 0, 0);
-            text-decoration: none;
-        }
-        #c{
-            display:flex;
-            justify-content: center;
-        }
-        #connection {
-            margin-top: 5%;
-            background-color: rgba(0, 0, 0, 0.63);
-            display: flex;
-            width: 400px;
-            height: fit-content;
-            flex-direction:column;
-            align-items: center;
-            padding-bottom: 2%;
-        }
-        #connection * {
-            margin-top: 2%;            
-            margin-left: 2%;
-            margin-bottom: 2%;
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
+		@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+		@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
+		* {
+			font-family: 'Poppins', sans-serif;
+			color: white;
+			margin: 0;
+		}
+		body {
+			background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
+		}
+		#tout {
+			background-color: rgba(0, 0, 0, 0.534);
+			height: 100vh;
+		}
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: left;
+			background: linear-gradient(black 10%, transparent);
+		}
+		header * {
+			margin: 2%;
+		}
+		header a {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 3vw;
+			font-style: bold;
+			letter-spacing: 4px;
+			color: #f44336;
+			text-shadow: 5px 3px 10px rgb(0, 0, 0);
+			text-decoration: none;
+		}
+		#c {
+			display: flex;
+			justify-content: center;
+		}
+		#connection {
+			margin-top: 5%;
+			background-color: rgba(0, 0, 0, 0.63);
+			display: flex;
+			width: 400px;
+			height: fit-content;
+			flex-direction: column;
+			align-items: center;
+			padding-bottom: 2%;
+		}
+		#connection * {
+			margin-top: 2%;
+			margin-left: 2%;
+			margin-bottom: 2%;
 
-        }
-        input {
-            color: black;
-        }
-    </style>
+		}
+		input {
+			color: black;
+		}
+	</style>
 
-<div id="tout">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+	<div id="tout">
+		{% if error %}
+			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connectés en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-        </div>
-    {% endif %}
-    <header>
-        <a href="{{ path('app_default') }}">Netflop</a>
-    </header>
-    <div id="c">
-    <div id="connection">
-        <h1>Connexion</h1>
-        <form method="post">
-            <p>Login</p>
-            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-            <p>Mot de Passe</p>
-            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-            <input type="hidden" name="_csrf_token"value="{{ csrf_token('authenticate') }}">
-            <input name="connexion" type="submit" value="Connexion">
-        </form>
-    </div>
-</div>
-{% endblock %}
+		{% if app.user %}
+			<div class="mb-3">
+				Vous êtes connectés en tant que
+				{{ app.user.userIdentifier }},
+				<a href="{{ path('app_logout') }}">Se déconnecter</a>
+			</div>
+		{% endif %}
+		<header>
+			<a href="{{ path('app_default') }}">Netflop</a>
+		</header>
+		<div id="c">
+			<div id="connection">
+				<h1>Connexion</h1>
+				<form method="post">
+					<p>Login</p>
+					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+					<p>Mot de Passe</p>
+					<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+					<input name="connexion" type="submit" value="Connexion">
+				</form>
+			</div>
+		</div>
+	{% endblock %}
