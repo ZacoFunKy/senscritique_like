@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% set pagination = 10 %}
 {% block title %}Series index{% endblock %}
 
 {% block body %}
@@ -17,7 +17,6 @@
         </thead>
         <tbody>
 
-        {#
         {% for series in series %}
             <tr>
                 <td>{{ series.title }}</td>
@@ -34,10 +33,17 @@
                 <td colspan="11">no records found</td>
             </tr>
         {% endfor %}
-        #}
+        {% if page is defined and page-pagination >= 0 %}
+            <a href="{{ path('app_series_index_page', {'page': page-pagination } ) }}"> précédent </a>
+
+            <a href="{{ path('app_series_index_page', {'page': page+pagination } ) }}"> suivant </a>
+        {% else %}
+        <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> suivant </a>
+        {% endif %}
 
 
          {# Permet de gérer l'aleatoire #}
+         {#
             {% set randomSerie = random(series) %}
             <td>{{ randomSerie.title }}</td>
                 <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
@@ -48,6 +54,7 @@
                     {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> #}
                 </td>
             </tr>
+            #}
         </tbody>
     </table>
    {# <a href="{{ path('app_series_new') }}">Create new</a> #}
