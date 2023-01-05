@@ -24,7 +24,9 @@ class UserCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
-        return [
+
+        if($this->isGranted('IS_IMPERSONATOR') && $this->isGranted('ROLE_SUPER_ADMIN')) {
+            return [
             IdField::new('id')
                 ->onlyOnIndex(),
             EmailField::new('email')
@@ -35,14 +37,32 @@ class UserCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['disabled' => true]),
             BooleanField::new('isAdmin')
                 ->setRequired(true)
-                ->setPermission('ROLE_SUPER_ADMIN'),
+                ->setFormTypeOptions(['disabled' => true]),
             BooleanField::new('isSuperAdmin')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true]),
             CollectionField::new('roles'),
-            
-            
-        ];
+            ];
+        } 
+        else {
+            return [
+                IdField::new('id')
+                    ->onlyOnIndex(),
+                EmailField::new('email')
+                    ->setRequired(true)
+                    ->setFormTypeOptions(['disabled' => true]),
+                TextField::new('password')
+                    ->setRequired(true)
+                    ->setFormTypeOptions(['disabled' => true]),
+                BooleanField::new('isAdmin')
+                    ->setRequired(true)
+                    ->setPermission('ROLE_SUPER_ADMIN'),
+                BooleanField::new('isSuperAdmin')
+                    ->setRequired(true)
+                    ->setFormTypeOptions(['disabled' => true]),
+                CollectionField::new('roles'),
+            ];
+        }
     }
     
 }

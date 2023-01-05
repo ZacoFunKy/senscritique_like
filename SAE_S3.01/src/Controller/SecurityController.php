@@ -26,9 +26,6 @@ class SecurityController extends AbstractController
             var_dump($role);
         }
 
-        if ($this->isGranted('IS_IMPERSONATOR')){
-            var_dump('You are impersonating');
-        }
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
