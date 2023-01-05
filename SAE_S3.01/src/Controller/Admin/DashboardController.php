@@ -31,14 +31,17 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Website');
+            ->setTitle('Home');
+
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::section('Users');
-        yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class)
-            ->setAction(Crud::PAGE_INDEX)
-            ->setPermission('ROLE_ADMIN');
+        return [
+            MenuItem::subMenu('Users', 'fa fa-users')->setSubItems([
+                MenuItem::linkToCrud('Users', 'fa fa-user', User::class),
+            ])->setPermission('ROLE_ADMIN')
+            ,
+        ];
     }
 }
