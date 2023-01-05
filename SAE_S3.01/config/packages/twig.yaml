@@ -1,5 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    # https://stackoverflow.com/questions/64400809/how-to-add-image-in-the-twig-template
+    paths:
+      '%kernel.project_dir%/public/images': images
 
 when@test:
     twig:
