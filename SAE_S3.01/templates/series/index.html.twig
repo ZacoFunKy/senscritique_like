@@ -3,59 +3,190 @@
 {% block title %}Series index{% endblock %}
 
 {% block body %}
-    <h1>Series index</h1>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
+    @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Poster</th>
-                <th>Director</th>
-                <th>YoutubeTrailer</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    * {
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        margin:0;
+    }
 
-        {% for series in series %}
-            <tr>
-                <td>{{ series.title }}</td>
-                <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-                <td>{{ series.director }}</td>
-                <td>{{ series.youtubeTrailer }}</td>
-                <td>
-                    <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
-                    <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> 
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        {% if page is defined and page-pagination >= 0 %}
-            <a href="{{ path('app_series_index_page', {'page': page-pagination } ) }}"> précédent </a>
+    html{
+        height: 100%;
+    }
+    
+    #tout{
+        background-color: rgba(0, 0, 0, 0.534);
+        height: 150vh;
+    }
 
-            <a href="{{ path('app_series_index_page', {'page': page+pagination } ) }}"> suivant </a>
-        {% else %}
-        <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> suivant </a>
-        {% endif %}
+    body {
+        background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');    }
+    header {
+        display:flex;
+        justify-content:space-between;
+        background: linear-gradient(black 10%, transparent);
+    }
+    header * {
+        margin: 2% 2%;
+    }
+    header a {      
+        color: #f44336;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 3vw;
+        letter-spacing: 4px;
+        text-shadow: 5px 3px 10px rgb(0, 0, 0);
+        text-decoration: none;
+    }
+    #content{
+        text-align:center;
+        flex-direction:column;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.63);
+        margin-right:2%;
+        margin-left:2%;
+        height:fit-content;
+        padding-bottom: 0.5%;
+    }
+
+    .bouton{
+        display:flex;
+        justify-content:center;
+
+    }
+    .bouton a{
+        background-color: #f44336;
+            border: none;
+            color: black;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+    }
+    .boutonModif{
+        background-color: #f44336;
+            border: none;
+            color: black;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+    }
+    h1{
+        display:flex;
+        flex-direction:column;
+        align-items: center;
+        margin-right:2%;
+        margin-left:2%;
+        padding-top: 1%;
+        height:fit-content;
+        padding-bottom: 0.5%;
+    }
+    #serie{
+        display:flex;
+        flex-direction:column;  
+        padding: 0.2%;
+
+    }
+    #serie td {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        padding: 0.2%;
+    }
+    #serie td img{
+        height:50vh;
+    }
+    #afficheSeries{
+        display:flex;
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:space-evenly; 
+        margin: 0 2%;
+
+    }
+    .nePasAfficher{
+        display:none;
+    }
+    
+    </style>
+    <div id="tout">
+
+        <header>
+            <a href="{{path('app_default')}}">Netflop</a>
+        </header>
+        <div id="content">
+            <h1>Catalogue</h1>
+
+            <table class="table">
+                <!--<thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Poster</th>
+                        <th>Director</th>
+                        <th>YoutubeTrailer</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>-->
+                <tbody id="afficheSeries">
+                {% for series in series %}
+                    <tr id="serie">
+                        <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+                        <!--<td>{{ series.director }}</td>
+                        <td>{{ series.youtubeTrailer }}</td>-->
+                        <td>{{ series.title }}</td>
+
+                        <td>
+                            <a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+                            <a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a> 
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11">no records found</td>
+                    </tr>
+
+                {% endfor %}
+
+                {% if page is defined and page-pagination >= 0 %}
+                <div class="bouton">
+                    <a href="{{ path('app_series_index_page', {'page': page-pagination } ) }}"> < Précédent </a>
+
+                    <a href="{{ path('app_series_index_page', {'page': page+pagination } ) }}"> Suivant > </a>
+                </div>
+                {% else %}
+                <div class="bouton">
+                    <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> Suivant > </a>
+                </div>
+                {% endif %}
 
 
-         {# Permet de gérer l'aleatoire #}
-         {#
-            {% set randomSerie = random(series) %}
-            <td>{{ randomSerie.title }}</td>
-                <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
-                <td>{{ randomSerie.director }}</td>
-                <td>{{ randomSerie.youtubeTrailer }}</td>
-                <td>
-                    <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
-                    {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> #}
-                </td>
-            </tr>
-            #}
-        </tbody>
-    </table>
-   {# <a href="{{ path('app_series_new') }}">Create new</a> #}
+                {# Permet de gérer l'aleatoire #}
+                {#
+                    {% set randomSerie = random(series) %}
+                    <td>{{ randomSerie.title }}</td>
+                        <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
+                        <td>{{ randomSerie.director }}</td>
+                        <td>{{ randomSerie.youtubeTrailer }}</td>
+                        <td>
+                            <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
+                            {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> 
+                        </td>
+                    </tr>
+                    #}
+                </tbody>
+            </table>
+        {# <a href="{{ path('app_series_new') }}">Create new</a> #}
+        </div>
+    </div>
 {% endblock %}
