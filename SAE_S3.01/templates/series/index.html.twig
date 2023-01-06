@@ -32,15 +32,10 @@
             <tr>
                 <td colspan="11">no records found</td>
             </tr>
-        {% endfor %}
-        {% if page is defined and page-pagination >= 0 %}
-            <a href="{{ path('app_series_index_page', {'page': page-pagination } ) }}"> précédent </a>
-
-            <a href="{{ path('app_series_index_page', {'page': page+pagination } ) }}"> suivant </a>
-        {% else %}
-        <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> suivant </a>
-        {% endif %}
-
+         {% endfor %}
+        <div class="navigation">
+             {{ knp_pagination_render(series) }}
+        </div>
 
          {# Permet de gérer l'aleatoire #}
          {#

@@ -5,12 +5,11 @@ namespace App\Controller;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-
 
 
 #[Route('/series')]
@@ -18,27 +17,19 @@ class SeriesController extends AbstractController
 {
 
     #[Route('/', name: 'app_series_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager, Request $request,
+    PaginatorInterface $paginator
+    ): Response
     {
         $series = $entityManager
             ->getRepository(Series::class)
-            ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
+            ->findBy([], ['title' => 'ASC']);
+        
+            $series = $paginator->paginate($series, $request
+            ->query->getInt('page', 1, 10));
 
         return $this->render('series/index.html.twig', [
             'series' => $series,
-        ]);
-    }
-
-    #[Route('/page/{page}', name: 'app_series_index_page', methods: ['GET'])]
-    public function indexPagination(EntityManagerInterface $entityManager, Request $request, $page): Response
-    {
-        $series = $entityManager
-            ->getRepository(Series::class)
-            ->findBy([], ['title' => 'ASC'], 10, $page ); //limit et offset
-
-        return $this->render('series/index.html.twig', [
-            'series' => $series,
-            'page' => $page,
         ]);
     }
 
