@@ -1,139 +1,176 @@
 {% extends 'base.html.twig' %}
 {% set pagination = 10 %}
-{% block title %}Series index{% endblock %}
+{% block title %}Series index
+{% endblock %}
 
 
 
 
 
 {% block body %}
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
+		@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+		@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
 
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
-    @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
+		* {
+			font-family: 'Poppins', sans-serif;
+			color: white;
+			margin: 0;
+		}
 
-    * {
-        font-family: 'Poppins', sans-serif;
-        color: white;
-        margin:0;
-    }
+		#tout {
+			background-color: rgba(0, 0, 0, 0.534);
+			height: 100%;
+			padding-bottom: 2%;
+		}
 
-    html{
-        height: 100%;
-    }
-    
-    #tout{
-        background-color: rgba(0, 0, 0, 0.534);
-        height: 150vh;
-    }
+		body {
+			background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
+		}
+		header {
+			display: flex;
+			justify-content: space-between;
+			background: linear-gradient(black 10%, transparent);
+		}
+		header * {
+			margin: 2%;
+		}
+		header a {
+			color: #f44336;
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 3vw;
+			letter-spacing: 4px;
+			text-shadow: 5px 3px 10px rgb(0, 0, 0);
+			text-decoration: none;
+		}
+		#id {
+			display: flex;
+		}
+		#id input {
+			background-color: #f44336;
+			border: none;
+			color: black;
+			padding: 10px 25px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			border-radius: 4px;
+			margin-right: 10%;
+			cursor: pointer;
+		}
+		#id a {
+			margin-right: 20px;
+		}
+		#content {
+			text-align: center;
+			flex-direction: column;
+			align-items: center;
+			background-color: rgba(0, 0, 0, 0.63);
+			margin-right: 2%;
+			margin-left: 2%;
+			height: fit-content;
+			padding-bottom: 0.5%;
+		}
 
-    body {
-        background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');    }
-    header {
-        display:flex;
-        justify-content:space-between;
-        background: linear-gradient(black 10%, transparent);
-    }
-    header * {
-        margin: 2% 2%;
-    }
-    header a {      
-        color: #f44336;
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 3vw;
-        letter-spacing: 4px;
-        text-shadow: 5px 3px 10px rgb(0, 0, 0);
-        text-decoration: none;
-    }
-    #content{
-        text-align:center;
-        flex-direction:column;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.63);
-        margin-right:2%;
-        margin-left:2%;
-        height:fit-content;
-        padding-bottom: 0.5%;
-    }
+		.bouton {
+			display: flex;
+			justify-content: center;
 
-    .bouton{
-        display:flex;
-        justify-content:center;
+		}
+		.bouton a {
+			background-color: #f44336;
+			border: none;
+			color: black;
+			padding: 10px 25px;
+			text-align: center;
+			text-decoration: none;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 5px;
+		}
+		.boutonModif {
+			background-color: #f44336;
+			border: none;
+			color: black;
+			padding: 10px 25px;
+			text-align: center;
+			text-decoration: none;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 5px;
+		}
+		h1 {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-right: 2%;
+			margin-left: 2%;
+			padding-top: 1%;
+			height: fit-content;
+			padding-bottom: 0.5%;
+		}
+		#serie {
+			display: flex;
+			flex-direction: column;
+			padding: 0.2%;
 
-    }
-    .bouton a{
-        background-color: #f44336;
-            border: none;
-            color: black;
-            padding: 10px 25px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-    }
-    .boutonModif{
-        background-color: #f44336;
-            border: none;
-            color: black;
-            padding: 10px 25px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-    }
-    h1{
-        display:flex;
-        flex-direction:column;
-        align-items: center;
-        margin-right:2%;
-        margin-left:2%;
-        padding-top: 1%;
-        height:fit-content;
-        padding-bottom: 0.5%;
-    }
-    #serie{
-        display:flex;
-        flex-direction:column;  
-        padding: 0.2%;
+		}
+		#serie td {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 0.2%;
+		}
+		#serie td img {
+			height: 50vh;
+		}
+		#afficheSeries {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-evenly;
+			margin: 2%;
 
-    }
-    #serie td {
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        padding: 0.2%;
-    }
-    #serie td img{
-        height:50vh;
-    }
-    #afficheSeries{
-        display:flex;
-        flex-direction:row;
-        flex-wrap:wrap;
-        justify-content:space-evenly; 
-        margin: 0 2%;
+		}
+		.nePasAfficher {
+			display: none;
+		}
 
-    }
-    .nePasAfficher{
-        display:none;
-    }
-    
-    </style>
-    <div id="tout">
+		.navigation * * {
+			background-color: #f44336;
+			border: none;
+			color: black;
+			padding: 0.5% 1%;
+			text-decoration: none;
+			font-size: 1.5vh;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 2% 0.5%;
+		}
+	</style>
+	<div id="tout">
 
-        <header>
-            <a href="{{path('app_default')}}">Netflop</a>
-        </header>
-        <div id="content">
-            <h1>Catalogue</h1>
+		<header>
+			<a href="{{path('app_default')}}">Netflop</a>
+			<div id="id">
+				{% if app.user %}
+					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
+				{% else %}
+					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
+					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
+				{% endif %}
+			</div>
+		</header>
+		<div id="content">
+			<h1>Catalogue</h1>
 
-                {% if form is defined %}
+
+			{% if form is defined %}
   {{ form_start(form) }}
 
 <div class="form-row align-items-end" >
@@ -149,68 +186,67 @@
 </div>
  {{ form_end(form) }}
 
- {% endif %}
+{% endif %}
 
-            
-            <table class="table">
-                <!--<thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Poster</th>
-                        <th>Director</th>
-                        <th>YoutubeTrailer</th>
-                        <th>actions</th>
-                    </tr>
-                </thead>-->
-                <tbody id="afficheSeries">
-                {% for series in series %}
-                    <tr id="serie">
-                        <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-                        <!--<td>{{ series.director }}</td>
-                        <td>{{ series.youtubeTrailer }}</td>-->
-                        <td>{{ series.title }}</td>
+			<table
+				class="table">
+				<!--<thead>
+												                    <tr>
+												                        <th>Title</th>
+												                        <th>Poster</th>
+												                        <th>Director</th>
+												                        <th>YoutubeTrailer</th>
+												                        <th>actions</th>
+												                    </tr>
+												                </thead>-->
+				<tbody id="afficheSeries">
+					{% for series in series %}
+						<tr id="serie">
+							<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+							<!--<td>{{ series.director }}</td>
+																					                        <td>{{ series.youtubeTrailer }}</td>-->
+							<td>{{ series.title }}</td>
 
-                        <td>
-                            <a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-                            <a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a> 
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="11">no records found</td>
-                    </tr>
+							<td>
+								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+								<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="11">no records found</td>
+						</tr>
+					{% endfor %}
 
-                {% endfor %}
-
-                {% if page is defined and page-pagination >= 0 %}
-                <div class="bouton">
-                    <a href="{{ path('app_series_index_page', {'page': page-pagination } ) }}"> < Précédent </a>
-
-                    <a href="{{ path('app_series_index_page', {'page': page+pagination } ) }}"> Suivant > </a>
-                </div>
-                {% else %}
-                <div class="bouton">
-                    <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> Suivant > </a>
-                </div>
-                {% endif %}
+					{# 
+															                <div class="bouton">
+															                    <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> Suivant > </a>
+															                </div>
+															                #}
 
 
-                {# Permet de gérer l'aleatoire #}
-                {#
-                    {% set randomSerie = random(series) %}
-                    <td>{{ randomSerie.title }}</td>
-                        <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
-                        <td>{{ randomSerie.director }}</td>
-                        <td>{{ randomSerie.youtubeTrailer }}</td>
-                        <td>
-                            <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
-                            {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> 
-                        </td>
-                    </tr>
-                    #}
-                </tbody>
-            </table>
-        {# <a href="{{ path('app_series_new') }}">Create new</a> #}
-        </div>
-    </div>
+				    
+					{% if pagination is defined and pagination == true %}
+					<div class="navigation">
+						{{ knp_pagination_render(series) }}
+					</div>
+					{% endif %}
+					{# Permet de gérer l'aleatoire #}
+					{#
+															                    {% set randomSerie = random(series) %}
+															                    <td>{{ randomSerie.title }}</td>
+															                        <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
+															                        <td>{{ randomSerie.director }}</td>
+															                        <td>{{ randomSerie.youtubeTrailer }}</td>
+															                        <td>
+															                            <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
+															                            {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> 
+															                        </td>
+															                    </tr>
+															                    #}
+				</tbody>
+			</table>
+			{# <a href="{{ path('app_series_new') }}">Create new</a> #}
+		</div>
+	</div>
 {% endblock %}

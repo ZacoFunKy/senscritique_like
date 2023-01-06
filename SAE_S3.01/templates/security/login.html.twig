@@ -20,9 +20,6 @@
 			background-color: rgba(0, 0, 0, 0.534);
 			height: 100vh;
 		}
-		.mb-3 {
-			background-color: black;
-		}
 		header {
 			display: flex;
 			align-items: center;
@@ -64,20 +61,23 @@
 		input {
 			color: black;
 		}
+		.btn{
+			background-color: #f44336;
+                border: none;
+                color: black;
+                padding: 10px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: flex;
+                justify-content: center;
+                font-size: 16px;
+                border-radius: 4px;
+                margin-right: 10%;
+                cursor: pointer;
+		}
 	</style>
 
 	<div id="tout">
-		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-		{% endif %}
-
-		{% if app.user %}
-			<div class="mb-3">
-				Vous êtes connectés en tant que
-				{{ app.user.userIdentifier }},
-				<a href="{{ path('app_logout') }}">Se déconnecter</a>
-			</div>
-		{% endif %}
 		<header>
 			<a href="{{ path('app_default') }}">Netflop</a>
 		</header>
@@ -85,12 +85,22 @@
 			<div id="connection">
 				<h1>Connexion</h1>
 				<form method="post">
-					<p>Login</p>
+					<p>Email</p>
 					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
 					<p>Mot de Passe</p>
 					<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-					<input name="connexion" type="submit" value="Connexion">
+					<input class="btn" name="connexion" type="submit" value="Connexion">
+					{% if error %}
+						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+					{% endif %}
+					{% if app.user %}
+						<div class="mb-3">
+							Vous êtes connectés en tant que
+							{{ app.user.userIdentifier }},
+							<a href="{{ path('app_logout') }}">Se déconnecter</a>
+						</div>
+					{% endif %}
 				</form>
 			</div>
 		</div>
