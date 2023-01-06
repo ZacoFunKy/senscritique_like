@@ -391,4 +391,8 @@ class Series
         echo '<img src="data:poster/jpeg;base64,'.$poster.'" alt="Poster"/>';
     }
 
+    public function getEmbedTrailerLink() {
+        return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer,'=')+1);
+    }
+
 }
