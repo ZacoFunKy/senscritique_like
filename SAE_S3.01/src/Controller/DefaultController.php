@@ -19,7 +19,13 @@ class DefaultController extends AbstractController
 
         $a = rand(0,sizeof($series)-1);
         $b = rand(0,sizeof($series)-1);
+        while ($b == $a) {
+            $b = rand(0,sizeof($series)-1);
+        }
         $c = rand(0,sizeof($series)-1);
+        while ($c == $a || $c == $b) {
+            $c = rand(0,sizeof($series)-1);
+        }
 
         $a = $series[$a];
         $b = $series[$b];
