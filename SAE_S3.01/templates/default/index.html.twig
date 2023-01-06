@@ -63,7 +63,28 @@
 		#id a {
 			margin-right: 20px;
 		}
-
+        #button {
+            display:flex;
+            justify-content: center;
+            margin-top:2%;
+            margin-bottom: 2%;
+        }
+        #button input {
+                background-color: #f44336;
+                border: none;
+                color: black;
+                padding: 10px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                border-radius: 4px;
+                margin-right: 10%;
+                cursor: pointer;
+            }
+        #button a{
+            margin-right: 20px;
+        }
 		#content {
 			display: flex;
 			flex-direction: column;
@@ -108,6 +129,10 @@
 				<li><img src="interstellar.jpg" alt="got">
 				</li>
 			</ul>
+            <div id="button">
+                <a href="{{ path('app_series_index')}}"><input name="series" type="submit" value="Voir le catalogue"></a>
+            </div>
+        
 		</div>
 	</div>
 {% endblock %}
