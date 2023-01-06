@@ -65,8 +65,17 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series): Response
     {
+        $users = $series->getUser();
+        $value = 0; 
+        foreach($users as $user) {
+            if($user == $this->getUser()){
+                $value = 1;            
+            } 
+        }
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
+            'valeur' => $value,
         ]);
     }
 
@@ -81,9 +90,11 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
+        /*
         return $this->render('series/show.html.twig', [
             'series' => $series
-        ]);
+        ]);*/
     }
 
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]

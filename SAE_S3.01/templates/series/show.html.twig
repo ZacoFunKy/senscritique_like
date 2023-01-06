@@ -5,6 +5,9 @@
 
 
 {% block body %}
+<script>
+window.location.replace(idSerie);
+</script>
     <h1>Series</h1>
 
     <table class="table">
@@ -57,7 +60,12 @@
                 {% endfor %}
                 </td>
                 </ul>
-                <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})">
+                {% if valeur == 1 %}
+                    <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})" checked>
+                {% else %}
+                    <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})">
+                {% endif %}
+                
             </tr>
             <tr>
         </tbody>
@@ -67,18 +75,17 @@
 
    {# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}
 
-   {#  {{ include('series/_delete_form.html.twig') }}        #}  
+   {#  {{ include('series/_delete_form.html.twig') }}        #}
 
    <script>
     function changerPage(idSerie, idUser) {
-        alert("oui");
         if (document.getElementById("suivi").checked){
             window.location.replace(idSerie+"/set_following/"+"1");
-            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : 1}) }}); #}
+            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1'}) }}); #}
         }
         else {
             window.location.replace(idSerie+"/set_following/"+"0");
-            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : 0}) }}); #}
+            {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0'}) }}); #}
         }
     }
     </script>
