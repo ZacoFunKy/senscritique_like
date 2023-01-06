@@ -3,111 +3,36 @@
 {% block title %}Netflop France - Accueil
 {% endblock %}
 
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="style/styleIndex.css">
+{% endblock %}
+
 {% block body %}
-	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
-		@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
-		@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
-
-		* {
-			font-family: 'Poppins', sans-serif;
-			color: white;
-			margin: 0;
-		}
-
-		html {
-			height: 100%;
-		}
-
-		body {
-			background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
-		}
-
-		#tout {
-			background-color: rgba(0, 0, 0, 0.534);
-			height: 100vh;
-		}
-
-		header {
-			display: flex;
-			justify-content: space-between;
-			background: linear-gradient(black 10%, transparent);
-		}
-		header * {
-			margin: 2%;
-		}
-		header a {
-			color: #f44336;
-			font-family: 'Bebas Neue', sans-serif;
-			font-size: 3vw;
-			letter-spacing: 4px;
-			text-shadow: 5px 3px 10px rgb(0, 0, 0);
-			text-decoration: none;
-		}
-		#id {
-			display: flex;
-		}
-		#id input {
-			background-color: #f44336;
-			border: none;
-			color: black;
-			padding: 10px 25px;
-			text-align: center;
-			text-decoration: none;
-			display: inline-block;
-			font-size: 16px;
-			border-radius: 4px;
-			margin-right: 10%;
-			cursor: pointer;
-		}
-		#id a {
-			margin-right: 20px;
-		}
-
-		#content {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			background-color: rgba(0, 0, 0, 0.63);
-			margin-right: 2%;
-			margin-left: 2%;
-			height: fit-content;
-			padding-bottom: 0.5%;
-		}
-		#content h1 {
-			margin-top: 5%;
-		}
-		#content ul {
-			display: flex;
-			margin-top: 3%;
-			list-style-type: none;
-		}
-		#content img {
-			height: 600px;
-		}
-		#content li {
-			margin: 0 2vw;
-		}
-	</style>
-
 	<div id="tout">
 		<header>
 			<a href="{{ path('app_default') }}">Netflop</a>
 			<div id="id">
-				<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
-				<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
+				{% if app.user %}
+					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
+				{% else %}
+					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
+					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
+				{% endif %}
 			</div>
 		</header>
 		<div id="content">
 			<h1>Quelques séries de notre catalogue:</h1>
 			<ul>
-				<li><img src="got.jpg" alt="got">
-				</li>
-				<li><img src="volt.jpg" alt="got">
-				</li>
-				<li><img src="interstellar.jpg" alt="got">
-				</li>
+				{% for serie in series %}
+					<li>
+						{{ serie.displayPoster() }}
+					</li>
+				{% endfor %}
 			</ul>
+			<div id="button">
+				<a href="{{ path('app_series_index')}}"><input name="series" type="submit" value="Voir le catalogue"></a>
+			</div>
+
 		</div>
 	</div>
 {% endblock %}

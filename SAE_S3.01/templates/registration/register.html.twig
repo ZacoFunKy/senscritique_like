@@ -3,89 +3,36 @@
 {% block title %}Netflop - Inscription
 {% endblock %}
 
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="style/styleRegister.css">
+{% endblock %}
+
 {% block body %}
-<style>
-	@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
-	@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
-	@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
-	* {
-		font-family: 'Poppins', sans-serif;
-		color: white;
-		margin: 0;
-	}
-	body {
-		background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
-	}
-	#tout {
-		background-color: rgba(0, 0, 0, 0.534);
-		height: 100vh;
-	}
-	header {
-		display: flex;
-		align-items: center;
-		justify-content: left;
-		background: linear-gradient(black 10%, transparent);
-	}
-	header * {
-		margin: 2%;
-	}
-	header a {
-		font-family: 'Bebas Neue', sans-serif;
-		font-size: 3vw;
-		letter-spacing: 4px;
-		color: #f44336;
-		text-shadow: 5px 3px 10px rgb(0, 0, 0);
-		text-decoration: none;
-	}
-	#c {
-		display: flex;
-		justify-content: center;
-	}
-	#connection {
-		margin-top: 5%;
-		background-color: rgba(0, 0, 0, 0.63);
-		display: flex;
-		width: 400px;
-		height: fit-content;
-		flex-direction: column;
-		align-items: center;
-		padding-bottom: 2%;
-	}
-	#connection * {
-		margin-top: 2%;
-		margin-left: 2%;
-		margin-bottom: 2%;
+	
+	<div id="tout">
+		<header>
+			<a href="{{ path('app_default') }}">Netflop</a>
+		</header>
+		<div id="c">
+			<div id="connection">
+				<h1>Inscription</h1>
 
-	}
-	button {
-		color: black;
-	}
-	input {
-		color: black;
-	}
-</style>
-<header>
-	<a href="{{path('app_default')}}">Netflop</a>
-</header>
-<div id="c">
-	<div id="connection">
-		<h1>Inscription</h1>
-
-		{{ form_start(registrationForm) }}
-		{{ form_row(registrationForm.email) }}
-		{{ form_row(registrationForm.name, {
-            label:'Nom'
-        }) }}
-		{{ form_row(registrationForm.plainPassword, {
-            label: 'Mot de passe'
-        }) }}
-		{{ form_row(registrationForm.agreeTerms, {
-            label:'Accepter les conditions d\'utilisation'
-        }) }}
-        {{ form_row(registrationForm.country, {
-            label:'Pays'
-        }) }}
-        
-        <button type="submit" class="btn">Entrer</button>
-    {{ form_end(registrationForm) }}
+				{{ form_start(registrationForm) }}
+				<p>Email</p>
+				{{ form_row(registrationForm.email) }}
+				<p>Nom</p>
+				{{ form_row(registrationForm.name) }}
+				<p>Mot de passe</p>
+				{{ form_row(registrationForm.plainPassword) }}
+				<p>Pays</p>
+				{{ form_row(registrationForm.country) }}
+				<div id="checkbox">
+					<p>Accepter les conditions d'utilisation</p>
+					{{ form_row(registrationForm.agreeTerms) }}
+				</div>
+				<button type="submit" class="btn">Entrer</button>
+				{{ form_end(registrationForm) }}
+			</div>
+		</div>
+	</div>
 {% endblock %}

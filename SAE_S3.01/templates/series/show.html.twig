@@ -1,81 +1,64 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Series
+{% endblock %}
 
-{% block title %}Series{% endblock %}
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="../style/styleShowS.css">
+{% endblock %}
 
 
 {% block body %}
-<script>
-window.location.replace(idSerie);
-</script>
-    <h1>Series</h1>
 
-    <table class="table">
-        <tbody>
-            {# <tr>
-                <th>Id</th>
-                <td>{{ series.id }}</td>
-            </tr> #}
-            <tr>
-                <th>Title</th>
-                <td>{{ series.title }}</td>
-            </tr>
-            <tr>
-                <th>Plot</th>
-                <td>{{ series.plot }}</td>
-            </tr>
-            {#  <tr>
-                <th>Imdb</th>
-                <td>{{ series.imdb }}</td>
-            </tr> #}
-            <tr>
-                <th>Poster</th>
-                <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-            </tr>
-            <tr>
-                <th>Director</th>
-                <td>{{ series.director }}</td>
-            </tr>
-            <tr>
-                <th>YoutubeTrailer</th>
-                <td>{{ series.youtubeTrailer }}</td>
-            </tr>
-            <tr>
-                <th>Awards</th>
-                <td>{{ series.awards }}</td>
-            </tr>
-            <tr>
-                <th>YearStart</th>
-                <td>{{ series.yearStart }}</td>
-            </tr>
-            <tr>
-                <th>YearEnd</th>
-                <td>{{ series.yearEnd }}</td>
-            </tr>
-            <tr>
-                <ul> <th>Seasons</th>
-                <td>
-                {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-                        <li>Saison {{ season.number }} ({{ season.episodes|length }} épisodes)</li>
-                {% endfor %}
-                </td>
-                </ul>
-                {% if valeur == 1 %}
-                    <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})" checked>
+	<div id="tout">
+		<header>
+			<a href="{{path('app_default')}}">Netflop</a>
+
+		</header>
+		<div id="content">
+			<div id="partGauche">
+				<p id="titre">{{ series.title }}</p>
+			</br>
+			<p>{{ series.plot }}</p>
+			<p>{{ series.director }}</p>
+		</br>
+		<h2>Bande d'annonce</h2>
+		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+		<h2>Awards</h2>
+		<p>{{ series.awards }}</p>
+		<h2>YearStart</h2>
+		<p>{{ series.yearStart }}</p>
+		<h2>YearEnd</h2>
+		<p>{{ series.yearEnd }}</p>
+		<h2>Seasons</h2>
+		<ul>
+			<td>
+				{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+					<li>Saison
+						{{ season.number }}
+						({{ season.episodes|length }}
+						épisodes)</li>
+				{% endfor %}
+			</td>
+		</ul>
+        {% if app.user.id is defined %}
+            {% if valeur == 1 %}
+                        <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})" checked>
                 {% else %}
                     <input type="checkbox" id="suivi" onchange="changerPage({{series.id}},{{app.user.id}})">
                 {% endif %}
+        {% endif %}
                 
-            </tr>
-            <tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_series_index') }}">back to list</a> 
-
-   {# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}
-
-   {#  {{ include('series/_delete_form.html.twig') }}        #}
+	</div>
+	<div id="partDroite">
+		<tr>
+			<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+		</tr>
+	</div>
+</div>
+<div id="bouton">
+	<a href="{{ path('app_series_index') }}">back to list</a>
+</div></div>{# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}{#  {{ include('series/_delete_form.html.twig') }} #}
 
    <script>
     function changerPage(idSerie, idUser) {
@@ -89,6 +72,5 @@ window.location.replace(idSerie);
         }
     }
     </script>
-
 
 {% endblock %}

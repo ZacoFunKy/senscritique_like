@@ -385,4 +385,14 @@ class Series
         return $this;
     }
 
+    public function displayPoster() {
+        $poster = stream_get_contents($this->getPoster());
+        $poster = base64_encode($poster);
+        echo '<img src="data:poster/jpeg;base64,'.$poster.'" alt="Poster"/>';
+    }
+
+    public function getEmbedTrailerLink() {
+        return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer,'=')+1);
+    }
+
 }
