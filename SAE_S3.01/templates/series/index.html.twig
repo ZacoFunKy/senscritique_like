@@ -2,7 +2,12 @@
 {% set pagination = 10 %}
 {% block title %}Series index{% endblock %}
 
+
+
+
+
 {% block body %}
+
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Rancho&display=swap');
     @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
@@ -128,6 +133,25 @@
         <div id="content">
             <h1>Catalogue</h1>
 
+                {% if form is defined %}
+  {{ form_start(form) }}
+
+<div class="form-row align-items-end" >
+ <div class="col">
+   {{ form_row(form.nom) }}
+ </div>
+
+  <div class="col">
+   <div class="form-group">
+      <button type="submit" class="btn btn-success">Rechercher</button>
+    </div>
+ </div>
+</div>
+ {{ form_end(form) }}
+
+ {% endif %}
+
+            
             <table class="table">
                 <!--<thead>
                     <tr>

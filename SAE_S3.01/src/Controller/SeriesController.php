@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Series;
+use App\Entity\PropertySearch;
+use App\Form\PropertySeachType;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,34 +13,73 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-
-
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
 
-    #[Route('/', name: 'app_series_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
+    public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $series = $entityManager
+        $propertySearch = new PropertySearch();
+        $form = $this->createForm(PropertySeachType::class,$propertySearch);
+        $form->handleRequest($request);
+
+        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $name = $propertySearch->getNom();
+            if ($name) {
+                // if name is contained in the title of a series
+                $queryBuilder->where('s.title LIKE :name')
+                    ->setParameter('name', '%'.$name.'%');
+                $series = $queryBuilder->getQuery()->getResult();
+            }
+            else {
+                $series = $entityManager
+                ->getRepository(Series::class)
+                ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
+            }
+        }else {
+            $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
+        }
+       
 
         return $this->render('series/index.html.twig', [
             'series' => $series,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/page/{page}', name: 'app_series_index_page', methods: ['GET'])]
+    #[Route('/page/{page}', name: 'app_series_index_page', methods: ['GET', 'POST'])]
     public function indexPagination(EntityManagerInterface $entityManager, Request $request, $page): Response
-    {
-        $series = $entityManager
+    { $propertySearch = new PropertySearch();
+        $form = $this->createForm(PropertySeachType::class,$propertySearch);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $name = $propertySearch->getNom();
+            if ($name) {
+                $series = $entityManager
+                    ->getRepository(Series::class)
+                    ->findBy(['title' => $name]);
+            }
+            else {
+                $series = $entityManager
+                ->getRepository(Series::class)
+                ->findBy([], ['title' => 'ASC'], 10, $page ); //limit et offset
+            }
+        }else {
+            $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC'], 10, $page ); //limit et offset
-
+        }
+       
         return $this->render('series/index.html.twig', [
             'series' => $series,
             'page' => $page,
+            'form' => $form->createView(),
+
         ]);
     }
 
