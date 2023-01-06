@@ -49,18 +49,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @var \DateTime|null
+     * @var array
      *
-     * @ORM\Column(name="register_date", type="datetime", nullable=true)
+     * @ORM\Column(name="roles", type="json", nullable=false)
      */
-    private $registerDate;
+    private $roles = ['ROLE_USER'];
 
     /**
      * @var bool
      *
      * @ORM\Column(name="admin", type="boolean", nullable=false)
      */
-    private $admin = '0';
+    private $admin = 0;
+
+      /**
+     * @var bool
+     *
+     * @ORM\Column(name="super_admin", type="boolean", nullable=false)
+     */
+    private $isSuperAdmin = 0;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="register_date", type="datetime", nullable=true)
+     */
+    private $registerDate;
+
 
     /**
      * @var string|null
@@ -79,19 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $country;
 
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="roles", type="json", nullable=false)
-     */
-    private $roles = ['ROLE_USER'];
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="super_admin", type="boolean", nullable=false)
-     */
-    private $isSuperAdmin = 0;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -185,17 +188,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isAdmin(): ?bool
-    {
-        return $this->admin;
-    }
-
-    public function setAdmin(bool $admin): self
-    {
-        $this->admin = $admin;
-
-        return $this;
-    }
 
     public function getUserId(): ?string
     {
@@ -269,7 +261,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+
     public function getUserIdentifier(): string { return $this->getEmail(); }
-    public function getRoles(): array { return ['ROLE_USER']; }
     public function eraseCredentials() { }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getisAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setisAdmin(bool $admin): self
+    {
+        // if the user is SuperAdmin, he is also Admin
+        if($this->getIsSuperAdmin()){
+            $admin = true;
+            $this->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
+            $this->admin = $admin;
+            return $this;
+        }
+        if($admin){
+            $this->setRoles(['ROLE_ADMIN']);
+        }else{
+            $this->setRoles(['ROLE_USER']);
+        }
+        $this->admin = $admin;
+        return $this;
+    }
+
+    public function getIsSuperAdmin(): ?bool
+    {
+        return $this->isSuperAdmin;
+    }
+
+    public function setIsSuperAdmin(bool $isSuperAdmin): self
+    {
+        $this->isSuperAdmin = $isSuperAdmin;
+        return $this;
+    }
+
 }
