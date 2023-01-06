@@ -3,79 +3,11 @@
 {% block title %}Netflop - Connexion
 {% endblock %}
 
-{% block body %}
-	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
-		@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
-		@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
-		* {
-			font-family: 'Poppins', sans-serif;
-			color: white;
-			margin: 0;
-		}
-		body {
-			background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
-		}
-		#tout {
-			background-color: rgba(0, 0, 0, 0.534);
-			height: 100vh;
-		}
-		header {
-			display: flex;
-			align-items: center;
-			justify-content: left;
-			background: linear-gradient(black 10%, transparent);
-		}
-		header * {
-			margin: 2%;
-		}
-		header a {
-			font-family: 'Bebas Neue', sans-serif;
-			font-size: 3vw;
-			font-style: bold;
-			letter-spacing: 4px;
-			color: #f44336;
-			text-shadow: 5px 3px 10px rgb(0, 0, 0);
-			text-decoration: none;
-		}
-		#c {
-			display: flex;
-			justify-content: center;
-		}
-		#connection {
-			margin-top: 5%;
-			background-color: rgba(0, 0, 0, 0.63);
-			display: flex;
-			width: 400px;
-			height: fit-content;
-			flex-direction: column;
-			align-items: center;
-			padding-bottom: 2%;
-		}
-		#connection * {
-			margin-top: 2%;
-			margin-left: 2%;
-			margin-bottom: 2%;
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="/style/styleLogin.css">
+{% endblock %}
 
-		}
-		input {
-			color: black;
-		}
-		.btn{
-			background-color: #f44336;
-                border: none;
-                color: black;
-                padding: 10px 25px;
-                text-align: center;
-                text-decoration: none;
-                display: flex;
-                justify-content: center;
-                font-size: 16px;
-                border-radius: 4px;
-                margin-right: 10%;
-                cursor: pointer;
-		}
-	</style>
+{% block body %}
 
 	<div id="tout">
 		<header>
