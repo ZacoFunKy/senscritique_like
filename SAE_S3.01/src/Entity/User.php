@@ -53,14 +53,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="roles", type="json", nullable=false)
      */
-    private $roles;
+    private $roles = ['ROLE_USER'];
 
     /**
      * @var bool
      *
      * @ORM\Column(name="admin", type="boolean", nullable=false)
      */
-    private $isAdmin = 0;
+    private $admin = 0;
 
       /**
      * @var bool
@@ -280,26 +280,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getIsAdmin(): ?bool
+    public function getisAdmin(): ?bool
     {
-        return $this->isAdmin;
+        return $this->admin;
     }
 
-    public function setIsAdmin(bool $isAdmin): self
+    public function setisAdmin(bool $admin): self
     {
         // if the user is SuperAdmin, he is also Admin
         if($this->getIsSuperAdmin()){
-            $isAdmin = true;
+            $admin = true;
             $this->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
-            $this->isAdmin = $isAdmin;
+            $this->admin = $admin;
             return $this;
         }
-        if($isAdmin){
+        if($admin){
             $this->setRoles(['ROLE_ADMIN']);
         }else{
             $this->setRoles(['ROLE_USER']);
         }
-        $this->isAdmin = $isAdmin;
+        $this->admin = $admin;
         return $this;
     }
 

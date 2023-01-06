@@ -6,9 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 
@@ -28,16 +26,16 @@ class UserCrudController extends AbstractCrudController
         if($this->isGranted('IS_IMPERSONATOR') && $this->isGranted('ROLE_SUPER_ADMIN')) {
             return [
             IdField::new('id')
-                ->onlyOnIndex(),
+                ->onlyOnIndex()
+                ->setSortable(true),
             EmailField::new('email')
                 ->setRequired(true)
-                ->setFormTypeOptions(['disabled' => true]),
-            TextField::new('password')
-                ->setRequired(true)
-                ->setFormTypeOptions(['disabled' => true]),
+                ->setFormTypeOptions(['disabled' => true])
+                ->setSortable(true),
             BooleanField::new('isAdmin')
                 ->setRequired(true)
-                ->setFormTypeOptions(['disabled' => true]),
+                ->setFormTypeOptions(['disabled' => true])
+                ->setSortable(false),
             BooleanField::new('isSuperAdmin')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true]),
@@ -49,9 +47,6 @@ class UserCrudController extends AbstractCrudController
                 IdField::new('id')
                     ->onlyOnIndex(),
                 EmailField::new('email')
-                    ->setRequired(true)
-                    ->setFormTypeOptions(['disabled' => true]),
-                TextField::new('password')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
                 BooleanField::new('isAdmin')

@@ -10,6 +10,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class DashboardController extends AbstractDashboardController
 {
@@ -18,7 +21,7 @@ class DashboardController extends AbstractDashboardController
     ) {
     }
 
-    #[Route('/admin', name: 'admin')]
+    #[Route('/admin/dashboard', name: 'admin')]
     public function index(): Response
     {
         $routeBuilder = $this->adminUrlGenerator
@@ -39,9 +42,20 @@ class DashboardController extends AbstractDashboardController
     {
         return [
             MenuItem::subMenu('Users', 'fa fa-users')->setSubItems([
-                MenuItem::linkToCrud('Users', 'fa fa-user', User::class),
+                MenuItem::linkToCrud('Permissions', 'fa fa-user', User::class),
             ])->setPermission('ROLE_ADMIN')
             ,
+
         ];
     }
+
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        return parent::configureUserMenu($user)
+        ->addMenuItems([
+            MenuItem::linkToRoute('Back to site', 'fa fa-home', 'home'),            
+        ])
+        ;
+    }
+    
 }

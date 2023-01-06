@@ -14,6 +14,18 @@
         {% endblock %}
     </head>
     <body>
+        <input type="checkbox" id="check" onclick="check()">
         {% block body %}{% endblock %}
     </body>
 </html>
+
+<script>
+function check(){
+    var check = document.getElementById("check");
+    if(check.checked == true){
+        alert("checked");
+    }else{
+        alert("unchecked");
+    }
+}
+<script>
