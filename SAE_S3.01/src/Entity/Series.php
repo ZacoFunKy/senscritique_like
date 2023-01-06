@@ -385,4 +385,10 @@ class Series
         return $this;
     }
 
+    public function displayPoster() {
+        $poster = stream_get_contents($this->getPoster());
+        $poster = base64_encode($poster);
+        echo '<img src="data:poster/jpeg;base64,'.$poster.'" alt="Poster"/>';
+    }
+
 }
