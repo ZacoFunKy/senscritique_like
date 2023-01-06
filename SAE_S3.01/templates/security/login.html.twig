@@ -61,6 +61,20 @@
 		input {
 			color: black;
 		}
+		.btn{
+			background-color: #f44336;
+                border: none;
+                color: black;
+                padding: 10px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: flex;
+                justify-content: center;
+                font-size: 16px;
+                border-radius: 4px;
+                margin-right: 10%;
+                cursor: pointer;
+		}
 	</style>
 
 	<div id="tout">
@@ -71,12 +85,12 @@
 			<div id="connection">
 				<h1>Connexion</h1>
 				<form method="post">
-					<p>Login</p>
+					<p>Email</p>
 					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
 					<p>Mot de Passe</p>
 					<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-					<input name="connexion" type="submit" value="Connexion">
+					<input class="btn" name="connexion" type="submit" value="Connexion">
 					{% if error %}
 						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 					{% endif %}
