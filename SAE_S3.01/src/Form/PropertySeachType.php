@@ -12,7 +12,14 @@ class PropertySeachType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
+                ->add('nom', null, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Rechercher une série'
+                ]
+            ])
+
         ;
     }
 

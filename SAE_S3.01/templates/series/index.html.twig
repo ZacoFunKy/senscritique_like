@@ -11,20 +11,9 @@
 	<div id="tout">
 
 		<header>
-			<a href="{{path('app_default')}}">Netflop</a>
+			<a href="{{path('app_default')}}" class="title">Netflop</a>
 			<div id="id">
-				{% if app.user %}
-					{% if is_granted('ROLE_ADMIN') %}
-						<a href="{{ path('admin') }}"><input name="admin" type="submit" value="Dashboard"></a>
-					{% endif %}
-					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
-					{% if is_granted('IS_IMPERSONATOR') %}
-						<a href="{{ path('admin') }}?_switch_user=_exit"><input name="deconnexion" type="submit" value="Retour à mon compte"></a>
-					{% endif %}
-				{% else %}
-					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
-					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
-				{% endif %}
+				{% include 'header.html.twig' %}
 			</div>
 		</header>
 		<div id="content">
@@ -33,18 +22,36 @@
 
 			{% if form is defined %}
   {{ form_start(form) }}
+ 
+  {{ form_widget(form) }}
+  <input type="submit" value="Rechercher" />
 
-<div class="form-row align-items-end" >
- <div class="col">
-   {{ form_row(form.nom) }}
- </div>
+  <style>
+  input[type="text"]{
+	width: 20%;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	padding: 5px;
+	font-size: 16px;
+	color: black;
+  }
 
-  <div class="col">
-   <div class="form-group">
-      <button type="submit" class="btn btn-success">Rechercher</button>
-    </div>
- </div>
-</div>
+  input[value="Rechercher"]{
+		background-color: #f44336;
+			border: none;
+			color: black;
+			padding: 10px 25px;
+			text-align: center;
+			text-decoration: none;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 5px;
+			margin-bottom: 15px;
+  }
+
+  </style>
  {{ form_end(form) }}
 
 {% endif %}
