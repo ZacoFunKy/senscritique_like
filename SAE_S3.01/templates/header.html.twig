@@ -16,7 +16,7 @@
             <p style="color:black">Bonjour {{ app.user.name }}</p>
           </li>
           <li>
-            <a href="#">Mon compte</a>
+            <a href="{{ path('app_user_profile') }}">Mon compte</a>
           </li>
           <li>
             <a href="{{ path('app_user_favorite')}}">Mes séries favorites</a>

@@ -8,7 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use phpDocumentor\Reflection\Types\This;
+use App\Entity\User;
+use App\Entity\Country;
+use App\Form\UpdateFormType;
 
 class UserController extends AbstractController
 {
@@ -32,5 +34,38 @@ class UserController extends AbstractController
             'episodes' => $episodes,
         ]);
     }
+
+    #[Route('/user/profile', name: 'app_user_profile')]
+    public function profile(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $form = $this->createForm(UpdateFormType::class, $this->getUser());
+        $form->handleRequest($request);
+
+        $countries = $entityManager->getRepository(Country::class)->findAll();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('photo')->getData();
+            if ($file) {
+                $fileContent = file_get_contents($file);
+                $this->getUser()->setPhoto($fileContent);
+            }
+            $entityManager->persist($this->getUser());
+            
+            $entityManager->flush();
+            return $this->redirectToRoute('app_user_profile');
+        }
+        return $this->render('user/profile.html.twig', [
+            'form' => $form->createView(),
+            'countries' => $countries,
+        ]);
+    }
+
+    #[Route('/photo/{id}', name: 'photo_user', methods: ['GET'])]
+    public function showPoster(User $user): Response
+    {
+    return new Response(stream_get_contents($user->getPhoto()), 200, array ('Content-type' => 'image/jpeg'));
+    }
+
+
     
 }
