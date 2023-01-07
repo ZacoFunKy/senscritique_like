@@ -33,6 +33,7 @@
 				<tbody id="afficheSeries">
 					{% for episode in episodes %}
 						<tr id="serie">
+                            <td>{{episode.season.series.title}}</td>
 							<td><img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/></td>
 							<td>{{episode.number}} {{ episode.title }}</td>
 
