@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Episode;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,7 +58,8 @@ class SeriesController extends AbstractController
     public function show(Series $series): Response
     {
         $users = $series->getUser();
-        $value = 0; 
+        $value = 0;
+
         foreach($users as $user) {
             if($user == $this->getUser()){
                 $value = 1;            
@@ -68,6 +70,24 @@ class SeriesController extends AbstractController
             'series' => $series,
             'valeur' => $value,
         ]);
+    }
+
+    #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
+    public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
+    {
+        if ($yesno == "1"){
+            $this->getUser()->addEpisode($episode);
+            $entityManager->flush();
+        }else{
+            $this->getUser()->removeEpisode($episode);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId()], Response::HTTP_SEE_OTHER);
+        /*
+        return $this->render('series/show.html.twig', [
+            'series' => $series
+        ]);*/
     }
 
     #[Route('/{series}/set_following/{yesno}', name: 'app_series_show_adds', methods: ['GET'])]
