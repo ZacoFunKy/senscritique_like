@@ -28,8 +28,11 @@ class SeriesController extends AbstractController
             $series = $paginator->paginate($series, $request
             ->query->getInt('page', 1, 10));
 
+            $numPage = $request->query->getInt('page', 1, 10);
+
         return $this->render('series/index.html.twig', [
             'series' => $series,
+            'numPage' => $numPage,
         ]);
     }
 
@@ -56,8 +59,11 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series): Response
     {
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
+            'numPage' => $numPage,
         ]);
     }
 
