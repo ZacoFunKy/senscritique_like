@@ -11,6 +11,8 @@ do
         "Lancer l'application web")
             echo "Downloading nessessary packages"
             composer install
+            # Replace vendor\easycorp\easyadmin-bundle\src\Resources\views\crud\field\email.html.twig by templates/easyAdmin/email.html.twig
+            cp templates/easyAdmin/email.html.twig vendor/easycorp/easyadmin-bundle/src/Resources/views/crud/field/email.html.twig
             echo "Checking if the database is up to date"
             php bin/console doctrine:schema:update --force
             echo "Launching the web application"
