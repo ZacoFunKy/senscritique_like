@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Episode;
 use App\Entity\Series;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
@@ -94,9 +95,61 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series): Response
     {
+        $users = $series->getUser();
+        $value = 0;
+
+        foreach($users as $user) {
+            if($user == $this->getUser()){
+                $value = 1;            
+            } 
+        }
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
+            'valeur' => $value,
         ]);
+    }
+
+    #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
+    public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
+    {
+        if ($yesno == "1"){
+            $this->getUser()->addEpisode($episode);
+            $entityManager->flush();
+        }else{
+            $this->getUser()->removeEpisode($episode);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId()], Response::HTTP_SEE_OTHER);
+        /*
+        return $this->render('series/show.html.twig', [
+            'series' => $series
+        ]);*/
+    }
+
+    #[Route('/{series}/set_following/{yesno}/{redirect}', name: 'app_series_show_adds', methods: ['GET'])]
+    public function addSerie(Series $series, $yesno, $redirect, EntityManagerInterface $entityManager): Response
+    {
+        if ($yesno == "1"){
+            $this->getUser()->addSeries($series);
+            $entityManager->flush();
+        }else{
+            $this->getUser()->removeSeries($series);
+            $entityManager->flush();
+        }
+
+        if ($redirect == "1"){
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
+        }
+        else{
+            return $this->redirectToRoute('app_user_favorite', [], Response::HTTP_SEE_OTHER);
+        }
+
+        /*
+        return $this->render('series/show.html.twig', [
+            'series' => $series
+        ]);*/
     }
 
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]

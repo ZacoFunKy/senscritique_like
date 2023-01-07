@@ -16,7 +16,7 @@
             <a href="#">Mon compte</a>
           </li>
           <li>
-            <a href="#">Mes favoris</a>
+            <a href="{{ path('app_user_favorite')}}">Mes favoris</a>
           </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>
