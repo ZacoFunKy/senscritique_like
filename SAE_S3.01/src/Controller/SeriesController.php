@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Series;
+use App\Entity\PropertySearch;
+use App\Form\PropertySeachType;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -16,21 +18,57 @@ use Symfony\Component\Routing\Annotation\Route;
 class SeriesController extends AbstractController
 {
 
-    #[Route('/', name: 'app_series_index', methods: ['GET'])]
+    #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator
     ): Response
     {
-        $series = $entityManager
+        $propertySearch = new PropertySearch();
+        $form = $this->createForm(PropertySeachType::class,$propertySearch);
+        $form->handleRequest($request);
+
+        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $name = $propertySearch->getNom();
+            if ($name) {
+                // if name is contained in the title of a series
+                $queryBuilder->where('s.title LIKE :name')
+                    ->setParameter('name', '%'.$name.'%');
+                $series = $queryBuilder->getQuery()->getResult();
+            }
+            else {
+                $series = $entityManager
+                ->getRepository(Series::class)
+                ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
+                
+            }
+        }else {
+            $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
-        
+
+
             $series = $paginator->paginate($series, $request
             ->query->getInt('page', 1, 10));
+    
+            return $this->render('series/index.html.twig', [
+                'series' => $series,
+                'form' => $form->createView(),
+                'pagination' => TRUE,
+            ]);
+            
+        }
 
+        $series = $paginator->paginate($series, $request
+        ->query->getInt('page', 1, 10));
+        
         return $this->render('series/index.html.twig', [
             'series' => $series,
+            'form' => $form->createView(),
+            'pagination' => FALSE,
         ]);
+
+   
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
