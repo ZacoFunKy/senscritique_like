@@ -17,8 +17,8 @@
 			</div>
 		</header>
 		<div id="content">
-			<h1>Vos séries favorites</h1>
-            <a class="boutonModif" href="{{ path('app_series_index') }}"> Retour</a>
+			<h1>Votre historique d'épisode</h1>
+            <a class="boutonModif" href="{{ path('app_series_index') }}" style="margin-bottom:15px"> Retour</a>
 			<table
 				class="table">
 				<!--<thead>
@@ -31,16 +31,14 @@
 												                    </tr>
 												                </thead>-->
 				<tbody id="afficheSeries">
-					{% for series in app.user.series %}
+					{% for episode in episodes %}
 						<tr id="serie">
-							<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-							<!--<td>{{ series.director }}</td>
-																					                        <td>{{ series.youtubeTrailer }}</td>-->
-							<td>{{ series.title }}</td>
+							<td><img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/></td>
+							<td>{{episode.number}} {{ episode.title }}</td>
 
 							<td>
-								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-								<a class="boutonModif" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
+								<a class="boutonModif" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
+                                <a class="boutonModif" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
 							</td>
 						</tr>
 					{% else %}
@@ -48,6 +46,12 @@
 							<td colspan="11">no records found</td>
 						</tr>
 					{% endfor %}
+
+                    {% if pagination is defined and pagination == true %}
+					<div class="navigation" style="margin-top:20px">
+						{{ knp_pagination_render(episodes) }}
+					</div>
+					{% endif %}
 
 					{# 
 															                <div class="bouton">

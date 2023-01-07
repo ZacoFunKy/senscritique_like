@@ -102,6 +102,9 @@ class SeriesController extends AbstractController
         $value = 0;
 
         $numPage = Request::createFromGlobals()->query->get('numPage');
+        if($numPage == NULL){
+            $numPage = 1;
+        }
 
         foreach($users as $user) {
             if($user == $this->getUser()){

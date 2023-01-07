@@ -13,10 +13,16 @@
       <div class="menu">
         <ul>
           <li>
+            <p style="color:black">Bonjour {{ app.user.name }}</p>
+          </li>
+          <li>
             <a href="#">Mon compte</a>
           </li>
           <li>
-            <a href="{{ path('app_user_favorite')}}">Mes favoris</a>
+            <a href="{{ path('app_user_favorite')}}">Mes séries favorites</a>
+          </li>
+          <li>
+            <a href="{{ path('app_user_history')}}">Mon historique</a>
           </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>

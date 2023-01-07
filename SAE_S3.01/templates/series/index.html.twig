@@ -76,8 +76,13 @@
 							<td>{{ series.title }}</td>
 
 							<td>
+								{% if numPage is defined %}
 								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
 								<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+								{% else %}
+								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+								<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+								{% endif %}	
 							</td>
 						</tr>
 					{% else %}
