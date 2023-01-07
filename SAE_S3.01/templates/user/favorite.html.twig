@@ -1,23 +1,43 @@
 {% extends 'base.html.twig' %}
+{% set pagination = 10 %}
+{% block title %}Series index
+{% endblock %}
 
 {% block stylesheets %}
         <link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
-{% block title %}Favorite Series{% endblock %}
-
 {% block body %}
-<h1 style="color:#f44336">Your favorite serires</h1>
-<ul>
-    <li><a  class="boutonModif" href="{{ path('app_series_index')  }}">Back to the list</a></li>
-</ul>
-<div class="row">
+	<div id="tout">
 
-	<tbody id="afficheSeries">
+		<header>
+			<a href="{{path('app_default')}}" class="title">Netflop</a>
+			<div id="id">
+				{% include 'header.html.twig' %}
+			</div>
+		</header>
+		<div id="content">
+			<h1>Catalogue</h1>
+            <a class="boutonModif" href="{{ path('app_series_index') }}"> Retour</a>
+			<table
+				class="table">
+				<!--<thead>
+												                    <tr>
+												                        <th>Title</th>
+												                        <th>Poster</th>
+												                        <th>Director</th>
+												                        <th>YoutubeTrailer</th>
+												                        <th>actions</th>
+												                    </tr>
+												                </thead>-->
+				<tbody id="afficheSeries">
 					{% for series in app.user.series %}
 						<tr id="serie">
 							<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-							<td style="color:black">{{ series.title }}</td>
+							<!--<td>{{ series.director }}</td>
+																					                        <td>{{ series.youtubeTrailer }}</td>-->
+							<td>{{ series.title }}</td>
+
 							<td>
 								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
 								<a class="boutonModif" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
@@ -28,4 +48,34 @@
 							<td colspan="11">no records found</td>
 						</tr>
 					{% endfor %}
+
+					{# 
+															                <div class="bouton">
+															                    <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> Suivant > </a>
+															                </div>
+															                #}
+
+
+				    
+
+					{# Permet de gérer l'aleatoire #}
+					{#
+															                    {% set randomSerie = random(series) %}
+															                    <td>{{ randomSerie.title }}</td>
+															                        <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
+															                        <td>{{ randomSerie.director }}</td>
+															                        <td>{{ randomSerie.youtubeTrailer }}</td>
+															                        <td>
+															                            <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
+															                            {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> 
+															                        </td>
+															                    </tr>
+															                    #}
+				</tbody>
+			</table>
+			{# <a href="{{ path('app_series_new') }}">Create new</a> #}
+		</div>
+	</div>
 {% endblock %}
+
+
