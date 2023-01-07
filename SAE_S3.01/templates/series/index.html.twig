@@ -14,7 +14,13 @@
 			<a href="{{path('app_default')}}">Netflop</a>
 			<div id="id">
 				{% if app.user %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{ path('admin') }}"><input name="admin" type="submit" value="Dashboard"></a>
+					{% endif %}
 					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
+					{% if is_granted('IS_IMPERSONATOR') %}
+						<a href="{{ path('admin') }}?_switch_user=_exit"><input name="deconnexion" type="submit" value="Retour à mon compte"></a>
+					{% endif %}
 				{% else %}
 					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
 					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>

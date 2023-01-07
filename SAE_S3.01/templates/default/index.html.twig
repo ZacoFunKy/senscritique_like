@@ -12,6 +12,7 @@
 		<header>
 			<a href="{{ path('app_default') }}">Netflop</a>
 			<div id="id">
+
 				{% if app.user %}
 					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
 				{% else %}
