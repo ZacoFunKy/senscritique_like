@@ -51,11 +51,14 @@ class SeriesController extends AbstractController
 
             $series = $paginator->paginate($series, $request
             ->query->getInt('page', 1, 10));
+
+            $numPage = $request->query->getInt('page', 1, 10);
     
             return $this->render('series/index.html.twig', [
                 'series' => $series,
                 'form' => $form->createView(),
                 'pagination' => TRUE,
+                'numPage' => $numPage,
             ]);
             
         }
@@ -98,6 +101,8 @@ class SeriesController extends AbstractController
         $users = $series->getUser();
         $value = 0;
 
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
         foreach($users as $user) {
             if($user == $this->getUser()){
                 $value = 1;            
@@ -107,6 +112,7 @@ class SeriesController extends AbstractController
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'valeur' => $value,
+            'numPage' => $numPage,
         ]);
     }
 
