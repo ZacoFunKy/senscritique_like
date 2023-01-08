@@ -22,7 +22,7 @@
 		header * {
 			margin: 2%;
 		}
-		header a {
+		header .title {
 			color: #f44336;
 			font-family: 'Bebas Neue', sans-serif;
 			font-size: 3vw;
@@ -30,6 +30,8 @@
 			text-shadow: 5px 3px 10px rgb(0, 0, 0);
 			text-decoration: none;
 		}
+
+
 		#titre {
 			font-family: 'Concert One', cursive;
 			font-size: 4vw;
@@ -71,4 +73,3 @@
 		}
 
 
-		

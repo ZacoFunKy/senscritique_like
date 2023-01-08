@@ -165,7 +165,7 @@ class SeriesController extends AbstractController
             return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
         }
         else{
-            return $this->redirectToRoute('app_series_index', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_favorite', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
         }
 
         /*

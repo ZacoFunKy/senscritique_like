@@ -5,6 +5,10 @@
 
 {% block body %}
 
+{% if numPage is not defined %}
+    {% set numPage = 1 %}
+{% endif %}
+
 {% if app.user %}
 <div class="action">
       <div class="profile" onclick="menuToggle();">
@@ -23,10 +27,10 @@
             <a href="{{ path('app_user_profile') }}">Mon compte</a>
           </li>
           <li>
-            <a href="{{ path('app_user_favorite')}}">Mes séries favorites</a>
+            <a href="{{ path('app_user_favorite', {'numPage': numPage} )}}">Mes séries favorites</a>
           </li>
           <li>
-            <a href="{{ path('app_user_history')}}">Mon historique</a>
+            <a href="{{ path('app_user_history', {'numPage': numPage} ) }}">Mon historique</a>
           </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>

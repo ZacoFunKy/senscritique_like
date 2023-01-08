@@ -17,8 +17,12 @@ class UserController extends AbstractController
     #[Route('/user/favoris', name: 'app_user_favorite')]
     public function index(): Response
     {
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+        $numPage = $numPage ? $numPage : 1;
+
         return $this->render('user/favorite.html.twig', [
             'controller_name' => 'UserController',
+            'numPage' => $numPage,
         ]);
     }
 
@@ -30,8 +34,13 @@ class UserController extends AbstractController
         $episodes = $paginator->paginate($episodes, $request
         ->query->getInt('page', 1, 10));
 
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+        $numPage = $numPage ? $numPage : 1;
+
+
         return $this->render('user/history.html.twig', [
             'episodes' => $episodes,
+            'numPage' => $numPage,
         ]);
     }
 

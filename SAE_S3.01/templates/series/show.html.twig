@@ -16,8 +16,19 @@
 
 	<div id="tout">
 		<header>
-			<a href="{{path('app_default')}}">Netflop</a>
+			<a href="{{path('app_series_index') }}?page={{numPage}}"><p class="title">Netflop</p></a>
+            {% include 'header.html.twig' %}
 
+        <style> 
+		header a p {
+            color: #f44336;
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 3vw;
+			letter-spacing: 4px;
+			text-shadow: 5px 3px 10px rgb(0, 0, 0);
+			text-decoration: none;
+            }
+        </style>
 		</header>
 		<div id="content">
 			<div id="partGauche">
