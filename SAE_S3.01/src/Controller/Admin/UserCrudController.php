@@ -69,9 +69,23 @@ class UserCrudController extends AbstractCrudController
             return 'series/?_switch_user='.$entity->getEmail();
         })
     ;
+
+
     return parent::configureActions($actions)
         ->add(Crud::PAGE_INDEX, $impersonate)
+        ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action
+                ->setLabel('Supprimer')
+                ->setIcon('fa fa-trash')
+                ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'));
+        })
+        ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action
+                ->setLabel('Modifier')
+                ->setIcon('fa fa-edit');
+        })
         ;
+        
     }
     
 }
