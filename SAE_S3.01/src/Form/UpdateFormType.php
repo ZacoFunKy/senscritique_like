@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 
 class UpdateFormType extends AbstractType
 {
@@ -64,6 +66,7 @@ class UpdateFormType extends AbstractType
                         'maxSize' => '1024k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid image',
@@ -81,6 +84,16 @@ class UpdateFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'photo' => null,
         ]);
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $entity = $form->getData();
+
+        if($entity->getPhoto()){
+            $view->vars['photo'] = $entity->getPhoto();
+        }
     }
 }

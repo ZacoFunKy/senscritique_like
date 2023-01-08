@@ -46,15 +46,12 @@
 </div>
 
 <script>
-// make the select element on the correct country
 var country = document.querySelector('select');
 country.value = {{app.user.country.id}};
 
-// don't dispay the form
 var form = document.querySelector('.frorm').style.display = 'none';
 var div = document.querySelector('.info').style.display = 'block';
 var stop = document.querySelector('.stop').style.display = 'none';
-// if the button is clicked, display the form
 var button = document.querySelector('.profile-button');
 button.addEventListener('click', function(){
     stop = document.querySelector('.stop').style.display = 'block';
@@ -63,7 +60,6 @@ button.addEventListener('click', function(){
     button.style.display = 'none';
 })
 
-// if the stop button is clicked, don't display the form
 var stop = document.querySelector('.stop');
 stop.addEventListener('click', function(){
     stop = document.querySelector('.stop').style.display = 'none';
@@ -71,7 +67,18 @@ stop.addEventListener('click', function(){
     div = document.querySelector('.info').style.display = 'block';
     button.style.display = 'block';
 })
-    
+
+// get the image in the input file and display it in the img tag
+var input = document.querySelector('input[type=file]');
+input.addEventListener('change', function(){
+    var file = this.files[0];
+    var reader = new FileReader();
+    reader.addEventListener('load', function(){
+        var img = document.querySelector('img');
+        img.src = reader.result;
+    });
+    reader.readAsDataURL(file);
+})
 </script>
 
     {% endblock %} 
