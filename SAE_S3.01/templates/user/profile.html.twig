@@ -13,6 +13,7 @@
     <div class="row">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="{{ path('photo_user', {'id': app.user.id} ) }}"><span class="font-weight-bold">{{app.user.name}}</span><span class="text-black-50">{{app.user.email}}</span><span> </span></div>
+            <a  class="d-flex flex-column align-items-center text-center" href="{{ path('app_series_index')}}"><button class="btn btn-primary btn-block" type="button">Retour</button></a>
         </div>
         <div class="col-md-5 border-right">
             <div class="p-3 py-5">
@@ -33,6 +34,7 @@
                     <div class="col-md-6"><label class="labels">Photo de profil</label>{{form_row(form.photo)}}</div>
                     <div class="col-md-6"><label class="d-flex flex-column align-items-center text-center py-2">Valider</label> <div class="d-flex flex-column align-items-center text-center">{{form_row(form.agreeTerms)}}<div></div>   
                     <div class="p-3">  {{form_row(form.submit)}}</div>
+                    <div class="p-3"> <button class="btn btn-danger stop" type="button">Annuler</button></div>
                     {{form_end(form)}}              
                 </div>
             </div>
@@ -51,14 +53,24 @@ country.value = {{app.user.country.id}};
 // don't dispay the form
 var form = document.querySelector('.frorm').style.display = 'none';
 var div = document.querySelector('.info').style.display = 'block';
+var stop = document.querySelector('.stop').style.display = 'none';
 // if the button is clicked, display the form
 var button = document.querySelector('.profile-button');
 button.addEventListener('click', function(){
+    stop = document.querySelector('.stop').style.display = 'block';
     form = document.querySelector('.frorm').style.display = 'block';
     div = document.querySelector('.info').style.display = 'none';
     button.style.display = 'none';
 })
 
+// if the stop button is clicked, don't display the form
+var stop = document.querySelector('.stop');
+stop.addEventListener('click', function(){
+    stop = document.querySelector('.stop').style.display = 'none';
+    form = document.querySelector('.frorm').style.display = 'none';
+    div = document.querySelector('.info').style.display = 'block';
+    button.style.display = 'block';
+})
     
 </script>
 

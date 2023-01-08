@@ -4,12 +4,14 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 
 class UserCrudController extends AbstractCrudController
@@ -58,6 +60,18 @@ class UserCrudController extends AbstractCrudController
                 CollectionField::new('roles'),
             ];
         }
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $impersonate = Action::new('impersonate', 'Incarner', 'fas fa-user-secret')
+        ->linkToUrl(function (User $entity) {
+            return 'series/?_switch_user='.$entity->getEmail();
+        })
+    ;
+    return parent::configureActions($actions)
+        ->add(Crud::PAGE_INDEX, $impersonate)
+        ;
     }
     
 }

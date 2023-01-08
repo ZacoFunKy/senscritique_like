@@ -22,8 +22,7 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if($this->getUser()){
-            $role = $this->getUser()->getRoles();
-            var_dump($role);
+            return $this->redirectToRoute('app_default');
         }
 
 

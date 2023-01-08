@@ -8,7 +8,11 @@
 {% if app.user %}
 <div class="action">
       <div class="profile" onclick="menuToggle();">
-        <img src="../images/avatar.png" />
+          {% if app.user.photo is not null %}
+        <img src="{{ path('photo_user', {'id': app.user.id} ) }}" alt="image de profil">
+        {% else %}
+        <img src="{{ asset('images/avatar.png') }}" alt="image de profil">
+        {% endif %}
       </div>
       <div class="menu">
         <ul>
@@ -31,7 +35,7 @@
           {% endif %}
           {% if is_granted('IS_IMPERSONATOR') %}
           <li>
-            <a href="{{ path('admin') }}">Désincarné</a>
+            <a href="{{ impersonation_exit_url() }}">Désincarner</a>
           </li>
           {% endif %}
           <li>

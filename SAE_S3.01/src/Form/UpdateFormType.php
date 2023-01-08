@@ -58,6 +58,7 @@ class UpdateFormType extends AbstractType
             ->add('photo', FileType::class, [
                 'label' => false,
                 'mapped' => false,
+                'required' => false,
                 'constraints' => [
                     new File ([
                         'maxSize' => '1024k',
