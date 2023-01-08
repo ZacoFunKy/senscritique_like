@@ -45,9 +45,9 @@
                         <p id="{{season.number}}" class="episode">{{episode.number}} {{ episode.title}}
                         {% if app.user %}
                             {% if episode in app.user.episode %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0'}) }}"><button>See Again</button></a>
+                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}"><button>See Again</button></a>
                             {% else %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1'}) }}"><button>See</button></a>
+                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}"><button>See</button></a>
                             {% endif %}
                         {% endif %}
                         </p>
@@ -82,11 +82,11 @@
     function changerPage(idSerie, idUser) {
         if (document.getElementById("suivi").checked){
 			alert("Vous suivez cette série");
-            window.location.replace(idSerie+"/set_following/"+"1/1");
+            window.location.replace(idSerie+"/set_following/"+"1/1?numPage={{numPage}}");
             {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1'}) }}); #}
         }
         else {
-            window.location.replace(idSerie+"/set_following/"+"0/1");
+            window.location.replace(idSerie+"/set_following/"+"0/1?numPage={{numPage}}");
 			alert("Vous ne suivez plus cette série");
             {# window.location.replace({{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0'}) }}); #}
         }

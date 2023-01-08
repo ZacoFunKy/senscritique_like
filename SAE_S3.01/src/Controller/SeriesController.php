@@ -102,6 +102,7 @@ class SeriesController extends AbstractController
         $value = 0;
 
         $numPage = Request::createFromGlobals()->query->get('numPage');
+
         if($numPage == NULL){
             $numPage = 1;
         }
@@ -130,7 +131,13 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId()], Response::HTTP_SEE_OTHER);
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+
+        return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
         /*
         return $this->render('series/show.html.twig', [
             'series' => $series
@@ -148,11 +155,17 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+
         if ($redirect == "1"){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
         }
         else{
-            return $this->redirectToRoute('app_user_favorite', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_index', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
         }
 
         /*
