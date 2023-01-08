@@ -42,8 +42,10 @@
                     <div class="col-md-6"><label class="labels">Mot de passe</label>{{form_row(form.plainPassword)}}</div>
                     <div class="col-md-6"><label class="labels">Photo de profil</label>{{form_row(form.photo)}}</div>
                     <div class="col-md-6"><label class="d-flex flex-column align-items-center text-center py-2">Valider</label> <div class="d-flex flex-column align-items-center text-center">{{form_row(form.agreeTerms)}}<div></div>   
-                    <div class="p-3">  {{form_row(form.submit)}}</div>
-                    <div class="p-3"> <button class="btn btn-danger stop" type="button">Annuler</button></div>
+                    <div class="d-flex align-items-center mb-3 p-3">
+                        <div class="submit">  {{form_row(form.submit)}}</div>
+                        <div> <button class="btn btn-danger stop" type="button">Annuler</button></div>
+                    </div>
                     {{form_end(form)}}              
                 </div>
             </div>
@@ -78,7 +80,6 @@ stop.addEventListener('click', function(){
     button.style.display = 'block';
 })
 
-// get the image in the input file and display it in the img tag
 var input = document.querySelector('input[type=file]');
 input.addEventListener('change', function(){
     var file = this.files[0];
@@ -89,6 +90,10 @@ input.addEventListener('change', function(){
     });
     reader.readAsDataURL(file);
 })
+
+var submit = document.querySelector('.submit');
+submit.style.marginRight = '10px';
+
 </script>
 
     {% endblock %} 
