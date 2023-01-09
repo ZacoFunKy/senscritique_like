@@ -80,22 +80,28 @@
                 {% endfor %}
 			</td>
 		</ul>  
-        <h2>Rating</h2>
-        <p>{{rating|length}}</p>
-     
-        <div class="rating">
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <i class="rating__star far fa-star"></i>
-         <input type="text" id="commentaire" placeholder="Commentaire">
-	    <button class="rate">Commente</button>
-        {% for comment in rating %}
-            <p>{{comment.user.name}}</p>
-            <p>{{comment.rating}}</p>
-            <p>{{comment.comment}}</p>
+        <h2>Rating {{rating|length}}</h2>
+        {% if rating is not empty %}
+          <div class="rating">
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <input type="text" id="commentaire" placeholder="Commentaire">
+        <button class="rate">Commente</button>
+      {% endif %}
+      <div class="">
+          {% for review in rating %} 
+          <div class="review_user">
+            <p>{{review.comment}}</p>
+            <p>{{review.user.name}}</p>
+            <p> Note : {{review.value}}</p>
+            <button class="modfier">Modifier</button>
+            <button class="supprimer">Supprimer</button>
+          </div>
         {% endfor %}
+        </div>
     </div>        
 	</div>
 

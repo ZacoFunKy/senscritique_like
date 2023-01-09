@@ -102,7 +102,7 @@ class SeriesController extends AbstractController
         $users = $series->getUser();
         $value = 0;
         
-        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['series' => $series->getId()]);
+        $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
         if($numPage == NULL){
@@ -246,14 +246,20 @@ class SeriesController extends AbstractController
         $respond->setStatusCode(200);
         $respond->send();
 
-        $ranting = new Rating();
-        $ranting->setUser($this->getUser());
-        $ranting->setSeries($series);
-        $ranting->setValue($rate);
-        $ranting->setComment($comment);
-        $ranting->setDate(new \DateTime());
-        $entityManager->persist($ranting);
-        $entityManager->flush();
+        //if the user has already rated this series, update the rating
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $this->getUser(), 'series' => $series]);
+        if($rating != null){
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        }else {
+            $ranting = new Rating();
+            $ranting->setUser($this->getUser());
+            $ranting->setSeries($series);
+            $ranting->setValue($rate);
+            $ranting->setComment($comment);
+            $ranting->setDate(new \DateTime()); 
+            $entityManager->persist($ranting);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
 
