@@ -42,6 +42,8 @@ class PropertySeachType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertySearch::class,
+            'method' => 'get',
+            'csrf_protection' => false,
         ]);
     }
 }

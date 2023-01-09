@@ -88,6 +88,16 @@ class SeriesController extends AbstractController
                 }
                 $series = $queryBuilder->getQuery()->getResult();
             }
+
+            $series = $paginator->paginate($series, $request
+            ->query->getInt('page', 1, 10));
+
+
+            return $this->render('series/index.html.twig', [
+                'series' => $series,
+                'form' => $form->createView(),
+                'pagination' => FALSE,
+            ]);
         }else {
             $series = $entityManager
             ->getRepository(Series::class)
