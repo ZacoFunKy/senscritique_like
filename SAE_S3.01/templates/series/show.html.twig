@@ -21,17 +21,31 @@
 			<p>{{ series.plot }}</p>
 			<p>{{ series.director }}</p>
 		</br>
+		<h2>Genre</h2>
+		<ul>
+			<td>
+				{% for genre in series.genre %}
+					<li>
+						{{ genre.name }}
+					</li>
+				{% endfor %}
+			</td>
+		</ul>
 		<h2>Bande d'annonce</h2>
 		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 		<h2>IMDB</h2>
-		<p><a href=https://www.imdb.com/title/{{series.imdb}}>Page imdb</a></p>
-		<h2>Awards</h2>
+		<p>
+			<a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
+		</p>
+		<h2>Récompense(s)</h2>
 		<p>{{ series.awards }}</p>
-		<h2>YearStart</h2>
+		<h2>Année de début</h2>
 		<p>{{ series.yearStart }}</p>
-		<h2>YearEnd</h2>
-		<p>{{ series.yearEnd }}</p>
-		<h2>Seasons</h2>
+		{% if series.yearEnd != null %}
+			<h2>Année de fin</h2>
+			<p>{{ series.yearEnd }}</p>
+		{% endif %}
+		<h2>Saison(s)</h2>
 		<ul>
 			<td>
 				{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
