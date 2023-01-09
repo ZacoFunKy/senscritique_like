@@ -97,11 +97,12 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series): Response
+    public function show(Series $series, EntityManagerInterface $entityManager): Response
     {
         $users = $series->getUser();
         $value = 0;
-
+        
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['series' => $series->getId()]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
         if($numPage == NULL){
@@ -118,6 +119,7 @@ class SeriesController extends AbstractController
             'series' => $series,
             'valeur' => $value,
             'numPage' => $numPage,
+            'rating' => $rating,
         ]);
     }
 
