@@ -125,7 +125,7 @@
             <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
             <p>{{userReview.user.name}}</p>
             <p>{{userReview.comment}}</p>
-            <p> Note : {{userReview.value}}</p>
+            <p><div class="user_rating jq-stars"></div></p>
             {% if app.user is defined %}
               {% if userReview.user.id == app.user.id %}
                 <button class="modifier">Modifier</button>
@@ -140,7 +140,7 @@
             <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
             <p>{{review.user.name}}</p>
             <p>{{review.comment}}</p>
-            <p> Note : {{review.value}}</p>
+            <p><div class="user_rating jq-stars"></div></p>
             {% if app.user is defined %}
               {% if review.user.id == app.user.id %}
                 <button class="modifier">Modifier</button>
@@ -188,6 +188,20 @@ $(function() {
     totalStars: 5,
     starShape: 'rounded',
     starSize: 40,
+    emptyColor: 'lightgray',
+    hoverColor: 'red',
+    ratedColor: 'yellow',
+    useGradient: false,
+    disableAfterRate: false,
+    initialRating: {{series.rating}},
+    readOnly: true,
+  });
+
+
+    $(".user_rating").starRating({
+    totalStars: 5,
+    starShape: 'rounded',
+    starSize: 15,
     emptyColor: 'lightgray',
     hoverColor: 'red',
     ratedColor: 'yellow',
