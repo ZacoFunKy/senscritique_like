@@ -33,6 +33,9 @@
           <li>
             <a href="{{ path('app_user_history', {'numPage': numPage} ) }}">Mon historique</a>
           </li>
+          <li>
+            <a href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
+          </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>
             <a href="{{ path('admin') }}">Dashboard Admin</a>

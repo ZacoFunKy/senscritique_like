@@ -10,7 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\User;
 use App\Entity\Country;
+use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
+use App\Form\UserSearchFormType;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class UserController extends AbstractController
 {
@@ -76,6 +80,32 @@ class UserController extends AbstractController
     }
 
 
+    #[Route('/user/all', name: 'app_user_show_all')]
+    public function allUser(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findAll();
+        
+        $users = $paginator->paginate($users, $request
+        ->query->getInt('page', 1, 10));
+
+        $userSearch = new UserSearch();
+        $form = $this->createForm(UserSearchFormType::class, $userSearch);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // get the users that contain the search string in their name
+            $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u');
+            $queryBuilder->where('u.name LIKE :name')
+                ->setParameter('name', '%' . $userSearch->getNom() . '%');
+            $users = $queryBuilder->getQuery()->getResult();
+        }
+    
+        return $this->render('user/all.html.twig', [
+            'users' => $users,
+            'form' => $form->createView(),
+            'pagination' => false,
+        ]);
+    }
 
     
 }
