@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Series;
+use App\Entity\Rating;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SeriesType;
@@ -216,9 +217,43 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/poster/{id}', name: 'poster_series_show', methods: ['GET'])]
+    #[Route('/poster/{id}', name: 'poster_series_show', methods: ['GET', 'POST'])]
     public function showPoster(Series $series): Response
     {
     return new Response(stream_get_contents($series->getPoster()), 200, array ('Content-type' => 'image/jpeg'));
+    }
+
+    #[Route('/series/rating/{id}', name: 'rating_series_show', methods: ['GET', 'POST'])]
+    public function showRating(Series $series,
+    EntityManagerInterface $entityManager): Response
+    {
+
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+        $request = Request::createFromGlobals();
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+        $rate = $data['value'];
+        $comment = $data['text'];
+
+        //Respond to the fetch for it to be a 200 
+        $respond = new Response();
+        $respond->setStatusCode(200);
+        $respond->send();
+
+        $ranting = new Rating();
+        $ranting->setUser($this->getUser());
+        $ranting->setSeries($series);
+        $ranting->setValue($rate);
+        $ranting->setComment($comment);
+        $ranting->setDate(new \DateTime());
+        $entityManager->persist($ranting);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+
     }
 }

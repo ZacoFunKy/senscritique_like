@@ -79,8 +79,19 @@
                     {% endfor %}
                 {% endfor %}
 			</td>
-		</ul>          
+		</ul>  
+            <div class="rating">
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <i class="rating__star far fa-star"></i>
+         <input type="text" id="commentaire" placeholder="Commentaire">
+	    <button class="rate">Commente</button>
+         
+    </div>        
 	</div>
+
 	<div id="partDroite">
 		<tr>
 			<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
@@ -91,12 +102,63 @@
 	<a href="{{ path('app_series_index') }}?page={{numPage}}">back to list</a>
 </div></div>{# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}{#  {{ include('series/_delete_form.html.twig') }} #}
 
-    <script>
-    </script>
+<script>
+      const ratingStars = [...document.getElementsByClassName("rating__star")];
 
+function executeRating(stars) {
+  const starClassActive = "rating__star fas fa-star";
+  const starClassInactive = "rating__star far fa-star";
+  const starsLength = stars.length;
+  let i;
+  stars.map((star) => {
+    star.onclick = () => {
+      i = stars.indexOf(star);
 
+      if (star.className===starClassInactive) {
+        for (i; i >= 0; --i) stars[i].className = starClassActive;
+      } else {
+        for (i; i < starsLength; ++i) stars[i].className = starClassInactive;
+      }
+    };
+  });
+}
+executeRating(ratingStars);
+</script>
 
-    <script>
+<script>
+// if the button rate is click then get the number of stars that are active and redirect to /rating/{id}/{value} id: series id value: number of stars
+const rateButton = document.querySelector(".rate");
+rateButton.onclick = () => {
+  const text = document.querySelector("#commentaire").value;
+  const ratingStars = [...document.getElementsByClassName("rating__star")];
+  const starClassActive = "rating__star fas fa-star";
+  const starsLength = ratingStars.length;
+  let i;
+  let value = 0;
+  for (i = 0; i < starsLength; ++i) {
+    if (ratingStars[i].className === starClassActive) {
+      value++;
+    }
+  }
+    const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+    const data = { text: text, value: value };
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+};
+</script>
+<script>
         var select = document.querySelector('select');
         select.addEventListener('change', function() {
             var selected = this.value;
@@ -121,6 +183,6 @@
                 }
             }
         }
-    </script>
+</script>
 
 {% endblock %}
