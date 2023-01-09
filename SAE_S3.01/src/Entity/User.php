@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,6 +77,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $registerDate;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="poster", type="blob", length=0, nullable=true)
+     */
+    private $photo ;
 
     /**
      * @var string|null
@@ -133,6 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->photo = file_get_contents('../public/images/avatar.png');
     }
 
     public function getId(): ?int
@@ -314,6 +322,56 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->isSuperAdmin = $isSuperAdmin;
         return $this;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto($photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->name,
+            $this->registerDate,
+            $this->userId,
+            $this->country,
+            $this->series,
+            $this->episode,
+            $this->roles,
+            $this->admin,
+            $this->isSuperAdmin,
+            $this->photo,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        [
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->name,
+            $this->registerDate,
+            $this->userId,
+            $this->country,
+            $this->series,
+            $this->episode,
+            $this->roles,
+            $this->admin,
+            $this->isSuperAdmin,
+            $this->photo,
+        ] = $data;
     }
 
 }

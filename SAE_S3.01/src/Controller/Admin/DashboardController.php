@@ -21,7 +21,7 @@ class DashboardController extends AbstractDashboardController
     ) {
     }
 
-    #[Route('/admin/dashboard', name: 'admin')]
+    #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
         $routeBuilder = $this->adminUrlGenerator
@@ -44,7 +44,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
             MenuItem::subMenu('Users', 'fa fa-users')->setSubItems([
                 MenuItem::linkToCrud('Permissions', 'fa fa-user', User::class),
-            ])->setPermission('ROLE_ADMIN')
+            ])
             ,
             MenuItem::linkToRoute('Back to site', 'fa fa-home', 'app_series_index'),            
 

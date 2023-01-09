@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="style/styleRegister.css">
+        <link rel="stylesheet" type="text/css" href="style/styleRegiste.css">
 {% endblock %}
 
 {% block body %}
@@ -12,6 +12,7 @@
 	<div id="tout">
 		<header>
 			<a href="{{ path('app_default') }}">Netflop</a>
+			{% include 'header.html.twig' %}
 		</header>
 		<div id="c">
 			<div id="connection">

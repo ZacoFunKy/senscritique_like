@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Series;
+use App\Entity\Rating;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SeriesType;
@@ -96,12 +97,14 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series): Response
+    public function show(Series $series, EntityManagerInterface $entityManager): Response
     {
         $users = $series->getUser();
         $value = 0;
-
+        
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['series' => $series->getId()]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
+
         if($numPage == NULL){
             $numPage = 1;
         }
@@ -116,21 +119,35 @@ class SeriesController extends AbstractController
             'series' => $series,
             'valeur' => $value,
             'numPage' => $numPage,
+            'rating' => $rating,
         ]);
     }
 
     #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
     public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
     {
-        if ($yesno == "1"){
-            $this->getUser()->addEpisode($episode);
-            $entityManager->flush();
-        }else{
-            $this->getUser()->removeEpisode($episode);
-            $entityManager->flush();
-        }
+        if($this->getUser() != null){
 
-        return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId()], Response::HTTP_SEE_OTHER);
+            if ($yesno == "1"){
+                $this->getUser()->addEpisode($episode);
+                $entityManager->flush();
+            }else{
+                $this->getUser()->removeEpisode($episode);
+                $entityManager->flush();
+            }
+
+            $numPage = Request::createFromGlobals()->query->get('numPage');
+
+            if($numPage == NULL){
+                $numPage = 1;
+            }
+
+            return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    } else {
+        return $this->redirectToRoute('app_series_show', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
+
+    }
+
         /*
         return $this->render('series/show.html.twig', [
             'series' => $series
@@ -140,20 +157,32 @@ class SeriesController extends AbstractController
     #[Route('/{series}/set_following/{yesno}/{redirect}', name: 'app_series_show_adds', methods: ['GET'])]
     public function addSerie(Series $series, $yesno, $redirect, EntityManagerInterface $entityManager): Response
     {
-        if ($yesno == "1"){
-            $this->getUser()->addSeries($series);
-            $entityManager->flush();
-        }else{
-            $this->getUser()->removeSeries($series);
-            $entityManager->flush();
-        }
+        $numPage = Request::createFromGlobals()->query->get('numPage');
 
-        if ($redirect == "1"){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
-        }
-        else{
-            return $this->redirectToRoute('app_user_favorite', [], Response::HTTP_SEE_OTHER);
-        }
+        if($numPage == NULL){
+            $numPage = 1;
+        }  
+
+        if($this->getUser() != null){
+
+            if ($yesno == "1"){
+                $this->getUser()->addSeries($series);
+                $entityManager->flush();
+            }else{
+                $this->getUser()->removeSeries($series);
+                $entityManager->flush();
+            }
+
+            if ($redirect == "1"){
+                return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            }
+            else{
+                return $this->redirectToRoute('app_user_favorite', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            }
+    } else {
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+         
+    }
 
         /*
         return $this->render('series/show.html.twig', [
@@ -190,9 +219,43 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/poster/{id}', name: 'poster_series_show', methods: ['GET'])]
+    #[Route('/poster/{id}', name: 'poster_series_show', methods: ['GET', 'POST'])]
     public function showPoster(Series $series): Response
     {
     return new Response(stream_get_contents($series->getPoster()), 200, array ('Content-type' => 'image/jpeg'));
+    }
+
+    #[Route('/series/rating/{id}', name: 'rating_series_show', methods: ['GET', 'POST'])]
+    public function showRating(Series $series,
+    EntityManagerInterface $entityManager): Response
+    {
+
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+        $request = Request::createFromGlobals();
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+        $rate = $data['value'];
+        $comment = $data['text'];
+
+        //Respond to the fetch for it to be a 200 
+        $respond = new Response();
+        $respond->setStatusCode(200);
+        $respond->send();
+
+        $ranting = new Rating();
+        $ranting->setUser($this->getUser());
+        $ranting->setSeries($series);
+        $ranting->setValue($rate);
+        $ranting->setComment($comment);
+        $ranting->setDate(new \DateTime());
+        $entityManager->persist($ranting);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+
     }
 }

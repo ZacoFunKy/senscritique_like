@@ -4,13 +4,15 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-
-
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -27,7 +29,8 @@ class UserCrudController extends AbstractCrudController
             return [
             IdField::new('id')
                 ->onlyOnIndex()
-                ->setSortable(true),
+                ->setSortable(true), 
+            TextField::new('name'),
             EmailField::new('email')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
@@ -46,6 +49,7 @@ class UserCrudController extends AbstractCrudController
             return [
                 IdField::new('id')
                     ->onlyOnIndex(),
+                TextField::new('name'),
                 EmailField::new('email')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
@@ -58,6 +62,32 @@ class UserCrudController extends AbstractCrudController
                 CollectionField::new('roles'),
             ];
         }
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $impersonate = Action::new('impersonate', 'Incarner', 'fas fa-user-secret')
+        ->linkToUrl(function (User $entity) {
+            return 'series/?_switch_user='.$entity->getEmail();
+        })
+    ;
+
+
+    return parent::configureActions($actions)
+        ->add(Crud::PAGE_INDEX, $impersonate)
+        ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action
+                ->setLabel('Supprimer')
+                ->setIcon('fa fa-trash')
+                ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'));
+        })
+        ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action
+                ->setLabel('Modifier')
+                ->setIcon('fa fa-edit');
+        })
+        ;
+        
     }
     
 }
