@@ -13,25 +13,35 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_default')]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        $a = rand(0,234);
+        $b = rand(0,234);
+        while ($b == $a) {
+            $b = rand(0,234);
+        }
+        $c = rand(0,234);
+        while ($c == $a || $c == $b) {
+            $c = rand(0,234);
+        }
+
         $series = $entityManager
             ->getRepository(Series::class)
-            ->findBy([], ['title' => 'ASC']);
+            ->findBy(['id' => [$a, $b, $c]], ['title' => 'ASC']);
 
-        $a = rand(0,sizeof($series)-1);
-        $b = rand(0,sizeof($series)-1);
-        while ($b == $a) {
-            $b = rand(0,sizeof($series)-1);
+        while (sizeof($series) != 3) {
+            $a = rand(0,234);
+            $b = rand(0,234);
+            while ($b == $a) {
+                $b = rand(0,234);
+            }
+            $c = rand(0,234);
+            while ($c == $a || $c == $b) {
+                $c = rand(0,234);
+            }
+
+            $series = $entityManager
+                ->getRepository(Series::class)
+                ->findBy(['id' => [$a, $b, $c]], ['title' => 'ASC']);
         }
-        $c = rand(0,sizeof($series)-1);
-        while ($c == $a || $c == $b) {
-            $c = rand(0,sizeof($series)-1);
-        }
-
-        $a = $series[$a];
-        $b = $series[$b];
-        $c = $series[$c];
-
-        $series = [$a, $b, $c];
 
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',

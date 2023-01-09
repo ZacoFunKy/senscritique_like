@@ -395,4 +395,8 @@ class Series
         return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer,'=')+1);
     }
 
+    public function __toString() {
+        return $this->getId();
+    }
+
 }
