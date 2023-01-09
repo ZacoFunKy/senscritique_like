@@ -10,14 +10,10 @@
 {% block body %}
 	<div id="tout">
 		<header>
-			<a href="{{ path('app_default') }}">Netflop</a>
+			<a href="{{ path('app_default') }}" class="title">Netflop</a>
 			<div id="id">
-				{% if app.user %}
-					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
-				{% else %}
-					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
-					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
-				{% endif %}
+
+				{% include 'header.html.twig' %}
 			</div>
 		</header>
 		<div id="content">

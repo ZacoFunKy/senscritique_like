@@ -1,0 +1,4 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+<a href="{{ path('app_series_index') }}?_switch_user={{ field.value}}">{{ field.formattedValue }}</a>

@@ -11,14 +11,9 @@
 	<div id="tout">
 
 		<header>
-			<a href="{{path('app_default')}}">Netflop</a>
+			<a href="{{path('app_default')}}" class="title">Netflop</a>
 			<div id="id">
-				{% if app.user %}
-					<a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
-				{% else %}
-					<a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
-					<a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
-				{% endif %}
+				{% include 'header.html.twig' %}
 			</div>
 		</header>
 		<div id="content">
@@ -32,8 +27,13 @@
 							<td>{{ series.title }}</td>
 
 							<td>
-								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
-								<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+								{% if numPage is defined %}
+									<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
+									<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+								{% else %}
+									<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+									<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+								{% endif %}	
 							</td>
 						</tr>
 					{% else %}
@@ -41,9 +41,12 @@
 							<td colspan="11">Pas d'autres séries trouvées</td>
 						</tr>
 					{% endfor %}
-					<div class="navigation">
-						{{ knp_pagination_render(series) }}
-					</div>
+				    
+					{% if pagination is defined and pagination == true %}
+						<div class="navigation">
+							{{ knp_pagination_render(series) }}
+						</div>
+					{% endif %}
 				</tbody>
 			</table>
 		</div>
