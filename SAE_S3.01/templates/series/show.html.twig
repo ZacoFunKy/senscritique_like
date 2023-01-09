@@ -42,19 +42,11 @@
 		<p>{{ series.awards }}</p>
 		<h2>Année de début</h2>
 		<p>{{ series.yearStart }}</p>
-<<<<<<< HEAD
 		{% if series.yearEnd != null %}
 			<h2>Année de fin</h2>
 			<p>{{ series.yearEnd }}</p>
 		{% endif %}
 		<h2>Saison(s)</h2>
-=======
-        {% if series.yearEnd is not null %}
-		<h2>YearEnd</h2>
-		<p>{{ series.yearEnd }}</p>
-        {% endif %}
-		<h2>Seasons</h2>
->>>>>>> origin/2.3_2.2
 		<ul>
 			<td>
                 <select name="season" id="season">
