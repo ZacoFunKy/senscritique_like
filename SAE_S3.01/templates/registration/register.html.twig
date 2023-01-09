@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="baba/styleRegister.css">
+	<link rel="stylesheet" type="text/css" href="style/styleRegister.css">
 {% endblock %}
 
 {% block body %}
@@ -30,6 +30,7 @@
 					<p>Accepter les conditions d'utilisation</p>
 					{{ form_row(registrationForm.agreeTerms) }}
 				</div>
+				{{ form_row(registrationForm.captcha) }}
 				<button type="submit" class="btn">Entrer</button>
 				{{ form_end(registrationForm) }}
 			</div>
