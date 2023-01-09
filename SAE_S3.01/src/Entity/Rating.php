@@ -23,9 +23,10 @@ class Rating
     private $id;
 
     /**
-     * @var int
+     * @var float
+     * 
      *
-     * @ORM\Column(name="value", type="integer", nullable=false)
+     * @ORM\Column(name="value", type="float", nullable=false)
      */
     private $value;
 

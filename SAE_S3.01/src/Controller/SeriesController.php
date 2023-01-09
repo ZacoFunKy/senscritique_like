@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Series;
+use App\Entity\User;
 use App\Entity\Rating;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
@@ -248,8 +249,11 @@ class SeriesController extends AbstractController
 
         //if the user has already rated this series, update the rating
         $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $this->getUser(), 'series' => $series]);
-        if($rating != null){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        if ($rating != null){
+            $rating->setValue($rate);
+            $rating->setComment($comment);
+            $rating->setDate(new \DateTime());
+            $entityManager->flush();
         }else {
             $ranting = new Rating();
             $ranting->setUser($this->getUser());
@@ -263,5 +267,23 @@ class SeriesController extends AbstractController
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
 
+    }
+
+    #[Route('/series/rating/{id}/{user}/delete', name: 'rating_series_delete', methods: ['GET', 'POST'])]
+    public function deleteRating(Series $series, EntityManagerInterface $entityManager, User $user){
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        if ($rating != null){
+            $entityManager->remove($rating);
+            $entityManager->flush();
+        }
+
+
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
 }
