@@ -19,6 +19,40 @@
 		<div id="content">
 			<h1>Catalogue</h1>
 
+{% if form is defined %}
+  {{ form_start(form) }}
+ 
+  {{ form_widget(form) }}
+  <input type="submit" value="Rechercher" />
+
+  <style>
+  input[type="text"]{
+    width: 20%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-size: 16px;
+    color: black;
+  }
+
+  input[value="Rechercher"]{
+        background-color: #f44336;
+            border: none;
+            color: black;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            margin-bottom: 15px;
+  }
+
+  </style>
+ {{ form_end(form) }}
+ {% endif %}
 			<table class="table">
 				<tbody id="afficheSeries">
 					{% for series in series %}

@@ -10,7 +10,7 @@
 
 
 
-{% if app.user %}
+{% if app.user is not null %}
 <div class="action">
       <div class="profile" onclick="menuToggle();">
           {% if app.user.photo is not null %}
