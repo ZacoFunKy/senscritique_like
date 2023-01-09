@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="/style/styleLogin.css">
+	<link rel="stylesheet" type="text/css" href="/style/styleLogin.css">
 {% endblock %}
 
 {% block body %}
@@ -24,7 +24,10 @@
 					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 					<input class="btn" name="connexion" type="submit" value="Connexion">
 					{% if error %}
-						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+						<div class="alert alert-danger">Identifiants invalides.<br/>
+							Voulez-vous vous
+							<a href="{{ path('app_register') }}">inscrire</a>
+							?</div>
 					{% endif %}
 					{% if app.user %}
 						<div class="mb-3">
