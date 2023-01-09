@@ -33,17 +33,60 @@ class SeriesController extends AbstractController
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if ($form->isSubmitted() && $form->isValid()) {
             $name = $propertySearch->getNom();
+            $avis = $propertySearch->getAvis();
             if ($name) {
-                // if name is contained in the title of a series
-                $queryBuilder->where('s.title LIKE :name')
-                    ->setParameter('name', '%'.$name.'%');
+                switch ($avis) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->andWhere('s.rating BETWEEN :rating-1 AND :rating+1')
+                            ->setParameter('name', '%'.$name.'%')
+                            ->setParameter('rating', $avis);
+                        break;
+                    case 'ASC':
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->orderBy('s.rating', 'ASC')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+                    case 'DESC':
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->orderBy('s.rating', 'DESC')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+                    default:
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+
+                }
                 $series = $queryBuilder->getQuery()->getResult();
             }
             else {
-                $series = $entityManager
-                ->getRepository(Series::class)
-                ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
-                
+                switch($avis) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
+                            ->setParameter('rating', $avis);
+                        break;
+                    case 'ASC':
+                        $queryBuilder->orderBy('s.rating', 'ASC');
+                        break;
+                    case 'DESC':
+                        $queryBuilder->orderBy('s.rating', 'DESC');
+                        break;
+                    case null:
+                        $series = $entityManager
+                        ->getRepository(Series::class)
+                        ->findBy([], ['title' => 'ASC']);
+                        break;
+                }
+                $series = $queryBuilder->getQuery()->getResult();
             }
         }else {
             $series = $entityManager
@@ -271,7 +314,7 @@ class SeriesController extends AbstractController
         }
         $series->setRating($sum / count($ratings));
         $entityManager->flush();
-        
+
 
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
