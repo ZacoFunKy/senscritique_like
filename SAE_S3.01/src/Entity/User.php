@@ -188,7 +188,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->registerDate;
     }
-
     public function setRegisterDate(?\DateTimeInterface $registerDate): self
     {
         $this->registerDate = $registerDate;
