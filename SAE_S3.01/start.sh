@@ -1,5 +1,4 @@
 #!/bin/bash
-
 database="shows"
 # Menu witch three options
 PS3='Please enter your choice: '

@@ -12,7 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -29,7 +29,8 @@ class UserCrudController extends AbstractCrudController
             return [
             IdField::new('id')
                 ->onlyOnIndex()
-                ->setSortable(true),
+                ->setSortable(true), 
+            TextField::new('name'),
             EmailField::new('email')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
@@ -48,6 +49,7 @@ class UserCrudController extends AbstractCrudController
             return [
                 IdField::new('id')
                     ->onlyOnIndex(),
+                TextField::new('name'),
                 EmailField::new('email')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
