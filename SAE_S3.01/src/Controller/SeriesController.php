@@ -247,7 +247,6 @@ class SeriesController extends AbstractController
         $respond->setStatusCode(200);
         $respond->send();
 
-        //if the user has already rated this series, update the rating
         $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $this->getUser(), 'series' => $series]);
         if ($rating != null){
             $rating->setValue($rate);

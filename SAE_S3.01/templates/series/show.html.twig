@@ -192,7 +192,6 @@ $(function() {
 
 var buttonReset = document.querySelector(".reset_rating");
 buttonReset.onclick = () => {
-    console.log("reset");
   $(".my-rating").starRating('unload');
   // grab the first 5 divs with the class name jq-star and delete them
   const stars = [...document.getElementsByClassName("jq-star")];
@@ -216,8 +215,8 @@ buttonReset.onclick = () => {
 <script>
 const rateButton = document.querySelector(".rate");
 rateButton.onclick = () => {
-  console.log("rate");
   let valeur = $(".my-rating").starRating('getRating');
+  console.log(valeur);
   let text = document.querySelector("#commentaire").value;
   const url = "{{ path('rating_series_show', {'id': series.id}) }}";
   const data = {value: valeur, text: text};
