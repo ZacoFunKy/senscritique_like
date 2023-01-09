@@ -55,6 +55,12 @@
 				{% endfor %}
 			</td>
 		</ul>
+    <h2>Avis</h2>
+		<ul>
+			<td>
+        <div class="series_rating jq-stars"></div>
+			</td>
+		</ul>
 		<h2>Bande d'annonce</h2>
 		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 		<h2>IMDB</h2>
@@ -177,6 +183,19 @@ buttonSuppr.addEventListener("click", () => {
 </script>
 <script>
 $(function() {
+
+  $(".series_rating").starRating({
+    totalStars: 5,
+    starShape: 'rounded',
+    starSize: 40,
+    emptyColor: 'lightgray',
+    hoverColor: 'red',
+    ratedColor: 'yellow',
+    useGradient: false,
+    disableAfterRate: false,
+    initialRating: {{series.rating}},
+    readOnly: true,
+  });
 
   $(".my-rating").starRating({
   totalStars: 5,

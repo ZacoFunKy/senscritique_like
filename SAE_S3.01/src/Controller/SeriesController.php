@@ -264,6 +264,16 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $sum = 0;
+        foreach ($ratings as $rating){
+            $sum += $rating->getValue();
+        }
+        $series->setRating($sum / count($ratings));
+        $entityManager->flush();
+        
+
+
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
 
     }
