@@ -15,8 +15,7 @@ body {
 }
 header {
     display: flex;
-    align-items: center;
-    justify-content: left;
+    justify-content: space-between;
     background: linear-gradient(black 10%, transparent);
 }
 header * {
