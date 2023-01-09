@@ -48,4 +48,11 @@ class DefaultController extends AbstractController
             'series' => $series,
         ]);
     }
+    #[Route('/about', name: 'app_about')]
+    public function about(): Response
+    {
+        return $this->render('default/about.html.twig', [
+            'controller_name' => 'DefaultController',
+        ]);
+    }
 }
