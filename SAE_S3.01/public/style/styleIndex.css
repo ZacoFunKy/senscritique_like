@@ -27,7 +27,7 @@ header {
 header * {
     margin: 2%;
 }
-header a {
+header .title {
     color: #f44336;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 3vw;
