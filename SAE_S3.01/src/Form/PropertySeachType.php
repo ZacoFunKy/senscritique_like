@@ -15,7 +15,6 @@ class PropertySeachType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('nom', TextType::class)
         ->add('genre', ChoiceType::class, [
             'required' => false,
             'choices' => [
@@ -63,6 +62,27 @@ class PropertySeachType extends AbstractType
                 'label' => false
             ])*/
 
+                ->add('nom', TextType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Rechercher une série'
+                ]
+            ]
+            )
+                ->add('avis', ChoiceType::class, [
+                'required' => false,
+                'choices' => [
+                    'Tous' => null,
+                    'Croissant' => 'ASC',
+                    'Décroissant' => 'DESC',
+                    '5 étoiles' => 5,
+                    '4 étoiles' => 4,
+                    '3 étoiles' => 3,
+                    '2 étoiles' => 2,
+                    '1 étoile' => 1,
+                ],
+            ])
         ;
     }
 
@@ -70,6 +90,8 @@ class PropertySeachType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertySearch::class,
+            'method' => 'get',
+            'csrf_protection' => false,
         ]);
     }
 }

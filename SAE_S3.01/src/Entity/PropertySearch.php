@@ -9,6 +9,7 @@ class PropertySearch
     private $anneeDeSortie;
     private $genre;
 
+    private $avis;
    
     public function getNom(): ?string
     {
@@ -41,8 +42,23 @@ class PropertySearch
  
     public function setGenre(string $genre): self
     {
-        $this->genre = $genre    ;
+        $this->genre = $genre;
  
         return $this;
     }
+    public function getAvis(): ?string
+    {
+         return $this->avis;
+    }
+
+    public function setAvis(string $avis): self
+    {
+        $this->avis = $avis;
+
+        return $this;
+    }
+
+
+
+
 }
