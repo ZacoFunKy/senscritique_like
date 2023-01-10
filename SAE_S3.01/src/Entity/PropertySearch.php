@@ -5,18 +5,44 @@ namespace App\Entity;
 class PropertySearch
 {
 
-   private $nom;
+    private $nom;
+    private $anneeDeSortie;
+    private $genre;
 
    
-   public function getNom(): ?string
-   {
-       return $this->nom;
-   }
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+ 
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom    ;
+ 
+        return $this;
+    }
 
-   public function setNom(string $nom): self
-   {
-       $this->nom = $nom    ;
+    public function getAnneeDeSortie(): ?string
+    {
+        return $this->anneeDeSortie;
+    }
+ 
+    public function setAnneeDeSortie(string $anneeDeSortie): self
+    {
+        $this->anneeDeSortie = $anneeDeSortie    ;
+ 
+        return $this;
+    }
 
-       return $this;
-   }
+    public function getGenre(): ?string
+    {
+        return $this->genre;
+    }
+ 
+    public function setGenre(string $genre): self
+    {
+        $this->genre = $genre    ;
+ 
+        return $this;
+    }
 }

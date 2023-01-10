@@ -21,10 +21,10 @@
 
 {% if form is defined %}
   {{ form_start(form) }}
- 
+	
   {{ form_widget(form) }}
   <input type="submit" value="Rechercher" />
-
+  
   <style>
   input[type="text"]{
     width: 20%;
@@ -53,6 +53,7 @@
   </style>
  {{ form_end(form) }}
  {% endif %}
+ 	
 			<table class="table">
 				<tbody id="afficheSeries">
 					{% for series in series %}
@@ -81,6 +82,7 @@
 							{{ knp_pagination_render(series) }}
 						</div>
 					{% endif %}
+					
 				</tbody>
 			</table>
 		</div>

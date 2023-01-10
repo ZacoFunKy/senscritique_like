@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
@@ -31,12 +30,21 @@ class SeriesController extends AbstractController
 
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if ($form->isSubmitted() && $form->isValid()) {
+            $genre=$propertySearch->getGenre();
+            $anneeDeSortie=$propertySearch->getAnneeDeSortie();
             $name = $propertySearch->getNom();
             if ($name) {
-                // if name is contained in the title of a series
-                $queryBuilder->where('s.title LIKE :name')
+                if (strlen($propertySearch->getNom())<4){
+                    // On affiche les séries commençant par $name
+                    $queryBuilder->where('s.title LIKE :name')
+                        ->setParameter('name', $name.'%');
+                    $series = $queryBuilder->getQuery()->getResult();
+                }else{
+                    // On affiche les séries contenant $name
+                    $queryBuilder->where('s.title LIKE :name')
                     ->setParameter('name', '%'.$name.'%');
-                $series = $queryBuilder->getQuery()->getResult();
+                    $series = $queryBuilder->getQuery()->getResult(); 
+                }
             }
             else {
                 $series = $entityManager
