@@ -140,7 +140,7 @@
             <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
             <p>{{userReview.user.name}}</p>
             <p>{{userReview.comment}}</p>
-            <p><div class="user_rating jq-stars"></div></p>
+            <p><div class="user_rating jq-stars" id= "{{userReview.user.id}}"></div></p>
             {% if app.user is defined %}
               {% if userReview.user.id == app.user.id %}
                 <button class="modifier">Modifier</button>
@@ -157,7 +157,7 @@
             <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
             <p>{{review.user.name}}</p>
             <p>{{review.comment}}</p>
-            <p><div class="user_rating jq-stars"></div></p>
+            <p><div class="user_rating jq-stars" id= "{{review.user.id}}"></div></p>
             {% if app.user is defined %}
               {% if review.user.id == app.user.id %}
                 <button class="modifier">Modifier</button>
@@ -210,6 +210,34 @@ buttonSuppr.addEventListener("click", () => {
 </script>
 {% endif %}
 
+
+{% if ratingCollection is defined and ratingCollection is not null %}
+  <script>
+  // Go through the rating collection and add for each user create a $('#userid').starRating
+  rateCollection = {{ratingCollection|json_encode|raw}};
+  for (var i = 0; i < rateCollection.length; i++) {
+    var user = rateCollection[i];
+    var id = user.id;
+    var rating = user.rating;
+    var selector = "#" + id;
+    $(selector).starRating({
+      totalStars: 5,
+      starShape: 'rounded',
+      starSize: 15,
+      emptyColor: 'lightgray',
+      hoverColor: 'red',
+      ratedColor: 'yellow',
+      useGradient: false,
+      disableAfterRate: false,
+      initialRating: rating,
+      readOnly: true,
+    });
+  }
+  </script>
+{% endif %}
+
+
+
 <script>
   $(".series_rating").starRating({
     totalStars: 5,
@@ -224,7 +252,8 @@ buttonSuppr.addEventListener("click", () => {
     readOnly: true
   });
 
-    $(".user_rating").starRating({
+
+  $(".user_rating").starRating({
     totalStars: 5,
     starShape: 'rounded',
     starSize: 15,
@@ -236,6 +265,7 @@ buttonSuppr.addEventListener("click", () => {
     initialRating: {{series.rating}},
     readOnly: true,
   });
+
 
   $(".my-rating").starRating({
   totalStars: 5,
