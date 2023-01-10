@@ -116,6 +116,7 @@
 		</ul>  
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
+          {% if app.user.id is defined and app.user.id is not null %}
           {% set hasAlreadyRated = false %}
           {% set userReview = null %}
           {% for review in rating %}
@@ -131,7 +132,9 @@
               <button class="rate">Commente</button>
             </div>
         {% endif %}
+        {% endif %}
       <div class="">
+      {% if app.user.id is defined and app.user.id is not null %}
         {% if userReview is not null %}
           <div class="review_user">
             <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
@@ -144,8 +147,10 @@
                 <button class="supprimer">Supprimer</button>
               {% endif %}
             {% endif %}
+          {% endif %}
           </div>
           {% endif %}
+          {% if app.user.id is defined and app.user.id is not null %}
           {% for review in rating %}
           {% if review != userReview %} 
           <div class="review_user">
@@ -162,6 +167,17 @@
           {% endif %}
           </div>
         {% endfor %}
+        {% else %}
+        {% for review in rating %}
+          <div class="review_user">
+            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            <p>{{review.user.name}}</p>
+            <p>{{review.comment}}</p>
+            <p><div class="user_rating jq-stars"></div></p>
+          </div>
+        {% endfor %}
+        {% endif %}
+
         </div>
     </div> 
 	</div>
@@ -175,7 +191,7 @@
 	<a href="{{ path('app_series_index') }}?page={{numPage}}">back to list</a>
 </div>
 </div>
-
+{% if app.user.id is defined and app.user.id is not null %}
 <script>
 if ({{hasAlreadyRated}}) {
   document.querySelector(".give_rating").style.display = "none";
@@ -192,6 +208,8 @@ buttonSuppr.addEventListener("click", () => {
   window.location.href = "{{ path('rating_series_delete', {'id': series.id, 'user': app.user.id}) }}";
 });
 </script>
+{% endif %}
+
 <script>
   $(".series_rating").starRating({
     totalStars: 5,
