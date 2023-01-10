@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\User;
 use App\Entity\Country;
+use App\Entity\Rating;
 use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
 use App\Form\UserSearchFormType;
@@ -48,13 +49,15 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/profile', name: 'app_user_profile')]
-    public function profile(EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/user/profile/{id}', name: 'app_user_profile')]
+    public function profile( $id, EntityManagerInterface $entityManager, Request $request): Response
     {
         $form = $this->createForm(UpdateFormType::class, $this->getUser());
         $form->handleRequest($request);
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
+        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('photo')->getData();
@@ -70,6 +73,8 @@ class UserController extends AbstractController
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
             'countries' => $countries,
+            'ratings' => $ratings,
+            'user' => $user[0],
         ]);
     }
 
