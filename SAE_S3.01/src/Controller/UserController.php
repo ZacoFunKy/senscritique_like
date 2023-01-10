@@ -56,7 +56,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
-        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id]);
+        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -74,7 +74,7 @@ class UserController extends AbstractController
             'form' => $form->createView(),
             'countries' => $countries,
             'ratings' => $ratings,
-            'user' => $user[0],
+            'user' => $user,
         ]);
     }
 

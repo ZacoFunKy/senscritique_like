@@ -67,7 +67,7 @@
 							</td>
 							<td>{{ user.name }}</td>
 							<td>
-									<a class="boutonModif" href="#">Afficher</a>
+								<a class="boutonModif" href="{{ path('app_user_profile', {'id': user.id} ) }}">Afficher</a>
 							</td>
 						</tr>
 					{% else %}

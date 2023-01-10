@@ -13,12 +13,12 @@
     <div class="row">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-            {% if app.user.photo is not null %}
-            <img class="rounded-circle mt-5" width="150px" src="{{ path('photo_user', {'id': app.user.id} ) }}">
+            {% if user.photo is not null %}
+            <img class="rounded-circle mt-5" width="150px" src="{{ path('photo_user', {'id': user.id} ) }}">
             {% else %}
             <img class="rounded-circle mt-5" width="150px" src="../images/avatar.png">
             {% endif %}
-            <span class="font-weight-bold">{{app.user.name}}</span><span class="text-black-50">{{app.user.email}}</span><span> </span></div>
+            <span class="font-weight-bold">{{user.name}}</span><span class="text-black-50">{{user.email}}</span><span> </span></div>
             <a  class="d-flex flex-column align-items-center text-center" href="{{ path('app_series_index')}}"><button class="btn btn-primary btn-block" type="button">Retour</button></a>
         </div>
         <div class="col-md-5 border-right">
@@ -27,9 +27,9 @@
                     <h4 class="text-right">Mon compte</h4>
                 </div>
                 <div class="row mt-2 info">
-                    <div class="col-md-6"><label class="labels">Nom :</label><br>{{app.user.name}}</div>
-                    <div class="col-md-6"><label class="labels">Email :</label><br>{{app.user.email}}</div>
-                    <div class="col-md-6"><label class="labels">Pays :</label><br>{{app.user.country}}</div>
+                    <div class="col-md-6"><label class="labels">Nom :</label><br>{{user.name}}</div>
+                    <div class="col-md-6"><label class="labels">Email :</label><br>{{user.email}}</div>
+                    <div class="col-md-6"><label class="labels">Pays :</label><br>{{user.country}}</div>
                 </div>
                 {% if is_granted('IS_IMPERSONATOR') %}
 
@@ -50,7 +50,9 @@
                 </div>
             </div>
         </div>
-        <button class="mt-4 btn btn-primary profile-button" type="button">Modifier mon compte</button>
+        {% if user == app.user %}
+            <button class="mt-4 btn btn-primary profile-button" type="button">Modifier mon compte</button>
+        {% endif %}
     </div>
     {% endif %}
 
@@ -75,7 +77,7 @@
     <h1>Vos séries favorites</h1>
     <table class="table">
         <tbody id="afficheSeries">
-            {% for series in app.user.series %}
+            {% for series in user.series %}
                 <tr id="serie">
                     <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
                     <td>{{ series.title }}</td>
@@ -97,9 +99,34 @@
 </div>
 
 
+
+<div id="history">
+    {% for episode in user.episode %}
+        <tr id="serie">
+            <td>{{episode.season.series.title}}</td>
+            <td><img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/></td>
+            <td>{{episode.number}} {{ episode.title }}</td>
+
+            <td>
+                <a class="boutonModif" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
+                {% if user == app.user %}
+                    <a class="boutonModif" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="11">Aucune série trouvée.</td>
+        </tr>
+    {% endfor %}
+</div>
+
+
+
+
 <script>
 var country = document.querySelector('select');
-country.value = {{app.user.country.id}};
+country.value = {{user.country.id}};
 
 var form = document.querySelector('.frorm').style.display = 'none';
 var div = document.querySelector('.info').style.display = 'block';
