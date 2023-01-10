@@ -44,7 +44,7 @@ class SeriesController extends AbstractController
                 ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
                 
             }
-        }else {
+        } else {
             $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
@@ -110,9 +110,9 @@ class SeriesController extends AbstractController
         }
 
         foreach($users as $user) {
-            if($user == $this->getUser()){
-                $value = 1;            
-            } 
+            if( $user == $this->getUser()) {
+                $value = 1;
+            }
         }
 
         return $this->render('series/show.html.twig', [
