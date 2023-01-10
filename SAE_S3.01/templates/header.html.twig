@@ -25,13 +25,16 @@
             <p style="color:black">Bonjour {{ app.user.name }}</p>
           </li>
           <li>
-            <a href="{{ path('app_user_profile') }}">Mon compte</a>
+            <a href="{{ path('app_user_profile', {'id': app.user.id} ) }}">Mon compte</a>
           </li>
           <li>
             <a href="{{ path('app_user_favorite', {'numPage': numPage} )}}">Mes séries favorites</a>
           </li>
           <li>
             <a href="{{ path('app_user_history', {'numPage': numPage} ) }}">Mon historique</a>
+          </li>
+          <li>
+            <a href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
           </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>
