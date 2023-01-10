@@ -59,7 +59,9 @@ class UserCrudController extends AbstractCrudController
                 BooleanField::new('isSuperAdmin')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
-                CollectionField::new('roles'),
+                CollectionField::new('roles')
+                    ->setFormTypeOptions(['disabled' => true])
+                    ->setPermission('ROLE_SUPER_ADMIN'),
             ];
         }
     }

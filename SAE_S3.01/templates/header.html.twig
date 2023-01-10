@@ -25,13 +25,16 @@
             <p style="color:black">Bonjour {{ app.user.name }}</p>
           </li>
           <li>
-            <a href="{{ path('app_user_profile') }}">Mon compte</a>
+            <a href="{{ path('app_user_profile', {'id': app.user.id} ) }}">Mon compte</a>
           </li>
           <li>
             <a href="{{ path('app_user_favorite', {'numPage': numPage} )}}">Mes séries favorites</a>
           </li>
           <li>
             <a href="{{ path('app_user_history', {'numPage': numPage} ) }}">Mon historique</a>
+          </li>
+          <li>
+            <a href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
           </li>
           {% if is_granted('ROLE_ADMIN') %}
           <li>
@@ -57,13 +60,17 @@
       <div class="menu">
         <ul>
           <li>
-            <a href="{{ path('app_login') }}">Connexion</a>
+            <a class="option" href="{{ path('app_login') }}">Connexion</a>
           </li>
           <li>
-            <a href="{{ path('app_register') }}">Créer un compte</a>
+            <a class="option" href="{{ path('app_register') }}">Créer un compte</a>
           </li>
           <li>
-           <a href="{{ path('app_series_index') }}">Catalogue</a>
+           <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
+           </li>
+           <li>
+            <a class="option" href="{{ path('app_about') }}">A propos</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -111,7 +118,7 @@
     top: 120px;
     right: -10px;
     padding: 10px 20px;
-    background: #fff;
+    background: black;
     width: 200px;
     box-sizing: 0 5px 25px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
@@ -133,7 +140,7 @@
     right: 28px;
     width: 20px;
     height: 20px;
-    background: #fff;
+    background: #f44336;
     transform: rotate(45deg);
   }
   
@@ -155,7 +162,7 @@
   
   .action .menu ul li {
     list-style: none;
-    padding: 16px 0;
+    padding: 2% 0;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
@@ -175,13 +182,20 @@
   .action .menu ul li a {
     display: inline-block;
     text-decoration: none;
-    color: #555;
+    color: white;
     font-weight: 500;
     transition: 0.5s;
   }
   
   .action .menu ul li:hover a {
-    color: red;
+    color: #f44336;
+  }
+
+  .option{
+    background-color: #424242;
+    padding:2vh 2vh;
+    width: 200px;
+    border-radius: 10px;
   }
 
   #id a {
