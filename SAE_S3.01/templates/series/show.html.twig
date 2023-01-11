@@ -4,220 +4,226 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="../style/styleShowS.css">
+<link rel="stylesheet" type="text/css" href="../style/styleShowS.css">
 {% endblock %}
 
 {% block javascripts %}
-	<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block body %}
 
-	<div id="tout">
-		<header>
-			<a href="{{path('app_series_index') }}?page={{numPage}}" class="title">Netflop</a>
-			{% include 'header.html.twig' %}
-			<style>
-				header a p {
-					color: #f44336;
-					font-family: 'Bebas Neue', sans-serif;
-					font-size: 3vw;
-					letter-spacing: 4px;
-					text-shadow: 5px 3px 10px rgb(0, 0, 0);
-					text-decoration: none;
-				}
-			</style>
-		</header>
-		<div id="content">
-			<div id="partGauche">
-				{% if app.user.id is defined %}
-					{% if valeur == 1 %}
-						<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0','redirect': "1",'numPage': numPage}) }}">
-							<i class="fa-solid fa-star fa-2xl" style="color:yellow"></i>
-						</a>
-					{% else %}
-						<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1','redirect': "1", 'numPage': numPage}) }}">
-							<i class="fa-regular fa-star fa-2xl" style="color:yellow"></i>
-						</a>
-					{% endif %}
-				{% endif %}
-				<p id="titre">{{ series.title }}</p>
+<div id="tout">
+	<header>
+		<a href="{{path('app_series_index') }}?page={{numPage}}" class="title">Netflop</a>
+		{% include 'header.html.twig' %}
+
+	</header>
+	<div id="content">
+		<div id="partGauche">
+			{% if app.user.id is defined %}
+			{% if valeur == 1 %}
+			<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0','redirect': " 1",'numPage':
+				numPage}) }}">
+				<i class="fa-solid fa-star fa-2xl" style="color:yellow"></i>
+			</a>
+			{% else %}
+			<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1','redirect': " 1", 'numPage' :
+				numPage}) }}">
+				<i class="fa-regular fa-star fa-2xl" style="color:yellow"></i>
+			</a>
+			{% endif %}
+			{% endif %}
+			<p id="titre">{{ series.title }}</p>
 			</br>
 			<p>{{ series.plot }}</p>
 			<p>{{ series.director }}</p>
-		</br>
-		<h2>Genre</h2>
-		<ul>
-			<td>
-				{% for genre in series.genre %}
+			</br>
+			<h2>Genre</h2>
+			<ul>
+				<td>
+					{% for genre in series.genre %}
 					<li>
 						{{ genre.name }}
 					</li>
-				{% endfor %}
-			</td>
-		</ul>
-		<h2>Bande d'annonce</h2>
-		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-		<h2>IMDB</h2>
-		<p>
-			<a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
-		</p>
-		<h2>Récompense(s)</h2>
-		<p>{{ series.awards }}</p>
-		<h2>Année de début</h2>
-		<p>{{ series.yearStart }}</p>
-		<h2>Année de fin</h2>
-		{% if series.yearEnd is not null %}
+					{% endfor %}
+				</td>
+			</ul>
+			<h2>Bande d'annonce</h2>
+			<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen></iframe>
+			<h2>IMDB</h2>
+			<p>
+				<a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
+			</p>
+			<h2>Récompense(s)</h2>
+			<p>{{ series.awards }}</p>
+			<h2>Année de début</h2>
+			<p>{{ series.yearStart }}</p>
+			<h2>Année de fin</h2>
+			{% if series.yearEnd is not null %}
 			<p>{{ series.yearEnd }}</p>
-		{% else %}
+			{% else %}
 			<p>En cours</p>
-		{% endif %}
-		<h2>Seasons</h2>
-		<ul>
-			<td>
-				<div class="w-25 mb-3">
-					<select name="season" id="season" class="form-select">
-						{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-							<option value="{{ season.number }}">Saison
-								{{ season.number }}</option>
+			{% endif %}
+			<div id="critique">
+				<h2>Critique(s) (
+					{{rating|length}}
+					)</h2>
+				{% if rating is not empty %}
+				<div class="rating">
+					<i class="rating__star far fa-star"></i>
+					<i class="rating__star far fa-star"></i>
+					<i class="rating__star far fa-star"></i>
+					<i class="rating__star far fa-star"></i>
+					<i class="rating__star far fa-star"></i>
+					<input type="text" id="commentaire" placeholder="Commentaire">
+					<button class="rate">Commente</button>
+					{% endif %}
+					<div class="a">
+						{% for review in rating %}
+						<div class="review_user">
+							<p>{{review.comment}}</p>
+							<p>{{review.user.name}}</p>
+							<p>
+								Note :
+								{{review.value}}</p>
+							<button class="modfier">Modifier</button>
+							<button class="supprimer">Supprimer</button>
+						</div>
 						{% endfor %}
-					</select>
+					</div>
 				</div>
-				{% for season in series.seasons %}
-					{% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
-						<p id="{{season.number}}" class="episode">{{episode.number}}
-							{{ episode.title}}
-							{% if app.user %}
-								{% if episode in app.user.episode %}
-									<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
+			</div>
+		</div>
+
+		<div id="partDroite">
+			<tr>
+				<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}" /></td>
+			</tr>
+			<div id="saison">
+				<h2>Saison(s)</h2>
+				<ul>
+					<td>
+						<div class="w-25 mb-3">
+							<select name="season" id="season" class="form-select">
+								<option value="" selected></option>
+								{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+									<option value="{{ season.number }}">Saison
+										{{ season.number }}</option>
+									{% endfor %}
+							</select>
+						</div>
+							<ul>
+							{% for season in series.seasons %}
+							<div id="{{season.number}}" class="seasonEpisode">
+							{% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
+							
+								<li id="{{season.number}}" class="episode"> Episode {{episode.number}}
+									{{ episode.title}}
+									{% if app.user %}
+									{% if episode in app.user.episode %}
+									<a class="episode_see_button"
+										href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
 										<i class="fa-solid fa-eye fa-xl"></i>
 									</a>
-								{% else %}
-									<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
+									{% else %}
+									<a class="episode_see_button"
+										href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
 										<i class="fa-solid fa-eye-slash fa-xl"></i>
 									</a>
-								{% endif %}
-							{% endif %}
-						</p>
-					{% endfor %}
-				{% endfor %}
-			</td>
-		</ul>
-		<h2>Rating
-			{{rating|length}}</h2>
-		{% if rating is not empty %}
-			<div class="rating">
-				<i class="rating__star far fa-star"></i>
-				<i class="rating__star far fa-star"></i>
-				<i class="rating__star far fa-star"></i>
-				<i class="rating__star far fa-star"></i>
-				<i class="rating__star far fa-star"></i>
-				<input type="text" id="commentaire" placeholder="Commentaire">
-				<button class="rate">Commente</button>
-			{% endif %}
-			<div class="">
-				{% for review in rating %}
-					<div class="review_user">
-						<p>{{review.comment}}</p>
-						<p>{{review.user.name}}</p>
-						<p>
-							Note :
-							{{review.value}}</p>
-						<button class="modfier">Modifier</button>
-						<button class="supprimer">Supprimer</button>
-					</div>
-				{% endfor %}
+									{% endif %}
+									{% endif %}
+								</li>
+								</br>
+								{% endfor %}
+							</div>
+								{% endfor %}
+							</ul>		
+					</td>
+				</ul>
 			</div>
 		</div>
 	</div>
-
-	<div id="partDroite">
-		<tr>
-			<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-		</tr>
+	<div id="bouton">
+		<a href="{{ path('app_series_index') }}?page={{numPage}}">back to list</a>
 	</div>
-</div>
-<div id="bouton">
-	<a href="{{ path('app_series_index') }}?page={{numPage}}">back to list</a>
-</div></div>{# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}{#  {{ include('series/_delete_form.html.twig') }} #}<script>
-const ratingStars = [...document.getElementsByClassName("rating__star")];
+</div>{# <a href="{{ path('app_series_edit', {'id': series.id}) }}">edit</a> #}{# {{
+include('series/_delete_form.html.twig') }} #}
+<script>const ratingStars = [...document.getElementsByClassName("rating__star")];
 
-function executeRating(stars) {
-const starClassActive = "rating__star fas fa-star";
-const starClassInactive = "rating__star far fa-star";
-const starsLength = stars.length;
-let i;
-stars.map((star) => {
-star.onclick = () => {
-i = stars.indexOf(star);
+	function executeRating(stars) {
+		const starClassActive = "rating__star fas fa-star";
+		const starClassInactive = "rating__star far fa-star";
+		const starsLength = stars.length;
+		let i;
+		stars.map((star) => {
+			star.onclick = () => {
+				i = stars.indexOf(star);
 
-if (star.className === starClassInactive) {
-for (i; i >= 0; -- i) 
-stars[i].className = starClassActive;
+				if (star.className === starClassInactive) {
+					for (i; i >= 0; --i)
+						stars[i].className = starClassActive;
 
 
-} else {
-for (i; i < starsLength; ++ i) 
-stars[i].className = starClassInactive;
+
+				} else {
+					for (i; i < starsLength; ++i)
+						stars[i].className = starClassInactive;
 
 
-}
-};
-});
-}
-executeRating(ratingStars);</script><script>
-// if the button rate is click then get the number of stars that are active and redirect to /rating/{id}/{value} id: series id value: number of stars
-const rateButton = document.querySelector(".rate");
-rateButton.onclick = () => {
-const text = document.querySelector("#commentaire").value;
-const ratingStars = [...document.getElementsByClassName("rating__star")];
-const starClassActive = "rating__star fas fa-star";
-const starsLength = ratingStars.length;
-let i;
-let value = 0;
-for (i = 0; i < starsLength; ++ i) {
-if (ratingStars[i].className === starClassActive) {
-value++;
-}
-}
-const url = "{{ path('rating_series_show', {'id': series.id}) }}";
-const data = {
-text: text,
-value: value
-};
-fetch(url, {
-method: "POST",
-body: JSON.stringify(data),
-headers: {
-"Content-Type": "application/json"
-}
-}).then((response) => response.json()).then((data) => {
-console.log("Success:", data);
-}).catch((error) => {
-console.error("Error:", error);
-});
-};</script><script>
-var select = document.querySelector('select');
-select.addEventListener('change', function () {
-var selected = this.value;
-var episodes = document.querySelectorAll('.episode');
-for (var i = 0; i < episodes.length; i++) {
-if (episodes[i].id == selected) {
-episodes[i].style.display = 'block';
-} else {
-episodes[i].style.display = 'none';
-}
-}
-});
 
-window.onload = function () {
-var selected = 1;
-var episodes = document.querySelectorAll('.episode');
-for (var i = 0; i < episodes.length; i++) {
-if (episodes[i].id == selected) {
-episodes[i].style.display = 'block';
-} else {
-episodes[i].style.display = 'none';
-}
-}
-}</script>{% endblock %}
+				}
+			};
+		});
+	}
+	executeRating(ratingStars);</script>
+<script>// if the button rate is click then get the number of stars that are active and redirect to /rating/{id}/{value} id: series id value: number of stars
+	const rateButton = document.querySelector(".rate");
+	rateButton.onclick = () => {
+		const text = document.querySelector("#commentaire").value;
+		const ratingStars = [...document.getElementsByClassName("rating__star")];
+		const starClassActive = "rating__star fas fa-star";
+		const starsLength = ratingStars.length;
+		let i;
+		let value = 0;
+		for (i = 0; i < starsLength; ++i) {
+			if (ratingStars[i].className === starClassActive) {
+				value++;
+			}
+		}
+		const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+		const data = {
+			text: text,
+			value: value
+		};
+		fetch(url, {
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		}).then((response) => response.json()).then((data) => {
+			console.log("Success:", data);
+		}).catch((error) => {
+			console.error("Error:", error);
+		});
+	};</script>
+<script>
+	var select = document.querySelector('select');
+	select.value = "";
+	select.addEventListener('change', function () {
+		var selected = this.value;
+		var saisonEpisode = document.querySelectorAll('.seasonEpisode');
+		for (var i = 0; i < saisonEpisode.length; i++) {
+			if (saisonEpisode[i].id == selected) {
+				saisonEpisode[i].style.display = 'block';
+			} else {
+				saisonEpisode[i].style.display = 'none';
+			}
+		}
+	});
+
+	</script>{% endblock %}

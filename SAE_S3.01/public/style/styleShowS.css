@@ -49,16 +49,16 @@ header .title {
 	justify-content: space-between;
 	padding: 2%;
 	background-color: rgba(0, 0, 0, 0.63);
-	margin: 2%;
 
 }
 
 #partGauche {
-	width: 70%;
+	width:40%;
+	margin-left:5%;
 }
 
 #partDroite {
-	margin: 2% 5%;
+	margin-right: 5%;
 }
 
 #bouton {
@@ -81,8 +81,30 @@ header .title {
 	margin-right: 10%;
 	cursor: pointer;
 }
+/*episode*/
+.rate, .review_user, .modfier, .supprimer, select, input{
+	
+	color:black;
+}
+
+#affichageEpisode * {
+ 	position:absolute;
+ 	left:40px;
+	top:30px; 
+}
+
+.seasonEpisode {
+	display: none;
+}
 
 
+/*
+#saison{
+	margin-top: 30%;
+}
+#critique{
+	margin-top: 5%;
+}*/
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
 	header .title {
