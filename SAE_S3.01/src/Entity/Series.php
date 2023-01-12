@@ -87,12 +87,7 @@ class Series
      */
     private $yearEnd;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="rating", type="float", nullable=true)
-     */
-    private $rating;
+
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -406,16 +401,5 @@ class Series
         return $this->getId();
     }
 
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
-    public function setRating(?float $rating): self
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
 
 }
