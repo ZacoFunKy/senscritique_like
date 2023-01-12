@@ -9,30 +9,24 @@
 
 {% block body %}
 	<div id="tout">
-
 		<header>
 			<a href="{{path('app_default')}}" class="title">Netflop</a>
-
 			<div id="id">
 				{% include 'header.html.twig' %}
 			</div>
 		</header>
 		<div id="content">
 			<h1>Catalogue</h1>
-
 			{% if form is defined %}
 				{{ form_start(form) }}
-
 				{{ form_widget(form) }}
 				<input type="submit" value="Rechercher"/>
-
 				<style>
 					form {
 						display: flex;
 						align-items: center;
 						justify-content: center;
 						margin: 2% 0;
-
 					}
 					input[type="text"] {
 						width: 80%;
@@ -58,36 +52,28 @@
 				</style>
 				{{ form_end(form) }}
 			{% endif %}
-			<table class="table">
-				<tbody id="afficheSeries">
-					{% for series in series %}
-						<tr id="serie">
-							<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-							<td>{{ series.title }}</td>
-
-							<td>
-								{% if numPage is defined %}
-									<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
-									<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
-								{% else %}
-									<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-									<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
-								{% endif %}
-							</td>
-						</tr>
-					{% else %}
-						<tr>
-							<td colspan="11">Pas d'autres séries trouvées</td>
-						</tr>
-					{% endfor %}
-
-					{% if pagination is defined and pagination == true %}
-						<div class="navigation">
-							{{ knp_pagination_render(series) }}
-						</div>
-					{% endif %}
-				</tbody>
-			</table>
+			{% if pagination is defined and pagination == true %}
+				<div class="navigation">
+					{{ knp_pagination_render(series) }}
+				</div>
+			{% endif %}
+			<div id="series">
+				{% for series in series %}
+					<div class="serie">
+						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+						<p>{{ series.title }}</p>
+						{% if numPage is defined %}
+							<a class="bouton" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
+							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+						{% else %}
+							<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+						{% endif %}
+					</div>
+				{% else %}
+					<span colspan="11">Pas de séries trouvées.</span>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 {% endblock %}

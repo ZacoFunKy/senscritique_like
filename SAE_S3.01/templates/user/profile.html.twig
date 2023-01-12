@@ -25,14 +25,14 @@
 			<div class="resume">
 				<div class="avatar">
 					{% if user.photo is not null %}
-						<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}">
+						<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}" alt="Avatar">
 					{% else %}
-						<img width="150px" src="../images/avatar.png">
+						<img width="150px" src="../images/avatar.png" alt="Avatar">
 					{% endif %}
 				</div>
 				<span>{{user.name}}</span>
 				<span>{{user.email}}</span>
-				<span></span>
+				{# <span></span> #}
 				<a href="{{ path('app_series_index')}}">
 					<button class="bouton" type="button">Retour</button>
 				</a>

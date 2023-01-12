@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% set pagination = 10 %}
+{% block title %}Series test
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
+{% endblock %}
+
+{% block body %}
+    <style>
+    p {
+        background-color : black;
+    }
+    </style>
+
+    {% for serie in array %}
+        <p>{{ serie.title }} | {{ serie.rating }}</p>
+    {% endfor %}
+{% endblock %}

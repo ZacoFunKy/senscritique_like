@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
+use App\Entity\Country;
 
 #[AsCommand(
     name: 'create:super-admin',
@@ -36,6 +37,7 @@ class CreateSuperAdminCommand extends Command
             ->addArgument('email', InputArgument::REQUIRED, 'email')
             ->addArgument('nom', InputArgument::REQUIRED, 'nom')
             ->addArgument('mot_de_passe', InputArgument::REQUIRED, 'mot de passe')
+            ->addArgument('pays', InputArgument::REQUIRED, 'pays')
         ;
     }
 
@@ -46,6 +48,8 @@ class CreateSuperAdminCommand extends Command
         $email = $input->getArgument('email');
         $nom = $input->getArgument('nom');
         $mdp = $input->getArgument('mot_de_passe');
+        $pays = $input->getArgument('pays');
+        $pays = $entityManager->getRepository(Country::class)->findBy(['name' => $pays])[0];
         $user = new User();
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(
@@ -55,6 +59,7 @@ class CreateSuperAdminCommand extends Command
         );
         $user->setName($nom);
         $user->setEmail($email);
+        $user->setCountry($pays);
         $user->setRegisterDate(new \DateTime('@'.strtotime('Europe/Paris')));
         $roles = ['ROLE_ADMIN','ROLE_SUPER_ADMIN'];
         $user->setRoles($roles);
