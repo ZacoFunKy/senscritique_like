@@ -62,7 +62,7 @@
 							{% if user.photo is not null %}
 							<img src="{{ path('photo_user', {'id': user.id} ) }}" alt="photo de profil" class="border-radius: 50%;" width="400px" height="50px">
 							{% else %}
-							<img src="{{ asset('images/avatar.png') }}" alt="photo de profil" >
+							<img src="../images/avatar.png" alt="photo de profil" >
 							{% endif %}
 							</td>
 							<td>{{ user.name }}</td>
