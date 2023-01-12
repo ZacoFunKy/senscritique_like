@@ -1,16 +1,17 @@
 {% extends "base.html.twig" %}
 {% block title %}
+	{{ user.name }}
 {% endblock %}
 
 {% block stylesheets %}
 	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
-  	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
+	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
 {% endblock %}
 
 {% block javascripts %}
-        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
-        <script src="../../js/jquery.star-rating-svg.js"></script>
+	<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+	<script src="../../js/jquery.star-rating-svg.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -38,13 +39,13 @@
 				</a>
 			</div>
 			<div class="compte">
-			{% if app.user is defined and app.user is not null%}
-				{% if user == app.user %}
-					<h3>Mon compte</h3>
-				{% else %}
-					<h3>Utilisateur</h3>
+				{% if app.user is defined and app.user is not null%}
+					{% if user == app.user %}
+						<h3>Mon compte</h3>
+					{% else %}
+						<h3>Utilisateur</h3>
+					{% endif %}
 				{% endif %}
-			{% endif %}
 				<div class="info">
 					<p class="label">Nom :</p>
 					<p>{{user.name}}</p>
@@ -81,11 +82,11 @@
 							</div>
 							{{form_end(form)}}
 						</div>
-					{% if app.user is defined and app.user is not null%}
-						{% if user == app.user %}
-							<button class="bouton profile-button" type="button">Modifier</button>
+						{% if app.user is defined and app.user is not null%}
+							{% if user == app.user %}
+								<button class="bouton profile-button" type="button">Modifier</button>
+							{% endif %}
 						{% endif %}
-					{% endif %}
 				{% endif %}
 			</div>
 		</div>
@@ -93,104 +94,84 @@
 			<div id="critiques">
 				<h2>Récapitulatifs des critiques</h2>
 				{{ knp_pagination_render(ratings) }}
-
-				{% for rating in ratings %}
-					<div class="bloc_critique">
-						<h3>{{ rating.series.title }}</h3>
-						<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80"/>
-						<p>{{ rating.comment }}</p>
-						<div class="{{rating.id}} jq-stars"></div>
-					</div>
-				{% else %}
-					<p>Aucune critique trouvée.</p>
-				{% endfor %}
+				<div id="ratings">
+					{% for rating in ratings %}
+						<div class="rating">
+							<h3>{{ rating.series.title }}</h3>
+							<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
+							<p>{{ rating.comment }}</p>
+							<div class="{{rating.id}} jq-stars"></div>
+						</div>
+					{% else %}
+						<p>Aucune critique trouvée.</p>
+					{% endfor %}
+				</div>
 			</div>
 			<div id="series-favorites">
 				<h2>Séries favorites</h2>
-				<table class="table">
-					<tbody id="afficheSeries">
-							{{ knp_pagination_render(series) }}
-						{% for series in series %}
-							<tr class="serie">
-								<td>
-									<img src="{{ path('poster_series_show', {'id': series.id} ) }}"/>
-								</td>
-								<td>{{ series.title }}</td>
-								<td>
-									<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-								</td>
+				<div id="series">
+					{{ knp_pagination_render(series) }}
+					{% for series in series %}
+						<div class="serie">
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+							<p>{{ series.title }}</p>
+							<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
 							{% if app.user is defined and app.user is not null%}
 								{% if user == app.user %}
-									<td>
-										<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
-									</td>
+									<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
 								{% endif %}
 							{% endif %}
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="11">Aucune série trouvée.</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+						</div>
+					{% else %}
+						<span colspan="11">Aucune série trouvée.</span>
+					{% endfor %}
+				</div>
 			</div>
 			<div id="historique">
 				<h2>Épisodes vus</h2>
-				<table class="table">
-					<tbody id="afficheSeries">
-						{% for episode in episodes %}
-							<tr class="serie">
-								<td>
-									<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/>
-								</td>
-								<td>{{ episode.season.series.title }}</td>
-								<td>Épisode
-									{{ episode.number }}</td>
-								<td>"{{ episode.title }}"</td>
-								<td>
-									<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
-								</td>
-								{% if app.user is defined and app.user is not null%}
+				<div id="episodes">
+					{% for episode in episodes %}
+						<div class="episode">
+							<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" alt="Poster"/>
+							<p>{{ episode.season.series.title }}</p>
+							<p>Épisode
+								{{ episode.number }}</p>
+							<p>"{{ episode.title }}"</p>
+							<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
+							{% if app.user is defined and app.user is not null%}
 								{% if user == app.user %}
-									<td>
-										<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
-									</td>
+									<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
 								{% endif %}
 							{% endif %}
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="11">Aucun épisode trouvé.</td>
-							</tr>
-						{% endfor %}
-						<div class="navigation">
-							{{ knp_pagination_render(episodes) }}
 						</div>
-					</tbody>
-				</table>
+					{% else %}
+						<td colspan="11">Aucun épisode trouvé.</td>
+					{% endfor %}
+					<div class="navigation">
+						{{ knp_pagination_render(episodes) }}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 
 
-		<script>
+	<script>
 		{% for rating in ratings %}
-			$(".{{rating.id}}").starRating({
-			totalStars: 5,
-			starShape: 'rounded',
-			starSize: 20,
-			emptyColor: 'lightgray',
-			hoverColor: 'red',
-			ratedColor: 'yellow',
-			initialRating: {{rating.value}},
-			readOnly: true,
-			});
+$(".{{ rating.id }}").starRating({
+totalStars: 5,
+starShape: 'rounded',
+starSize: 20,
+emptyColor: 'lightgray',
+hoverColor: 'red',
+ratedColor: 'yellow',
+initialRating: {{ rating.value }},
+readOnly: true
+});
 
-			// change the width of the star rating
-			var width = $(".{{rating.id}}").width();
-			$(".{{rating.id}}").width(width + 20);
-		{% endfor %}
+// change the width of the star rating
+var width = $(".{{ rating.id }}").width();
+$(".{{ rating.id }}").width(width + 20);{% endfor %}
 	</script>
 
 	<script>
@@ -232,5 +213,4 @@ reader.readAsDataURL(file);
 var submit = document.querySelector('.submit');
 submit.style.marginRight = '10px';
 	</script>
-
 {% endblock %}

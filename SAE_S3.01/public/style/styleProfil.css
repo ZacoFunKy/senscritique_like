@@ -120,6 +120,7 @@ select {
     margin: 1% 1% 0;
 }
 
+#ratings,
 #series,
 #users,
 #episodes {
@@ -129,6 +130,7 @@ select {
     margin: 2% 0;
 }
 
+.rating,
 .serie,
 .user,
 .episode {
