@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>    
+        <script src="../js/jquery.star-rating-svg.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -50,6 +52,24 @@
 				{% endfor %}
 			</td>
 		</ul>
+    <h2>Avis</h2>
+		<ul>
+			<td>
+        <div id="rating"></div>
+                <script>
+                $("#rating").starRating({
+                  totalStars: 5,
+                  starShape: 'rounded',
+                  starSize: 40,
+                  emptyColor: 'lightgray',
+                  hoverColor: 'red',
+                  ratedColor: 'yellow',
+                  initialRating: {{series.rating}},
+                  readOnly: true
+                });
+        </script>
+			</td>
+		</ul>
 		<h2>Bande d'annonce</h2>
 		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 		<h2>IMDB</h2>
@@ -68,48 +88,107 @@
         {% endif %}
 		<h2>Seasons</h2>
 		<ul>
-			<td>
-                <div class="w-25 mb-3">
-                    <select name="season" id="season" class="form-select">
-				{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-                    <option value="{{ season.number }}">Saison {{ season.number }}</option>
-				{% endfor %}
-                </select>
-                </div>
-                {% for season in series.seasons %}
-                    {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
-                        <p id="{{season.number}}" class="episode">{{episode.number}} {{ episode.title}}
-                        {% if app.user %}
-                            {% if episode in app.user.episode %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}"><i class="fa-solid fa-eye fa-xl"></i></a>
-                            {% else %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}"><i class="fa-solid fa-eye-slash fa-xl"></i></a>
-                            {% endif %}
-                        {% endif %}
-                        </p>
-                    {% endfor %}
-                {% endfor %}
-			</td>
-		</ul>  
-        <h2>Rating {{rating|length}}</h2>
-        {% if rating is not empty %}
-          <div class="rating">
-          <i class="rating__star far fa-star"></i>
-          <i class="rating__star far fa-star"></i>
-          <i class="rating__star far fa-star"></i>
-          <i class="rating__star far fa-star"></i>
-          <i class="rating__star far fa-star"></i>
-          <input type="text" id="commentaire" placeholder="Commentaire">
-        <button class="rate">Commente</button>
-      {% endif %}
+				<td>
+					<div class="w-25 mb-3">
+						<select name="season" id="season" class="form-select">
+							<option value="" selected></option>
+							{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+								<option value="{{ season.number }}">Saison
+									{{ season.number }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<ul>
+						{% for season in series.seasons %}
+							<div id="{{season.number}}" class="seasonEpisode">
+								{% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
+
+									<li id="{{season.number}}" class="episode">
+										Episode
+										{{episode.number}}
+										{{ episode.title}}
+										{% if app.user %}
+											{% if episode in app.user.episode %}
+												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
+													<i class="fa-solid fa-eye fa-xl"></i>
+												</a>
+											{% else %}
+												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
+													<i class="fa-solid fa-eye-slash fa-xl"></i>
+												</a>
+											{% endif %}
+										{% endif %}
+									</li>
+								</br>
+							{% endfor %}
+						</div>
+					{% endfor %}
+				</td>
+			</ul>
+        <h2>Commentaire ({{rating|length}})</h2>
+        {% if app.user is defined %}
+          {% if app.user.id is defined and app.user.id is not null %}
+          {% set hasAlreadyRated = false %}
+          {% set userReview = null %}
+          {% for review in rating %}
+              {% if review.user.id == app.user.id %}
+                {% set hasAlreadyRated = true %}
+                {% set userReview = review %}
+              {% endif %}
+          {% endfor %}
+            <div class='give_rating'>
+              <div class="my-rating jq-stars"></div>
+              <button class="reset_rating">Reset rating</button>
+              <input type="text" id="commentaire" placeholder="Commentaire">
+              <button class="rate">Commente</button>
+            </div>
+        {% endif %}
+        {% endif %}
       <div class="">
-          {% for review in rating %} 
+      {% if app.user.id is defined and app.user.id is not null %}
+        {% if userReview is not null %}
           <div class="review_user">
-            <p>{{review.comment}}</p>
+            <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            <p>{{userReview.user.name}}</p>
+            <p>{{userReview.comment}}</p>
+                       <p>
+            <div class="{{userReview.user.id}} jq-stars"></div>
+            </p>
+            {% if app.user is defined %}
+              {% if userReview.user.id == app.user.id %}
+                <button class="modifier">Modifier</button>
+                <button class="supprimer">Supprimer</button>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          </div>
+          {% endif %}
+          {% if app.user.id is defined and app.user.id is not null %}
+          {% for review in rating %}
+          {% if review != userReview %} 
+          <div class="review_user">
+            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
             <p>{{review.user.name}}</p>
-            <p> Note : {{review.value}}</p>
-            <button class="modfier">Modifier</button>
-            <button class="supprimer">Supprimer</button>
+            <p>{{review.comment}}</p>
+            <p>
+            <div class="{{review.user.id}} jq-stars"></div>
+            </p>
+            {% if app.user is defined %}
+              {% if review.user.id == app.user.id %}
+                <button class="modifier">Modifier</button>
+                <button class="supprimer">Supprimer</button>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          </div>
+        {% endfor %}
+        {% else %}
+        {% for review in rating %}
+          <div class="review_user">
+            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            <p>{{review.user.name}}</p>
+            <p>{{review.comment}}</p>
+            <p><div class="{{review.user.id}} jq-stars"></div></p>
           </div>
         {% endfor %}
         {% endif %}
@@ -149,16 +228,59 @@ buttonSuppr.addEventListener("click", () => {
 
 
 <script>
-      const ratingStars = [...document.getElementsByClassName("rating__star")];
+  $(".series_rating").starRating({
+    totalStars: 5,
+    starShape: 'rounded',
+    starSize: 40,
+    emptyColor: 'lightgray',
+    hoverColor: 'red',
+    ratedColor: 'yellow',
+    useGradient: false,
+    disableAfterRate: false,
+    initialRating: {{series.rating}},
+    readOnly: true
+  });
 
-function executeRating(stars) {
-  const starClassActive = "rating__star fas fa-star";
-  const starClassInactive = "rating__star far fa-star";
-  const starsLength = stars.length;
-  let i;
-  stars.map((star) => {
-    star.onclick = () => {
-      i = stars.indexOf(star);
+  {% for review in rating %}
+    $(".{{review.user.id}}").starRating({
+      totalStars: 5,
+      starShape: 'rounded',
+      starSize: 15,
+      emptyColor: 'lightgray',
+      hoverColor: 'red',
+      ratedColor: 'yellow',
+      useGradient: false,
+      disableAfterRate: false,
+      initialRating: {{review.value}},
+      readOnly: true,
+    });
+  {% endfor %}
+
+/*=
+  $(".user_rating").starRating({
+    totalStars: 5,
+    starShape: 'rounded',
+    starSize: 15,
+    emptyColor: 'lightgray',
+    hoverColor: 'red',
+    ratedColor: 'yellow',
+    useGradient: false,
+    disableAfterRate: false,
+    initialRating: {{series.rating}},
+    readOnly: true,
+  });
+*/
+
+  $(".my-rating").starRating({
+  totalStars: 5,
+  starShape: 'rounded',
+  starSize: 40,
+  emptyColor: 'lightgray',
+  hoverColor: 'red',
+  ratedColor: 'yellow',
+  useGradient: false,
+  disableAfterRate: false,
+  });
 
 var buttonReset = document.querySelector(".reset_rating");
 buttonReset.onclick = () => {
@@ -222,5 +344,4 @@ saisonEpisode[i].style.display = 'none';
 }
 });
 </script>
-
 {% endblock %}
