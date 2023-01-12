@@ -9,6 +9,7 @@ use App\Entity\Rating;
 use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
+use App\Form\SerieAddFormType;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -16,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
@@ -315,5 +318,106 @@ class SeriesController extends AbstractController
 
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/series/add/', name: 'app_admin_user_series_new', methods: ['GET', 'POST'])]
+    public function addSeries(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(SerieAddFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            // Ask the api http://www.omdbapi.com/ for the serie with the title apiKey = 42404c61
+            $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $data['title'] ."&type=series&r=json";
+            $obj = json_decode(file_get_contents($url));
+            $series = [];
+
+            foreach($obj->Search as $serie){
+                $series[$serie->Title]= $serie->imdbID;
+            }
+
+            if($series == []){
+                $this->addFlash('error', 'No series found with this title');
+                return $this->redirectToRoute('admin', ['error' => "No series found with this title"], Response::HTTP_SEE_OTHER);
+            }
+            $form2 = $this->createFormBuilder();
+            $form2->add('title', ChoiceType::class, [
+                'choices' => $series,
+                'label' => 'Select the serie you want to add',
+            ]);
+            $form2 = $form2->getForm();
+
+            return $this->render('series/add.html.twig', [
+                'form2' => $form2->createView(),
+            ]);
+
+        }
+        
+        return $this->render('series/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/series/add_series/{imdb}', name: 'app_series_add', methods: ['GET', 'POST'])]
+    public function newSeries(Request $request, EntityManagerInterface $entityManager, $imdb): Response
+    {
+        // Check if a serie in the database already exist it it does then update it 
+
+        $url = "http://www.omdbapi.com/?apikey=42404c61&i=" . $imdb ."&type=series&r=json";
+        $obj = json_decode(file_get_contents($url));
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
+        if($serie != null){
+            $serie->setTitle($obj->Title);
+            $yearStart = substr($obj->Released,0, 4);
+            $yearEnd = substr($obj->Released,5, 9);
+            // Convert the years into int
+            $yearEnd = (int)$yearEnd;
+            $yearStart = (int)$yearStart;
+            $serie->setYearStart($yearStart);
+            $serie->setYearEnd($yearEnd);
+            $poster = file_get_contents($obj->Poster);
+            $serie->setPoster($poster);
+            $serie->setPlot($obj->Plot);
+            $serie->setImdb($imdb);
+            $genre = explode(",", $obj->Genre);
+            foreach($genre as $g){
+                $genre_check = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
+                if($genre_check != null){
+                    $serie->addGenre($genre_check);
+                }
+            }
+            $entityManager->flush();
+            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
+        }else {
+            $series = new Series();
+            $series->setTitle($obj->Title);
+            $yearStart = substr($obj->Released,0, 4);
+            $yearEnd = substr($obj->Released,5, 9);
+            // Convert the years into int 
+            $yearStart = (int)$yearStart;
+            $yearEnd = (int)$yearEnd;
+            $series->setYearStart($yearStart);
+            $series->setYearEnd($yearEnd);
+            $poster = file_get_contents($obj->Poster);
+            $series->setPoster($poster);
+            $series->setPlot($obj->Plot);
+            $series->setImdb($imdb);
+            // Cut the genre befor each , 
+            $genre = explode(",", $obj->Genre);
+            foreach($genre as $g){
+                $genre_check = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
+                if($genre_check != null){
+                    $series->addGenre($genre_check);
+                }
+            }
+            $entityManager->persist($series);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin', ['error' => "Nouvelle serie ajouté"], Response::HTTP_SEE_OTHER);
+        
+        }
+      
     }
 }
