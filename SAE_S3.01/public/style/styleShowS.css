@@ -49,7 +49,6 @@ header .title {
 	justify-content: space-between;
 	padding: 2%;
 	background-color: rgba(0, 0, 0, 0.63);
-
 }
 
 .titre-favoris {
@@ -72,6 +71,7 @@ header .title {
 
 #partDroite {
 	margin-right: 5%;
+	width: 30%;
 }
 
 #bouton {
@@ -95,14 +95,52 @@ header .title {
 	cursor: pointer;
 }
 
-/*episode*/
+button {
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding: 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1.2vh;
+	border-radius: 4px;
+	margin: 2% 0%;
+	cursor: pointer;
+}
+
+/* Commentaire */
+
+.review_user{
+	background-color: #424242;
+	padding:2%;
+	display: flex;
+	border-radius: 10px;
+	margin-top: 2%;
+
+}
+
+.profil {
+	display: flex;
+	flex-direction: column;
+}
+
+.rate_part {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10%;
+}
+
+/* Episode */
 .rate,
 .review_user,
 .modfier,
 .supprimer,
 select,
 input {
+	color: black;
+}
 
+option {
 	color: black;
 }
 
@@ -115,7 +153,6 @@ input {
 .seasonEpisode {
 	display: none;
 }
-
 
 /*
 #saison{

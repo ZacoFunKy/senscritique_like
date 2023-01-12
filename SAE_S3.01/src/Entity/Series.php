@@ -88,7 +88,6 @@ class Series
     private $yearEnd;
 
 
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      *

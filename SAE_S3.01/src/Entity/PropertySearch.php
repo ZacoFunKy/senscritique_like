@@ -91,8 +91,8 @@ class PropertySearch
     {
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
-            foreach ($toutesLesSeries as $serie){
-                if (str_contains($serie->getTitle(), $nameFromForm)) {
+            foreach ($toutesLesSeries as $serie) {
+                if (str_starts_with($serie->getTitle(), $nameFromForm)) {
                     array_push($arrayName, $serie);
                 }
             }
