@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Series;
+use App\Entity\User;
 use App\Entity\Rating;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
@@ -32,17 +33,60 @@ class SeriesController extends AbstractController
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if ($form->isSubmitted() && $form->isValid()) {
             $name = $propertySearch->getNom();
+            $avis = $propertySearch->getAvis();
             if ($name) {
-                // if name is contained in the title of a series
-                $queryBuilder->where('s.title LIKE :name')
-                    ->setParameter('name', '%'.$name.'%');
+                switch ($avis) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->andWhere('s.rating BETWEEN :rating-1 AND :rating+1')
+                            ->setParameter('name', '%'.$name.'%')
+                            ->setParameter('rating', $avis);
+                        break;
+                    case 'ASC':
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->orderBy('s.rating', 'ASC')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+                    case 'DESC':
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->orderBy('s.rating', 'DESC')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+                    default:
+                        $queryBuilder->where('s.title LIKE :name')
+                            ->setParameter('name', '%'.$name.'%');
+                        break;
+
+                }
                 $series = $queryBuilder->getQuery()->getResult();
             }
             else {
-                $series = $entityManager
-                ->getRepository(Series::class)
-                ->findBy([], ['title' => 'ASC'], 10, 0); //limit et offset
-                
+                switch($avis) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
+                            ->setParameter('rating', $avis);
+                        break;
+                    case 'ASC':
+                        $queryBuilder->orderBy('s.rating', 'ASC');
+                        break;
+                    case 'DESC':
+                        $queryBuilder->orderBy('s.rating', 'DESC');
+                        break;
+                    case null:
+                        $series = $entityManager
+                        ->getRepository(Series::class)
+                        ->findBy([], ['title' => 'ASC']);
+                        break;
+                }
+                $series = $queryBuilder->getQuery()->getResult();
             }
         } else {
             $series = $entityManager
@@ -105,6 +149,12 @@ class SeriesController extends AbstractController
         $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
+        $ratingCollection = [];
+        foreach($rating as $rate){
+            $ratingCollection[$rate->getUser()->getId()] = $rate->getValue();
+        }
+
+
         if($numPage == NULL){
             $numPage = 1;
         }
@@ -120,6 +170,7 @@ class SeriesController extends AbstractController
             'valeur' => $value,
             'numPage' => $numPage,
             'rating' => $rating,
+            'ratingCollection' => $ratingCollection,
         ]);
     }
 
@@ -246,10 +297,12 @@ class SeriesController extends AbstractController
         $respond->setStatusCode(200);
         $respond->send();
 
-        //if the user has already rated this series, update the rating
         $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $this->getUser(), 'series' => $series]);
-        if($rating != null){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        if ($rating != null){
+            $rating->setValue($rate);
+            $rating->setComment($comment);
+            $rating->setDate(new \DateTime());
+            $entityManager->flush();
         }else {
             $ranting = new Rating();
             $ranting->setUser($this->getUser());
@@ -261,7 +314,35 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $sum = 0;
+        foreach ($ratings as $rating){
+            $sum += $rating->getValue();
+        }
+        $series->setRating($sum / count($ratings));
+        $entityManager->flush();
+
+
+
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
 
+    }
+
+    #[Route('/series/rating/{id}/{user}/delete', name: 'rating_series_delete', methods: ['GET', 'POST'])]
+    public function deleteRating(Series $series, EntityManagerInterface $entityManager, User $user){
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if($numPage == NULL){
+            $numPage = 1;
+        }
+
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        if ($rating != null){
+            $entityManager->remove($rating);
+            $entityManager->flush();
+        }
+
+
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
 }

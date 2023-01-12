@@ -7,6 +7,7 @@ class PropertySearch
 
    private $nom;
 
+    private $avis;
    
    public function getNom(): ?string
    {
@@ -19,4 +20,20 @@ class PropertySearch
 
        return $this;
    }
+
+    public function getAvis(): ?string
+    {
+         return $this->avis;
+    }
+
+    public function setAvis(string $avis): self
+    {
+        $this->avis = $avis;
+
+        return $this;
+    }
+
+
+
+
 }
