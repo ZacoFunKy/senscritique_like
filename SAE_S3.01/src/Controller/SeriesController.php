@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
+<<<<<<< HEAD
     #[Route('/test', name: 'app_series_test', methods: ['GET', 'POST'])]
     public function test(EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator
@@ -61,6 +62,8 @@ class SeriesController extends AbstractController
     }
 
 
+=======
+>>>>>>> 6b09274 (cleaning code (division en fonctions))
     #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator
@@ -70,10 +73,6 @@ class SeriesController extends AbstractController
         $form = $this->createForm(PropertySeachType::class,$propertySearch);
         $form->handleRequest($request);
         
-
-        
-
-        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if ($form->isSubmitted() && $form->isValid()) {
             $genreFromForm=$propertySearch->getGenre();
             $anneeDepartFromForm=$propertySearch->getAnneeDepart();
@@ -81,88 +80,27 @@ class SeriesController extends AbstractController
             $nameFromForm = $propertySearch->getNom();
             $avisFromForm = $propertySearch->getAvis();
 
-
             // Toutes les séries
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-            
             $series = $entityManager->getRepository(Series::class)->findAll();
             $toutesLesSeries = array();
-            foreach($series as $serie){
+            foreach ($series as $serie) {
                 array_push($toutesLesSeries, $serie);
             }
 
-
             // Genre
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-
-            if (strlen($genreFromForm) > 0) {
-                $genres = $entityManager->getRepository(Genre::class)->findAll();
-                $genre = $entityManager->getRepository(Genre::class)->findBy(['name' => $genreFromForm])[0];
-                $seriesByGenre = $genre->getSeries();
-
-                $arrayGenre = array();
-                foreach($seriesByGenre as $serie){
-                    array_push($arrayGenre, $serie);
-                }
-            }
-            else {
-                $arrayGenre = $toutesLesSeries;
-            }
-
+            $arrayGenre=$propertySearch->triGenre($entityManager, $genreFromForm, $toutesLesSeries);
 
             // Name
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-
-            if (strlen($nameFromForm) > 0) {
-                $arrayName = array();
-                foreach($toutesLesSeries as $serie){
-                    if (str_contains($serie->getTitle(), $nameFromForm)) {
-                        array_push($arrayName, $serie);
-                    }
-                }
-            }
-            else {
-                $arrayName = $toutesLesSeries;
-            }
-
+            $arrayName=$propertySearch->triName($nameFromForm, $toutesLesSeries);
 
             // Date début
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-
-            if (strlen($anneeDepartFromForm) > 0) {
-                $queryBuilder->where('s.yearStart >= :date')
-                    ->setParameter('date', $anneeDepartFromForm);
-                $seriesByAnneeDebut = $queryBuilder->getQuery()->getResult();
-                $arrayAnneeDebut = array();
-                foreach($seriesByAnneeDebut as $serie){
-                    array_push($arrayAnneeDebut, $serie);
-                }
-            }
-            else {
-                $arrayAnneeDebut = $toutesLesSeries;
-            }
-
+            $arrayAnneeDebut=$propertySearch->triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries);
 
             // Date fin
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-
-            if (strlen($anneeFinFromForm) > 0) {
-                $queryBuilder->where('s.yearStart <= :date')
-                    ->setParameter('date', $anneeFinFromForm);
-
-                $seriesByAnneeFin = $queryBuilder->getQuery()->getResult();
-
-                $seriesAnneeFin = array();
-                foreach($seriesByAnneeFin as $serie){
-                    array_push($seriesAnneeFin, $serie);
-                }
-            }
-            else {
-                $seriesAnneeFin = $toutesLesSeries;
-            }
-
+            $arrayAnneeFin=$propertySearch->triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries);
 
             // Avis
+<<<<<<< HEAD
             $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
             if (strlen($avisFromForm) > 0) {
@@ -221,6 +159,12 @@ class SeriesController extends AbstractController
             }
 
             // Paginator
+=======
+            $arrayAvis=$propertySearch->triAvis($entityManager, $avisFromForm, $toutesLesSeries);
+
+            // Intersect du tout
+            $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $arrayAnneeFin);
+>>>>>>> 6b09274 (cleaning code (division en fonctions))
             $arrayIntersect = $paginator->paginate($arrayIntersect, $request
             ->query->getInt('page', 1, 10));
 
@@ -234,7 +178,6 @@ class SeriesController extends AbstractController
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
 
-
             $series = $paginator->paginate($series, $request
             ->query->getInt('page', 1, 10));
 
@@ -246,19 +189,13 @@ class SeriesController extends AbstractController
                 'pagination' => TRUE,
                 'numPage' => $numPage,
             ]);
-            
         }
-
-        $series = $paginator->paginate($series, $request
-        ->query->getInt('page', 1, 10));
-        
+        $series = $paginator->paginate($series, $request->query->getInt('page', 1, 10));
         return $this->render('series/index.html.twig', [
             'series' => $series,
             'form' => $form->createView(),
             'pagination' => FALSE,
         ]);
-
-   
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
