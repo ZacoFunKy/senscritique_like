@@ -150,7 +150,7 @@ class PropertySearch
                 case 3:
                 case 4:
                 case 5:
-                    $queryBuilder->where('r.value BETWEEN :rating-1 AND :rating+1')
+                    $queryBuilder->where('r.value BETWEEN :rating-1 AND :rating')
                         ->setParameter('rating', $avisFromForm);
                     break;
                 case 'ASC':
