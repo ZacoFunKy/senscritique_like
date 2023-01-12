@@ -7,11 +7,8 @@
  *  Licensed under MIT
  */
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> main
 ;(function ( $, window, document, undefined ) {
 
   'use strict';
