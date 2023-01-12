@@ -4,13 +4,13 @@
 
 {% block stylesheets %}
 	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
-  	<link rel="stylesheet" type="text/css" href="../style/star-rating-svg.css">
+  	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
 {% endblock %}
 
 {% block javascripts %}
         <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
-        <script src="../js/jquery.star-rating-svg.js"></script>
+        <script src="../../js/jquery.star-rating-svg.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -92,9 +92,12 @@
 		<div class="contenu">
 			<div id="critiques">
 				<h2>Récapitulatifs des critiques</h2>
+				{{ knp_pagination_render(ratings) }}
+
 				{% for rating in ratings %}
 					<div class="bloc_critique">
 						<h3>{{ rating.series.title }}</h3>
+						<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80"/>
 						<p>{{ rating.comment }}</p>
 						<div class="{{rating.id}} jq-stars"></div>
 					</div>
@@ -176,15 +179,17 @@
 			$(".{{rating.id}}").starRating({
 			totalStars: 5,
 			starShape: 'rounded',
-			starSize: 15,
+			starSize: 20,
 			emptyColor: 'lightgray',
 			hoverColor: 'red',
 			ratedColor: 'yellow',
-			useGradient: false,
-			disableAfterRate: false,
 			initialRating: {{rating.value}},
 			readOnly: true,
 			});
+
+			// change the width of the star rating
+			var width = $(".{{rating.id}}").width();
+			$(".{{rating.id}}").width(width + 20);
 		{% endfor %}
 	</script>
 
