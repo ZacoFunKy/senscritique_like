@@ -387,10 +387,13 @@ class SeriesController extends AbstractController
                 $obj->totalSeasons = null;
             }else{
                 $obj->totalSeasons = (int)$obj->totalSeasons;
-                $season = new Season();
-                $season->setNumber(1);
-                $season->setSeries($serie);
-                $entityManager->persist($season);
+                $season_check = $entityManager->getRepository(Season::class)->findOneBy(['number' => 1, 'series' => $serie]);
+                if($season_check == null){
+                    $season = new Season();
+                    $season->setNumber(1);
+                    $season->setSeries($serie);
+                    $entityManager->persist($season);
+                }
             }
             $poster = file_get_contents($obj->Poster);
             $serie->setPoster($poster);
