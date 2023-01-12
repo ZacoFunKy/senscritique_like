@@ -102,26 +102,32 @@ button {
 	padding: 10px 25px;
 	text-align: center;
 	text-decoration: none;
-	font-size: 16px;
+	font-size: 1.2vh;
 	border-radius: 4px;
+	margin: 2% 0%;
 	cursor: pointer;
 }
 
 /* Commentaire */
 
 .review_user{
+	background-color: #424242;
+	padding:2%;
 	display: flex;
-	justify-content: space-between;
+	border-radius: 10px;
+	margin-top: 2%;
+
 }
 
-.profil{
+.profil {
 	display: flex;
-	align-items: column;
+	flex-direction: column;
 }
 
-.rate_part{
+.rate_part {
 	display: flex;
-	align-items: column;
+	flex-direction: column;
+	margin-left: 10%;
 }
 
 /* Episode */
@@ -144,7 +150,6 @@ input {
 .seasonEpisode {
 	display: none;
 }
-
 
 /*
 #saison{
