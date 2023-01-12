@@ -92,7 +92,7 @@ class UpdateFormType extends AbstractType
     {
         $entity = $form->getData();
 
-        if($entity->getPhoto()){
+        if($entity != null && $entity->getPhoto()){
             $view->vars['photo'] = $entity->getPhoto();
         }
     }

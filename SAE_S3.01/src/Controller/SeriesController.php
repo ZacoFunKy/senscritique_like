@@ -127,19 +127,18 @@ class SeriesController extends AbstractController
         foreach ($ratings as $rating){
             $sum += $rating->getValue();
         }
-        if(count($ratings) != 0){
+        if (count($ratings) != 0) {
             $avg = $sum / count($ratings);
         } else {
             $avg = 0;
         }
                 
-        var_dump($avg);
-        if($numPage == NULL){
+        if ($numPage == null) {
             $numPage = 1;
         }
 
-        foreach($users as $user) {
-            if( $user == $this->getUser()) {
+        foreach ($users as $user) {
+            if ( $user == $this->getUser()) {
                 $value = 1;
             }
         }
@@ -157,19 +156,19 @@ class SeriesController extends AbstractController
     #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
     public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
     {
-        if($this->getUser() != null){
+        if ($this->getUser() != null) {
 
-            if ($yesno == "1"){
+            if ($yesno == "1") {
                 $this->getUser()->addEpisode($episode);
                 $entityManager->flush();
-            }else{
+            } else {
                 $this->getUser()->removeEpisode($episode);
                 $entityManager->flush();
             }
 
             $numPage = Request::createFromGlobals()->query->get('numPage');
 
-            if($numPage == NULL){
+            if ($numPage == null) {
                 $numPage = 1;
             }
 
@@ -190,11 +189,11 @@ class SeriesController extends AbstractController
     {
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
-        if($numPage == NULL){
+        if ($numPage == null) {
             $numPage = 1;
-        }  
+        }
 
-        if($this->getUser() != null){
+        if ($this->getUser() != null){
 
             if ($yesno == "1"){
                 $this->getUser()->addSeries($series);
@@ -257,13 +256,12 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/series/rating/{id}', name: 'rating_series_show', methods: ['GET', 'POST'])]
-    public function showRating(Series $series,
-    EntityManagerInterface $entityManager): Response
+    public function showRating(Series $series, EntityManagerInterface $entityManager): Response
     {
 
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
-        if($numPage == NULL){
+        if ($numPage == null) {
             $numPage = 1;
         }
         $request = Request::createFromGlobals();
@@ -272,7 +270,7 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
-        //Respond to the fetch for it to be a 200 
+        //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
         $respond->send();
@@ -289,7 +287,7 @@ class SeriesController extends AbstractController
             $ranting->setSeries($series);
             $ranting->setValue($rate);
             $ranting->setComment($comment);
-            $ranting->setDate(new \DateTime()); 
+            $ranting->setDate(new \DateTime());
             $entityManager->persist($ranting);
             $entityManager->flush();
         }
@@ -303,7 +301,7 @@ class SeriesController extends AbstractController
     public function deleteRating(Series $series, EntityManagerInterface $entityManager, User $user){
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
-        if($numPage == NULL){
+        if ($numPage == null) {
             $numPage = 1;
         }
 

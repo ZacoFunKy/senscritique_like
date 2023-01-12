@@ -163,3 +163,45 @@ button {
     margin-top: 8.5%;
     height: 43px;
 }
+
+/*téléphone en portrait*/
+@media screen and (min-width: 340px) and (orientation: portrait) {
+    .infos-utilisateur {
+        flex-direction: column;
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+
+    .avatar {
+        width: 300px;
+        height: 300px;
+    }
+
+    .compte {
+        width: 100%;
+    }
+
+    .resume,
+    h2,
+    h3 {
+        font-size: 3em;
+    }
+
+    .info,
+    .contenu p {
+        font-size: 2em;
+    }
+
+    .bouton {
+        font-size: 30px;
+        border-radius: 15px;
+    }
+
+    .contenu * {
+        margin: 2% 2% 0;
+    }
+
+    .serie img {
+        height: 800px;
+    }
+}
