@@ -68,7 +68,9 @@ class UserController extends AbstractController
             $entityManager->persist($this->getUser());
             
             $entityManager->flush();
-            return $this->redirectToRoute('app_user_profile');
+            return $this->redirectToRoute('app_user_profile', [
+                'id' => $id
+                ]);
         }
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
