@@ -49,7 +49,6 @@ header .title {
 	justify-content: space-between;
 	padding: 2%;
 	background-color: rgba(0, 0, 0, 0.63);
-
 }
 
 .titre-favoris {
@@ -72,6 +71,7 @@ header .title {
 
 #partDroite {
 	margin-right: 5%;
+	width: 30%;
 }
 
 #bouton {
@@ -137,7 +137,10 @@ button {
 .supprimer,
 select,
 input {
+	color: black;
+}
 
+option {
 	color: black;
 }
 

@@ -112,11 +112,11 @@
               <div class="review_user">
                 <div class="profil">
                   <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                  <p>{{userReview.user.name}}</p>
+                  <a href="{{ path('app_user_profile', {'id': userReview.user.id}) }}">{{userReview.user.name}}</a>
                 </div>
                 <div class="rate_part">
-                  <p>{{userReview.comment}}</p>
                   <p><div class="{{userReview.user.id}} jq-stars"></div></p>
+                  <p>{{userReview.comment}}</p>                  
                 </div>
               </div>
               {% if app.user is defined %}
@@ -134,7 +134,7 @@
                   <div class="review_user">
                     <div class="profil">
                       <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                      <p>{{review.user.name}}</p>
+                      <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
                     </div>
                     <div class="rate_part">
                       <p>
@@ -156,7 +156,7 @@
                 <div class="review_user">
                   <div class="profil">
                     <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                    <p>{{review.user.name}}</p>
+                    <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
                   </div>
                   <div class="rate_part">
                     <p><div class="{{review.user.id}} jq-stars"></div></p>
@@ -259,14 +259,6 @@
       });
     {% endfor %}
 
-    var buttonReset = document.querySelector(".reset_rating");
-    buttonReset.onclick = () => {
-      $(".my-rating").starRating('unload');
-      // grab the first 5 divs with the class name jq-star and delete them
-      const stars = [...document.getElementsByClassName("jq-star")];
-      stars.forEach((star) => {
-          star.remove();
-      });
       $(".my-rating").starRating({
         totalStars: 5,
         starShape: 'rounded',
@@ -276,8 +268,7 @@
         ratedColor: 'yellow',
         useGradient: false,
         disableAfterRate: false,
-      });
-    }
+      });  
   
     var buttonReset = document.querySelector(".reset_rating");
     buttonReset.onclick = () => {
@@ -297,6 +288,32 @@
         disableAfterRate: false,
       });
     }
+  </script>
+  
+  <script>
+  const rateButton = document.querySelector(".rate");
+  rateButton.onclick = () => {
+    let valeur = $(".my-rating").starRating('getRating');
+    console.log(valeur);
+    let text = document.querySelector("#commentaire").value;
+    const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+    const data = {value: valeur, text: text};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    location.reload();
+  }
   </script>
 
   <script>
