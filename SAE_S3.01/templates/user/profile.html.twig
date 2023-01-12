@@ -1,6 +1,5 @@
 {% extends "base.html.twig" %}
 {% block title %}
-	{{app.user.name}}
 {% endblock %}
 
 {% block stylesheets %}
@@ -33,11 +32,13 @@
 				</a>
 			</div>
 			<div class="compte">
+			{% if app.user is defined and app.user is not null%}
 				{% if user == app.user %}
 					<h3>Mon compte</h3>
 				{% else %}
 					<h3>Utilisateur</h3>
 				{% endif %}
+			{% endif %}
 				<div class="info">
 					<p class="label">Nom :</p>
 					<p>{{user.name}}</p>
@@ -74,9 +75,11 @@
 							</div>
 							{{form_end(form)}}
 						</div>
+					{% if app.user is defined and app.user is not null%}
 						{% if user == app.user %}
 							<button class="bouton profile-button" type="button">Modifier</button>
 						{% endif %}
+					{% endif %}
 				{% endif %}
 			</div>
 		</div>
@@ -106,12 +109,13 @@
 								<td>
 									<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
 								</td>
+							{% if app.user is defined and app.user is not null%}
 								{% if user == app.user %}
 									<td>
 										<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
 									</td>
 								{% endif %}
-
+							{% endif %}
 							</tr>
 						{% else %}
 							<tr>
@@ -137,11 +141,13 @@
 								<td>
 									<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
 								</td>
+								{% if app.user is defined and app.user is not null%}
 								{% if user == app.user %}
 									<td>
 										<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
 									</td>
 								{% endif %}
+							{% endif %}
 							</tr>
 						{% else %}
 							<tr>
