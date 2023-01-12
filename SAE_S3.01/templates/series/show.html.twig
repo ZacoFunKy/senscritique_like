@@ -20,7 +20,6 @@
 		<header>
 			<a href="{{path('app_series_index') }}?page={{numPage}}" class="title">Netflop</a>
 			{% include 'header.html.twig' %}
-
 		</header>
 		<div id="content">
 			<div id="partGauche">
@@ -38,211 +37,243 @@
 						{% endif %}
 					{% endif %}
 				</div>
-			</br>
-			<p>{{ series.plot }}</p>
-			<p>{{ series.director }}</p>
-		</br>
-		<h2>Genre</h2>
-		<ul>
-			<td>
-				{% for genre in series.genre %}
-					<li>
-						{{ genre.name }}
-					</li>
-				{% endfor %}
-			</td>
-		</ul>
-    <h2>Avis</h2>
-		<ul>
-			<td>
-        <div id="rating"></div>
-                <script>
-                $("#rating").starRating({
-                  totalStars: 5,
-                  starShape: 'rounded',
-                  starSize: 40,
-                  emptyColor: 'lightgray',
-                  hoverColor: 'red',
-                  ratedColor: 'yellow',
-                  initialRating: {{series.rating}},
-                  readOnly: true
-                });
-        </script>
-			</td>
-		</ul>
-		<h2>Bande d'annonce</h2>
-		<iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-		<h2>IMDB</h2>
-		<p>
-			<a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
-		</p>
-		<h2>Récompense(s)</h2>
-		<p>{{ series.awards }}</p>
-		<h2>Année de début</h2>
-		<p>{{ series.yearStart }}</p>
+			  </br>
+			  <p>{{ series.plot }}</p>
+			  <p>{{ series.director }}</p>
+		    </br>
+        <h2>Genre</h2>
+        <ul>
+          <td>
+            {% for genre in series.genre %}
+              <li>
+                {{ genre.name }}
+              </li>
+            {% endfor %}
+          </td>
+        </ul>
+        <h2>Avis</h2>
+        <ul>
+          <td>
+            <div id="rating"></div>
+               <script>
+                  $("#rating").starRating({
+                    totalStars: 5,
+                    starShape: 'rounded',
+                    starSize: 40,
+                    emptyColor: 'lightgray',
+                    hoverColor: 'red',
+                    ratedColor: 'yellow',
+                    initialRating: {{series.rating}},
+                    readOnly: true
+                  });
+                </script>
+			    </td>
+		    </ul>
+		    <h2>Bande d'annonce</h2>
+        <iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <h2>IMDB</h2>
+        <p>
+          <a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
+        </p>
+		    <h2>Récompense(s)</h2>
+		    <p>{{ series.awards }}</p>
+		    <h2>Année de début</h2>
+		    <p>{{ series.yearStart }}</p>
         <h2>Année de fin</h2>
         {% if series.yearEnd is not null %}
-            <p>{{ series.yearEnd }}</p>
+          <p>{{ series.yearEnd }}</p>
         {% else %}
-            <p>En cours</p>
+          <p>En cours</p>
         {% endif %}
-		<h2>Seasons</h2>
-		<ul>
-				<td>
-					<div class="w-25 mb-3">
-						<select name="season" id="season" class="form-select">
-							<option value="" selected></option>
-							{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-								<option value="{{ season.number }}">Saison
-									{{ season.number }}</option>
-							{% endfor %}
-						</select>
-					</div>
-					<ul>
-						{% for season in series.seasons %}
-							<div id="{{season.number}}" class="seasonEpisode">
-								{% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
-
-									<li id="{{season.number}}" class="episode">
-										Episode
-										{{episode.number}}
-										{{ episode.title}}
-										{% if app.user %}
-											{% if episode in app.user.episode %}
-												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
-													<i class="fa-solid fa-eye fa-xl"></i>
-												</a>
-											{% else %}
-												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
-													<i class="fa-solid fa-eye-slash fa-xl"></i>
-												</a>
-											{% endif %}
-										{% endif %}
-									</li>
-								</br>
-							{% endfor %}
-						</div>
-					{% endfor %}
-				</td>
-			</ul>
+		    <h2>Seasons</h2>
+		    <ul>
+          <td>
+            <div class="w-25 mb-3">
+              <select name="season" id="season" class="form-select">
+                <option value="" selected></option>
+                {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+                  <option value="{{ season.number }}">Saison
+                    {{ season.number }}</option>
+                {% endfor %}
+              </select>
+            </div>
+				    <ul>
+						  {% for season in series.seasons %}
+							  <div id="{{season.number}}" class="seasonEpisode">
+								  {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
+									  <li id="{{season.number}}" class="episode">
+										  Episode
+										  {{episode.number}}
+										  {{ episode.title}}
+										  {% if app.user %}
+											  {% if episode in app.user.episode %}
+												  <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
+													  <i class="fa-solid fa-eye fa-xl"></i>
+												  </a>
+											  {% else %}
+												  <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
+													  <i class="fa-solid fa-eye-slash fa-xl"></i>
+												  </a>
+											  {% endif %}
+										  {% endif %}
+									  </li>
+								    </br>
+							    {% endfor %}
+						    </div>
+					    {% endfor %}
+          </td>
+			  </ul>
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
-          {% set hasAlreadyRated = false %}
-          {% set userReview = null %}
-          {% for review in rating %}
+            {% set hasAlreadyRated = false %}
+            {% set userReview = null %}
+            {% for review in rating %}
               {% if review.user.id == app.user.id %}
                 {% set hasAlreadyRated = true %}
                 {% set userReview = review %}
               {% endif %}
-          {% endfor %}
-            <div class='give_rating'>
-              <div class="my-rating jq-stars"></div>
-              <button class="reset_rating">Reset rating</button>
-              <input type="text" id="commentaire" placeholder="Commentaire">
-              <button class="rate">Commente</button>
-            </div>
-        {% endif %}
-        {% endif %}
-      <div class="">
-      {% if app.user.id is defined and app.user.id is not null %}
-        {% if userReview is not null %}
-          <div class="review_user">
-            <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
-            <p>{{userReview.user.name}}</p>
-            <p>{{userReview.comment}}</p>
-                       <p>
-            <div class="{{userReview.user.id}} jq-stars"></div>
-            </p>
-            {% if app.user is defined %}
-              {% if userReview.user.id == app.user.id %}
-                <button class="modifier">Modifier</button>
-                <button class="supprimer">Supprimer</button>
-              {% endif %}
-            {% endif %}
+            {% endfor %}
+              <div class='give_rating'>
+                <div class="my-rating jq-stars"></div>
+                <button class="reset_rating">Réinitialiser la note</button>
+                <input type="text" id="commentaire" placeholder="Commentaire">
+                <button class="rate">Commenter</button>
+                <button class="annuler">Annuler</button>
+              </div>
           {% endif %}
-          </div>
-          {% endif %}
+        {% endif %}
+        <div class="">
+          {# Commentaire de l'utlisateur lorsqu'il est connecté #}
           {% if app.user.id is defined and app.user.id is not null %}
-          {% for review in rating %}
-          {% if review != userReview %} 
-          <div class="review_user">
-            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-            <p>{{review.user.name}}</p>
-            <p>{{review.comment}}</p>
-            <p>
-            <div class="{{review.user.id}} jq-stars"></div>
-            </p>
-            {% if app.user is defined %}
-              {% if review.user.id == app.user.id %}
-                <button class="modifier">Modifier</button>
-                <button class="supprimer">Supprimer</button>
-              {% endif %}
-            {% endif %}
+            {% if userReview is not null %}
+              <div class="review_user">
+                <div class="profil">
+                  <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                  <p>{{userReview.user.name}}</p>
+                </div>
+                <div class="rate_part">
+                  <p>{{userReview.comment}}</p>
+                  <p><div class="{{userReview.user.id}} jq-stars"></div></p>
+                </div>
+                {% if app.user is defined %}
+                  {% if userReview.user.id == app.user.id %}
+                    <button class="modifier">Modifier</button>
+                    <button class="supprimer">Supprimer</button>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endif %}        
           {% endif %}
-          </div>
-        {% endfor %}
-        {% else %}
-        {% for review in rating %}
-          <div class="review_user">
-            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-            <p>{{review.user.name}}</p>
-            <p>{{review.comment}}</p>
-            <p><div class="{{review.user.id}} jq-stars"></div></p>
-          </div>
-        {% endfor %}
-        {% endif %}
+          {# Commentaire des autres utilisateurs #}
+            {% if app.user.id is defined and app.user.id is not null %}
+              {% for review in rating %}
+                {% if review != userReview %} 
+                  <div class="review_user">
+                    <div class="profil">
+                      <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                      <p>{{review.user.name}}</p>
+                    </div>
+                    <div class="rate_part">
+                      <p>
+                        <div class="{{review.user.id}} jq-stars"></div>
+                      </p>
+                      <p>{{review.comment}}</p>
+                    </div>
+                    {% if app.user is defined %}
+                      {% if review.user.id == app.user.id %}
+                        <button class="modifier">Modifier</button>
+                        <button class="supprimer">Supprimer</button>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                {% endif %}   
+              {% endfor %}
+            {% else %}
+              {% for review in rating %}
+                <div class="review_user">
+                  <div class="profil">
+                    <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                    <p>{{review.user.name}}</p>
+                  </div>
+                  <div class="rate_part">
+                    <p><div class="{{review.user.id}} jq-stars"></div></p>
+                    <p>{{review.comment}}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+         </div>
+      </div>
+	     <div id="partDroite">
+		      <tr>
+			      <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+		      </tr>
+	      </div>
+     </div> 
+     <div id="bouton">
+	      <a href="{{ path('app_series_index') }}?page={{numPage}}">Retour à la liste</a>
+     </div>
+  </div>
+  {% if app.user.id is defined and app.user.id is not null %}
+    <script>
+      if ({{hasAlreadyRated}}) {
+        document.querySelector(".give_rating").style.display = "none";
+      }
 
-        </div>
-    </div> 
-	</div>
-	<div id="partDroite">
-		<tr>
-			<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-		</tr>
-	</div>
-</div>
-<div id="bouton">
-	<a href="{{ path('app_series_index') }}?page={{numPage}}">back to list</a>
-</div>
-</div>
-{% if app.user.id is defined and app.user.id is not null %}
-<script>
-if ({{hasAlreadyRated}}) {
-  document.querySelector(".give_rating").style.display = "none";
-}
+      var buttonModif = document.querySelector(".modifier");
+      buttonModif.addEventListener("click", () => {
+        document.querySelector(".give_rating").style.display = "block";
+        document.querySelector(".modifier").style.display = "none";
+        document.querySelector(".supprimer").style.display = "none";
+        
+      });
 
-var buttonModif = document.querySelector(".modifier");
-buttonModif.addEventListener("click", () => {
-  document.querySelector(".give_rating").style.display = "block";
-  
-});
+      var buttonSuppr = document.querySelector(".supprimer");
+      buttonSuppr.addEventListener("click", () => {
+        window.location.href = "{{ path('rating_series_delete', {'id': series.id, 'user': app.user.id}) }}";
+      });
 
-var buttonSuppr = document.querySelector(".supprimer");
-buttonSuppr.addEventListener("click", () => {
-  window.location.href = "{{ path('rating_series_delete', {'id': series.id, 'user': app.user.id}) }}";
-});
-</script>
-{% endif %}
+      var buttonSuppr = document.querySelector(".annuler");
+      buttonSuppr.addEventListener("click", () => {
+        document.querySelector(".give_rating").style.display = "none";
+        document.querySelector(".modifier").style.display = "inline";
+        document.querySelector(".supprimer").style.display = "inline";
+      });
+    </script>
+  {% endif %}
 
+  <script>
+    $(".series_rating").starRating({
+      totalStars: 5,
+      starShape: 'rounded',
+      starSize: 40,
+      emptyColor: 'lightgray',
+      hoverColor: 'red',
+      ratedColor: 'yellow',
+      useGradient: false,
+      disableAfterRate: false,
+      initialRating: {{series.rating}},
+      readOnly: true
+    });
 
+    {% for review in rating %}
+      $(".{{review.user.id}}").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 15,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+        initialRating: {{review.value}},
+        readOnly: true,
+      });
+    {% endfor %}
 
-<script>
-  $(".series_rating").starRating({
-    totalStars: 5,
-    starShape: 'rounded',
-    starSize: 40,
-    emptyColor: 'lightgray',
-    hoverColor: 'red',
-    ratedColor: 'yellow',
-    useGradient: false,
-    disableAfterRate: false,
-    initialRating: {{series.rating}},
-    readOnly: true
-  });
-
-  {% for review in rating %}
-    $(".{{review.user.id}}").starRating({
+  /*=
+    $(".user_rating").starRating({
       totalStars: 5,
       starShape: 'rounded',
       starSize: 15,
@@ -251,97 +282,78 @@ buttonSuppr.addEventListener("click", () => {
       ratedColor: 'yellow',
       useGradient: false,
       disableAfterRate: false,
-      initialRating: {{review.value}},
+      initialRating: {{series.rating}},
       readOnly: true,
     });
-  {% endfor %}
+  */
 
-/*=
-  $(".user_rating").starRating({
+    $(".my-rating").starRating({
     totalStars: 5,
     starShape: 'rounded',
-    starSize: 15,
+    starSize: 40,
     emptyColor: 'lightgray',
     hoverColor: 'red',
     ratedColor: 'yellow',
     useGradient: false,
     disableAfterRate: false,
-    initialRating: {{series.rating}},
-    readOnly: true,
-  });
-*/
+    });
 
-  $(".my-rating").starRating({
-  totalStars: 5,
-  starShape: 'rounded',
-  starSize: 40,
-  emptyColor: 'lightgray',
-  hoverColor: 'red',
-  ratedColor: 'yellow',
-  useGradient: false,
-  disableAfterRate: false,
-  });
+    var buttonReset = document.querySelector(".reset_rating");
+    buttonReset.onclick = () => {
+      $(".my-rating").starRating('unload');
+      // grab the first 5 divs with the class name jq-star and delete them
+      const stars = [...document.getElementsByClassName("jq-star")];
+      stars.forEach((star) => {
+          star.remove();
+      });
+      $(".my-rating").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 40,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+      });
+    }
 
-var buttonReset = document.querySelector(".reset_rating");
-buttonReset.onclick = () => {
-  $(".my-rating").starRating('unload');
-  // grab the first 5 divs with the class name jq-star and delete them
-  const stars = [...document.getElementsByClassName("jq-star")];
-  stars.forEach((star) => {
-    star.remove();
-  });
-  $(".my-rating").starRating({
-  totalStars: 5,
-  starShape: 'rounded',
-  starSize: 40,
-  emptyColor: 'lightgray',
-  hoverColor: 'red',
-  ratedColor: 'yellow',
-  useGradient: false,
-  disableAfterRate: false,
-});
-}
+    const rateButton = document.querySelector(".rate");
+    rateButton.onclick = () => {
+      let valeur = $(".my-rating").starRating('getRating');
+      console.log(valeur);
+      let text = document.querySelector("#commentaire").value;
+      const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+      const data = {value: valeur, text: text};
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      location.reload();
+    }
 
-</script>
-
-<script>
-const rateButton = document.querySelector(".rate");
-rateButton.onclick = () => {
-  let valeur = $(".my-rating").starRating('getRating');
-  console.log(valeur);
-  let text = document.querySelector("#commentaire").value;
-  const url = "{{ path('rating_series_show', {'id': series.id}) }}";
-  const data = {value: valeur, text: text};
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-  location.reload();
-}
-</script>
-<script>
-var select = document.querySelector('select');
-select.value = "";
-select.addEventListener('change', function () {
-var selected = this.value;
-var saisonEpisode = document.querySelectorAll('.seasonEpisode');
-for (var i = 0; i < saisonEpisode.length; i++) {
-if (saisonEpisode[i].id == selected) {
-saisonEpisode[i].style.display = 'block';
-} else {
-saisonEpisode[i].style.display = 'none';
-}
-}
-});
-</script>
+    var select = document.querySelector('select');
+    select.value = "";
+    select.addEventListener('change', function () {
+      var selected = this.value;
+      var saisonEpisode = document.querySelectorAll('.seasonEpisode');
+      for (var i = 0; i < saisonEpisode.length; i++) {
+        if (saisonEpisode[i].id == selected) {
+          saisonEpisode[i].style.display = 'block';
+        } else {
+        saisonEpisode[i].style.display = 'none';
+        }
+      }
+    });
+  </script>
 {% endblock %}
