@@ -7,6 +7,7 @@ use App\Entity\Series;
 use App\Entity\User;
 use App\Entity\Rating;
 use App\Entity\Genre;
+use App\Entity\Season;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SerieAddFormType;
@@ -371,13 +372,26 @@ class SeriesController extends AbstractController
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
         if($serie != null){
             $serie->setTitle($obj->Title);
-            $yearStart = substr($obj->Released,0, 4);
-            $yearEnd = substr($obj->Released,5, 9);
+            $yearStart = substr($obj->Year,0, 4);
+            $yearEnd= substr($obj->Year,5, 9);
+            if($yearEnd == "-"){
+                $yearEnd = null;
+            }else{
+                $serie->setYearEnd((int)$yearEnd);
+            }
             // Convert the years into int
             $yearEnd = (int)$yearEnd;
             $yearStart = (int)$yearStart;
             $serie->setYearStart($yearStart);
-            $serie->setYearEnd($yearEnd);
+            if($obj->totalSeasons == "N/A"){
+                $obj->totalSeasons = null;
+            }else{
+                $obj->totalSeasons = (int)$obj->totalSeasons;
+                $season = new Season();
+                $season->setNumber(1);
+                $season->setSeries($serie);
+                $entityManager->persist($season);
+            }
             $poster = file_get_contents($obj->Poster);
             $serie->setPoster($poster);
             $serie->setPlot($obj->Plot);
@@ -394,11 +408,23 @@ class SeriesController extends AbstractController
         }else {
             $series = new Series();
             $series->setTitle($obj->Title);
-            $yearStart = substr($obj->Released,0, 4);
-            $yearEnd = substr($obj->Released,5, 9);
+            $yearStart = substr($obj->Year,0,4);
+            $yearEnd= substr($obj->Released,5, 9);
+            if($yearEnd == "-"){
+                $yearEnd = null;
+            }
             // Convert the years into int 
             $yearStart = (int)$yearStart;
             $yearEnd = (int)$yearEnd;
+            if($obj->totalSeasons == "N/A"){
+                $obj->totalSeasons = null;
+            }else{
+                $obj->totalSeasons = (int)$obj->totalSeasons;
+                $season = new Season();
+                $season->setNumber(1);
+                $season->setSeries($series);
+                $entityManager->persist($season);
+            }
             $series->setYearStart($yearStart);
             $series->setYearEnd($yearEnd);
             $poster = file_get_contents($obj->Poster);
