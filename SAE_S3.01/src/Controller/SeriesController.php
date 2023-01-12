@@ -6,6 +6,7 @@ use App\Entity\Episode;
 use App\Entity\Series;
 use App\Entity\User;
 use App\Entity\Rating;
+use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SeriesType;
@@ -16,11 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
-
     #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator
@@ -29,70 +28,52 @@ class SeriesController extends AbstractController
         $propertySearch = new PropertySearch();
         $form = $this->createForm(PropertySeachType::class,$propertySearch);
         $form->handleRequest($request);
-
-        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $name = $propertySearch->getNom();
-            $avis = $propertySearch->getAvis();
-            if ($name) {
-                switch ($avis) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->andWhere('s.rating BETWEEN :rating-1 AND :rating+1')
-                            ->setParameter('name', '%'.$name.'%')
-                            ->setParameter('rating', $avis);
-                        break;
-                    case 'ASC':
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->orderBy('s.rating', 'ASC')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
-                    case 'DESC':
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->orderBy('s.rating', 'DESC')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
-                    default:
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
+            $genreFromForm=$propertySearch->getGenre();
+            $anneeDepartFromForm=$propertySearch->getAnneeDepart();
+            $anneeFinFromForm=$propertySearch->getAnneeFin();
+            $nameFromForm = $propertySearch->getNom();
+            $avisFromForm = $propertySearch->getAvis();
 
-                }
-                $series = $queryBuilder->getQuery()->getResult();
+            // Toutes les séries
+            $series = $entityManager->getRepository(Series::class)->findAll();
+            $toutesLesSeries = array();
+            foreach ($series as $serie) {
+                array_push($toutesLesSeries, $serie);
             }
-            else {
-                switch($avis) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
-                            ->setParameter('rating', $avis);
-                        break;
-                    case 'ASC':
-                        $queryBuilder->orderBy('s.rating', 'ASC');
-                        break;
-                    case 'DESC':
-                        $queryBuilder->orderBy('s.rating', 'DESC');
-                        break;
-                    case null:
-                        $series = $entityManager
-                        ->getRepository(Series::class)
-                        ->findBy([], ['title' => 'ASC']);
-                        break;
-                }
-                $series = $queryBuilder->getQuery()->getResult();
-            }
-        } else {
+
+            // Genre
+            $arrayGenre=$propertySearch->triGenre($entityManager, $genreFromForm, $toutesLesSeries);
+
+            // Name
+            $arrayName=$propertySearch->triName($nameFromForm, $toutesLesSeries);
+
+            // Date début
+            $arrayAnneeDebut=$propertySearch->triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries);
+
+            // Date fin
+            $arrayAnneeFin=$propertySearch->triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries);
+
+            // Avis
+            $arrayAvis=$propertySearch->triAvis($entityManager, $avisFromForm, $toutesLesSeries);
+
+            // Intersect du tout
+            $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $arrayAnneeFin);
+            $arrayIntersect = $propertySearch->triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect);
+            
+            $arrayIntersect = $paginator->paginate($arrayIntersect, $request
+            ->query->getInt('page', 1, 10));
+
+            return $this->render('series/index.html.twig', [
+                'series' => $arrayIntersect,
+                'form' => $form->createView(),
+                'pagination' => TRUE,
+            ]);
+        }else {
             $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
-
 
             $series = $paginator->paginate($series, $request
             ->query->getInt('page', 1, 10));
@@ -105,19 +86,13 @@ class SeriesController extends AbstractController
                 'pagination' => TRUE,
                 'numPage' => $numPage,
             ]);
-            
         }
-
-        $series = $paginator->paginate($series, $request
-        ->query->getInt('page', 1, 10));
-        
+        $series = $paginator->paginate($series, $request->query->getInt('page', 1, 10));
         return $this->render('series/index.html.twig', [
             'series' => $series,
             'form' => $form->createView(),
             'pagination' => FALSE,
         ]);
-
-   
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
@@ -146,15 +121,19 @@ class SeriesController extends AbstractController
         $users = $series->getUser();
         $value = 0;
         
-        $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
-
-        $ratingCollection = [];
-        foreach($rating as $rate){
-            $ratingCollection[$rate->getUser()->getId()] = $rate->getValue();
+        $sum = 0;
+        foreach ($ratings as $rating){
+            $sum += $rating->getValue();
         }
-
-
+        if(count($ratings) != 0){
+            $avg = $sum / count($ratings);
+        } else {
+            $avg = 0;
+        }
+                
+        var_dump($avg);
         if($numPage == NULL){
             $numPage = 1;
         }
@@ -165,12 +144,13 @@ class SeriesController extends AbstractController
             }
         }
 
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'valeur' => $value,
             'numPage' => $numPage,
-            'rating' => $rating,
-            'ratingCollection' => $ratingCollection,
+            'rating' => $ratings,
+            'avg' => $avg,
         ]);
     }
 
@@ -313,15 +293,6 @@ class SeriesController extends AbstractController
             $entityManager->persist($ranting);
             $entityManager->flush();
         }
-
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
-        $sum = 0;
-        foreach ($ratings as $rating){
-            $sum += $rating->getValue();
-        }
-        $series->setRating($sum / count($ratings));
-        $entityManager->flush();
-
 
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);

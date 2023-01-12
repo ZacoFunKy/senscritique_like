@@ -148,6 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->photo = file_get_contents(__DIR__.'/../../public/images/avatar.png');
     }
 
     public function getId(): ?int

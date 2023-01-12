@@ -38,8 +38,8 @@ class SeriesCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         $avis = Action::new('avis', 'Avis', 'fa fa-comment')
-            ->linkToRoute('app_admin_user_comment_new', function (Series $series) {
-                return ['id' => $series->getId()];
+            ->linkToUrl(function (Series $series) {
+                return $this->generateUrl('app_admin_user_comment_new', ['id' => $series->getId()]);
             });
 
     return parent::configureActions($actions)

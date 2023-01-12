@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 {% set pagination = 10 %}
-{% block title %}Series index
+{% block title %}Series favorites
 {% endblock %}
 
 {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
+	<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
 {% block body %}
@@ -18,29 +18,20 @@
 		</header>
 		<div id="content">
 			<h1>Vos séries favorites</h1>
-			<a class="boutonModif" href="{{ path('app_series_index', {'page': numPage} ) }}"> Retour</a>
-			<table
-				class="table">
-				<tbody id="afficheSeries">
-					{% for series in app.user.series %}
-						<tr id="serie">
-							<td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
-							<td>{{ series.title }}</td>
-
-							<td>
-								<a class="boutonModif" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-								<a class="boutonModif" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
-							</td>
-						</tr>
-					{% else %}
-						<tr>
-							<td colspan="11">no records found</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<a class="bouton" href="{{ path('app_series_index', {'page': numPage} ) }}">
+				Retour</a>
+			<div id="series">
+				{% for series in app.user.series %}
+					<div class="serie">
+						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+						<p>{{ series.title }}</p>
+						<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+						<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
+					</div>
+				{% else %}
+					<span colspan="11">Pas encore de séries favorites.</span>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 {% endblock %}
-
-

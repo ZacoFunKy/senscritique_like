@@ -400,16 +400,5 @@ class Series
         return $this->getId();
     }
 
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
-    public function setRating(?float $rating): self
-    {
-        $this->rating = $rating;
-
-        return $this;
-    }
 
 }

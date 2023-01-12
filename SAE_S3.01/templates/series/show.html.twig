@@ -64,7 +64,7 @@
                   emptyColor: 'lightgray',
                   hoverColor: 'red',
                   ratedColor: 'yellow',
-                  initialRating: {{series.rating}},
+                  initialRating: {{avg}},
                   readOnly: true
                 });
         </script>
@@ -148,7 +148,11 @@
       {% if app.user.id is defined and app.user.id is not null %}
         {% if userReview is not null %}
           <div class="review_user">
-            <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            {% if userReview.user.photo is not null %}
+                <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            {% else %}
+              <img src="../images/avatar.png" alt="photo de profil" width="50" height="50">
+            {% endif %}
             <p>{{userReview.user.name}}</p>
             <p>{{userReview.comment}}</p>
                        <p>
@@ -167,7 +171,11 @@
           {% for review in rating %}
           {% if review != userReview %} 
           <div class="review_user">
-            <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            {% if review.user.photo is not null %}
+                <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+            {% else %}
+              <img src="../images/avatar.png" alt="photo de profil" width="50" height="50">
+            {% endif %}
             <p>{{review.user.name}}</p>
             <p>{{review.comment}}</p>
             <p>
@@ -228,18 +236,7 @@ buttonSuppr.addEventListener("click", () => {
 
 
 <script>
-  $(".series_rating").starRating({
-    totalStars: 5,
-    starShape: 'rounded',
-    starSize: 40,
-    emptyColor: 'lightgray',
-    hoverColor: 'red',
-    ratedColor: 'yellow',
-    useGradient: false,
-    disableAfterRate: false,
-    initialRating: {{series.rating}},
-    readOnly: true
-  });
+
 
   {% for review in rating %}
     $(".{{review.user.id}}").starRating({
@@ -256,20 +253,7 @@ buttonSuppr.addEventListener("click", () => {
     });
   {% endfor %}
 
-/*=
-  $(".user_rating").starRating({
-    totalStars: 5,
-    starShape: 'rounded',
-    starSize: 15,
-    emptyColor: 'lightgray',
-    hoverColor: 'red',
-    ratedColor: 'yellow',
-    useGradient: false,
-    disableAfterRate: false,
-    initialRating: {{series.rating}},
-    readOnly: true,
-  });
-*/
+
 
   $(".my-rating").starRating({
   totalStars: 5,
@@ -285,7 +269,6 @@ buttonSuppr.addEventListener("click", () => {
 var buttonReset = document.querySelector(".reset_rating");
 buttonReset.onclick = () => {
   $(".my-rating").starRating('unload');
-  // grab the first 5 divs with the class name jq-star and delete them
   const stars = [...document.getElementsByClassName("jq-star")];
   stars.forEach((star) => {
     star.remove();
