@@ -121,15 +121,19 @@ class SeriesController extends AbstractController
         $users = $series->getUser();
         $value = 0;
         
-        $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
-
-        $ratingCollection = [];
-        foreach($rating as $rate){
-            $ratingCollection[$rate->getUser()->getId()] = $rate->getValue();
+        $sum = 0;
+        foreach ($ratings as $rating){
+            $sum += $rating->getValue();
         }
-
-
+        if(count($ratings) != 0){
+            $avg = $sum / count($ratings);
+        } else {
+            $avg = 0;
+        }
+                
+        var_dump($avg);
         if($numPage == NULL){
             $numPage = 1;
         }
@@ -140,12 +144,13 @@ class SeriesController extends AbstractController
             }
         }
 
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'valeur' => $value,
             'numPage' => $numPage,
-            'rating' => $rating,
-            'ratingCollection' => $ratingCollection,
+            'rating' => $ratings,
+            'avg' => $avg,
         ]);
     }
 
@@ -288,15 +293,6 @@ class SeriesController extends AbstractController
             $entityManager->persist($ranting);
             $entityManager->flush();
         }
-
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
-        $sum = 0;
-        foreach ($ratings as $rating){
-            $sum += $rating->getValue();
-        }
-        $series->setRating($sum / count($ratings));
-        $entityManager->flush();
-
 
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
