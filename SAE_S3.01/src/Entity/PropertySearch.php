@@ -91,8 +91,8 @@ class PropertySearch
     {
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
-            foreach ($toutesLesSeries as $serie){
-                if (str_contains($serie->getTitle(), $nameFromForm)) {
+            foreach ($toutesLesSeries as $serie) {
+                if (str_starts_with($serie->getTitle(), $nameFromForm)) {
                     array_push($arrayName, $serie);
                 }
             }
@@ -141,7 +141,7 @@ class PropertySearch
 
     public function triAvis($entityManager, $avisFromForm, $toutesLesSeries):array
     {
-        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+        $queryBuilder = $entityManager->getRepository(Rating::class)->createQueryBuilder('r');
 
         if (strlen($avisFromForm) > 0) {
             switch ($avisFromForm) {
@@ -150,17 +150,22 @@ class PropertySearch
                 case 3:
                 case 4:
                 case 5:
-                    $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
+                    $queryBuilder->where('r.value BETWEEN :rating-1 AND :rating+1')
                         ->setParameter('rating', $avisFromForm);
                     break;
                 case 'ASC':
-                    $queryBuilder->orderBy('s.rating', 'ASC');
+                    $queryBuilder->orderBy('r.value', 'ASC');
                     break;
                 case 'DESC':
-                    $queryBuilder->orderBy('s.rating', 'DESC');
+                    $queryBuilder->orderBy('r.value', 'DESC');
                     break;
             }
-            $seriesByAvis = $queryBuilder->getQuery()->getResult();
+            $ratingByvalue = $queryBuilder->getQuery()->getResult();
+
+            $seriesByAvis = array();
+            foreach ($ratingByvalue as $serie){
+                array_push($seriesByAvis, $serie->getSeries());
+            }
 
             $arrayAvis = array();
             foreach($seriesByAvis as $serie){
@@ -178,7 +183,8 @@ class PropertySearch
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
                 foreach($arrayIntersect as $serie){
-                    $arrayRating[$serie->getId()] = $serie->getRating();
+                    $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $serie])[0];
+                    $arrayRating[$serie->getId()] = $rating->getValue();
                 }
 
                 if ($avisFromForm == 'ASC') {
