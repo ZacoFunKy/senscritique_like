@@ -14,9 +14,6 @@ use App\Entity\Rating;
 use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
 use App\Form\UserSearchFormType;
-use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
-use phpDocumentor\Reflection\PseudoTypes\True_;
-
 class UserController extends AbstractController
 {
     #[Route('/user/favoris', name: 'app_user_favorite')]
@@ -50,7 +47,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/profile/{id}', name: 'app_user_profile')]
-    public function profile( $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function profile( $id, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         $form = $this->createForm(UpdateFormType::class, $this->getUser());
         $form->handleRequest($request);
@@ -70,11 +67,18 @@ class UserController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('app_user_profile');
         }
+
+        $series = $paginator->paginate($user->getSeries(), $request->query->getInt('page', 1, 3));
+        $episodes = $paginator->paginate($user->getEpisode(), $request->query->getInt('page', 1, 3));
+
+
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
             'countries' => $countries,
             'ratings' => $ratings,
             'user' => $user,
+            'series' => $series,
+            'episodes' => $episodes,
         ]);
     }
 

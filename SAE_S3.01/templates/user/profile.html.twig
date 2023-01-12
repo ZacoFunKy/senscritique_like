@@ -4,8 +4,14 @@
 
 {% block stylesheets %}
 	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
+  	<link rel="stylesheet" type="text/css" href="../style/star-rating-svg.css">
 {% endblock %}
 
+{% block javascripts %}
+        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
+        <script src="../js/jquery.star-rating-svg.js"></script>
+{% endblock %}
 
 {% block body %}
 	<div id="tout">
@@ -88,9 +94,9 @@
 				<h2>Récapitulatifs des critiques</h2>
 				{% for rating in ratings %}
 					<div class="bloc_critique">
+						<h3>{{ rating.series.title }}</h3>
 						<p>{{ rating.comment }}</p>
-						<p>{{ rating.value }}</p>
-						<p>------------</p>
+						<div class="{{rating.id}} jq-stars"></div>
 					</div>
 				{% else %}
 					<p>Aucune critique trouvée.</p>
@@ -100,7 +106,8 @@
 				<h2>Séries favorites</h2>
 				<table class="table">
 					<tbody id="afficheSeries">
-						{% for series in user.series %}
+							{{ knp_pagination_render(series) }}
+						{% for series in series %}
 							<tr class="serie">
 								<td>
 									<img src="{{ path('poster_series_show', {'id': series.id} ) }}"/>
@@ -129,7 +136,7 @@
 				<h2>Épisodes vus</h2>
 				<table class="table">
 					<tbody id="afficheSeries">
-						{% for episode in user.episode %}
+						{% for episode in episodes %}
 							<tr class="serie">
 								<td>
 									<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/>
@@ -154,13 +161,36 @@
 								<td colspan="11">Aucun épisode trouvé.</td>
 							</tr>
 						{% endfor %}
+						<div class="navigation">
+							{{ knp_pagination_render(episodes) }}
+						</div>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 
+
+		<script>
+		{% for rating in ratings %}
+			$(".{{rating.id}}").starRating({
+			totalStars: 5,
+			starShape: 'rounded',
+			starSize: 15,
+			emptyColor: 'lightgray',
+			hoverColor: 'red',
+			ratedColor: 'yellow',
+			useGradient: false,
+			disableAfterRate: false,
+			initialRating: {{rating.value}},
+			readOnly: true,
+			});
+		{% endfor %}
+	</script>
+
 	<script>
+
+
 		var country = document.querySelector('select');
 country.value = {{ user.country.id }};
 
