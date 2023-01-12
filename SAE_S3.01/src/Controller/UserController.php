@@ -15,7 +15,7 @@ use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
 use App\Form\UserCreateFormType;
 use App\Form\UserSearchFormType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Form\CommentNewFormType;
 
 class UserController extends AbstractController
 {
@@ -179,6 +179,48 @@ class UserController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('admin');
     }
+
+
+    #[Route('/user/comment/new', name: 'app_admin_user_comment_new')]
+    public function new_comment(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $form = $this->createForm(CommentNewFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment_exemple = array();
+            $comment_exemple[0] = "C'est vraiment un bon film";
+            $comment_exemple[1] = "J'ai adoré ce film";
+            $comment_exemple[2] = "Je n'ai pas aimé ce film";
+            $comment_exemple[3] = "Je n'ai pas compris ce film";
+            $data = $form->getData();
+            $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+            $serie = $entityManager->getRepository(Serie::class)->findBy(['id' => $data['serie']])[0];
+            if($serie==null){
+                $queryBuilder = $entityManager->getRepository(Serie::class)->createQueryBuilder('s');
+                $queryBuilder->where('s.name LIKE :name')
+                    ->setParameter('name', '%' . $data['serie'] . '%');
+                $serie = $queryBuilder->getQuery()->getResult()[0];
+            }
+            for ($i = 0; $i < $data['number']; $i++) {
+                $comment = new Rating();
+                $comment->setUser($user);
+                $comment->setSeries($serie);
+                $comment->setValue(rand(0,5));
+                $comment->setComment($comment_exemple[rand(0,3)]);
+                $entityManager->persist($comment);
+            }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('user/commentaire_new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+        
+    }
+
 
     
 }
