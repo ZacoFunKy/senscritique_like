@@ -13,7 +13,10 @@ use App\Entity\Country;
 use App\Entity\Rating;
 use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
+use App\Form\UserCreateFormType;
 use App\Form\UserSearchFormType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class UserController extends AbstractController
 {
     #[Route('/user/favoris', name: 'app_user_favorite')]
@@ -131,6 +134,50 @@ class UserController extends AbstractController
             'form' => $form->createView(),
             'pagination' => false,
         ]);
+    }
+
+    #[Route('/user/admin/new', name: 'app_admin_user_new')]
+    public function new(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $form = $this->createForm(UserCreateFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            for ($i = 0; $i < $data['number']; $i++) {
+                $user = new User();
+                $user->setName($data['name'] . $i);
+                $email = $data['email'];
+                $email = explode('@', $email);
+                $user->setEmail($email[0] . $i . '@' . $email[1]);
+                $user->setPassword($data['name'] . $i);
+                $user->setRoles(['ROLE_USER']);
+                $country = $entityManager->getRepository(Country::class)->findOneBy(['name' => "France" ]);
+                $user->setCountry($country);
+                $user->setIsBot(true);
+                $entityManager->persist($user);
+            }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('user/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/user/admin/delete', name: 'app_admin_user_delete')]
+    public function delete(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // delete all the users with isBot to true
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $entityManager->remove($u);
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('admin');
     }
 
     
