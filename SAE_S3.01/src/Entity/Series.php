@@ -87,12 +87,6 @@ class Series
      */
     private $yearEnd;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="rating", type="float", nullable=true)
-     */
-    private $rating;
 
     /**
      * @var \Doctrine\Common\Collections\Collection

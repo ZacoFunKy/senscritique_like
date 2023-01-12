@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\User;
 use App\Entity\Country;
+use App\Entity\Series;
 use App\Entity\Rating;
 use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
@@ -195,24 +196,30 @@ class UserController extends AbstractController
             $comment_exemple[3] = "Je n'ai pas compris ce film";
             $data = $form->getData();
             $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
-            $serie = $entityManager->getRepository(Serie::class)->findBy(['id' => $data['serie']])[0];
-            if($serie==null){
-                $queryBuilder = $entityManager->getRepository(Serie::class)->createQueryBuilder('s');
-                $queryBuilder->where('s.name LIKE :name')
-                    ->setParameter('name', '%' . $data['serie'] . '%');
-                $serie = $queryBuilder->getQuery()->getResult()[0];
+            if($user==null){
+                return $this->redirectToRoute('admin', ['error' => 'No bot user']);
             }
+            if(count($user)<$data['number']){
+                return $this->redirectToRoute('admin', ['error' => 'Not enough users']);
+            }
+            // get the serie id in the url 
+            $serie = $request->query->get('id');
+            $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $serie]);
             for ($i = 0; $i < $data['number']; $i++) {
-                $comment = new Rating();
-                $comment->setUser($user);
-                $comment->setSeries($serie);
-                $comment->setValue(rand(0,5));
-                $comment->setComment($comment_exemple[rand(0,3)]);
-                $entityManager->persist($comment);
+                $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user[$i], 'series' => $serie]);
+                if($rating==null){
+                    $comment = new Rating();
+                    $comment->setUser($user[$i]);
+                    $comment->setSeries($serie);
+                    $comment->setValue(rand(0,5));
+                    $comment->setDate(new \DateTime());
+                    $comment->setComment($comment_exemple[rand(0,3)]);
+                    $entityManager->persist($comment);
+                }
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('admin', ['error' => 'Commentaires ajoutés']);
         }
 
         return $this->render('user/commentaire_new.html.twig', [

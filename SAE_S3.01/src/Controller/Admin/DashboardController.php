@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Series;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -48,7 +49,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_delete'),
             ]),
             MenuItem::subMenu('Comments', 'fa-solid fa-comment')->setSubItems([
-                MenuItem::linkToRoute('Ajouter', 'fa-solid fa-robot', 'app_admin_user_comment_new'),
+                MenuItem::linkToCrud('Ajouter', 'fa-solid fa-robot', Series::class),
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_comment_delete'),
             ])
             ,
