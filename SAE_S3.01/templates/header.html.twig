@@ -22,10 +22,13 @@
       <div class="menu">
         <ul>
           <li>
-            <p style="color:white; font-weight: bold ">Bonjour {{ app.user.name }}</p>
+            <p class="name" style="color:white; font-weight: bold ">Bonjour {{ app.user.name }}</p>
           </li>
           <li>
             <a class="option" href="{{ path('app_user_profile', {'id': app.user.id} ) }}">Mon compte</a>
+          </li>
+          <li>
+            <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
           </li>
           <li>
             <a class="option" href="{{ path('app_user_favorite', {'numPage': numPage} )}}">Mes séries favorites</a>
@@ -46,6 +49,9 @@
             <a class="option" href="{{ impersonation_exit_url() }}">Désincarner</a>
           </li>
           {% endif %}
+          <li>
+            <a class="option" href="{{ path('app_about') }}">A propos</a>
+          </li>
           <li>
             <a class="option" href="{{ path('app_logout')}}">Déconnexion</a>
           </li>
@@ -207,7 +213,10 @@
   /*téléphone en portrait*/
   @media screen and (min-width: 340px) and (orientation: portrait) {
     .action .menu ul li a{
-      font-size: 1em;
+      font-size: 1.5em;
+    }
+    .name{
+      font-size: 1.8em;
     }
   
   

@@ -16,7 +16,7 @@ class UserSearchFormType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Rechercher une série'
+                    'placeholder' => 'Rechercher un utilisateur'
                 ]
             ])
 

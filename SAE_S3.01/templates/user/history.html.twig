@@ -20,7 +20,6 @@
 			<h1>Votre historique d'épisodes</h1>
 			<a class="bouton" href="{{ path('app_series_index', {'page': numPage} ) }}" style="margin-bottom:15px">
 				Retour</a>
-
 			<div id="episodes">
 				{% for episode in episodes %}
 					<div class="episode">
@@ -28,7 +27,7 @@
 						<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" , alt="Poster"/>
 						<p>{{episode.number}}
 							{{ episode.title }}</p>
-						<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afisher</a>
+						<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
 						<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
 					</div>
 				{% else %}
