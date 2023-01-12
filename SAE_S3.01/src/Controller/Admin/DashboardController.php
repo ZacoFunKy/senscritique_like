@@ -50,7 +50,7 @@ class DashboardController extends AbstractDashboardController
             ]),
             MenuItem::subMenu('Comments', 'fa-solid fa-comment')->setSubItems([
                 MenuItem::linkToCrud('Ajouter', 'fa-solid fa-robot', Series::class),
-                MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_comment_delete'),
+                MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_comment_delete'),
             ])
             ,
             MenuItem::linkToRoute('Back to site', 'fa-solid fa-right-from-bracket', 'app_series_index'),            

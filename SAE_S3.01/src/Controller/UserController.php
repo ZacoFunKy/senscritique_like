@@ -175,12 +175,22 @@ class UserController extends AbstractController
     public function delete(EntityManagerInterface $entityManager, Request $request): Response
     {
         // delete all the users with isBot to true
+
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
+            foreach ($comment as $c) {
+                $entityManager->remove($c);
+            }
+        }
+
+        $entityManager->flush();
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         foreach ($user as $u) {
             $entityManager->remove($u);
         }
         $entityManager->flush();
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('admin', ['error' => 'Les utilisateurs ont bien été supprimés']);
     }
 
 
@@ -228,6 +238,23 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
         
+    }
+
+    #[Route('/user/comment/delete', name: 'app_admin_user_comment_delete')]
+    public function delete_comment(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // delete all the comments publish by the users which isBot is true
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
+            foreach ($comment as $c) {
+                $entityManager->remove($c);
+            }
+        }
+
+        $entityManager->flush();
+        return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
+
     }
 
 
