@@ -82,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="poster", type="blob", length=0, nullable=true)
      */
-    private $photo ;
+    private $photo;
 
     /**
      * @var string|null
@@ -140,7 +140,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->photo = file_get_contents('../public/images/avatar.png');
     }
 
     public function getId(): ?int
@@ -297,15 +296,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setisAdmin(bool $admin): self
     {
         // if the user is SuperAdmin, he is also Admin
-        if($this->getIsSuperAdmin()){
+        if ($this->getIsSuperAdmin()) {
             $admin = true;
             $this->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
             $this->admin = $admin;
             return $this;
         }
-        if($admin){
+        if ($admin) {
             $this->setRoles(['ROLE_ADMIN']);
-        }else{
+        } else {
             $this->setRoles(['ROLE_USER']);
         }
         $this->admin = $admin;
@@ -316,7 +315,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->isSuperAdmin;
     }
-
+    /**
+     * $isSuperAdmin 1 si il est admin sinon 0
+     */
     public function setIsSuperAdmin(bool $isSuperAdmin): self
     {
         $this->isSuperAdmin = $isSuperAdmin;

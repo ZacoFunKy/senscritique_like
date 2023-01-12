@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="/style/styleLogin.css">
+	<link rel="stylesheet" type="text/css" href="style/styleLogin.css">
 {% endblock %}
 
 {% block body %}
@@ -12,7 +12,9 @@
 	<div id="tout">
 		<header>
 			<a href="{{ path('app_default') }}">Netflop</a>
-			{% include 'header.html.twig' %}
+			<div id="id">
+				{% include 'header.html.twig' %}
+			</div>
 		</header>
 		<div id="c">
 			<div id="connection">

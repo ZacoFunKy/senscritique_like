@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 {% set pagination = 10 %}
-{% block title %}Series index
+{% block title %}Historique
 {% endblock %}
 
 {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
+	<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
 {% block body %}
@@ -17,71 +17,29 @@
 			</div>
 		</header>
 		<div id="content">
-			<h1>Votre historique d'épisode</h1>
-            			<a class="boutonModif" href="{{ path('app_series_index', {'page': numPage} ) }}" style="margin-bottom:15px"> Retour</a>
+			<h1>Votre historique d'épisodes</h1>
+			<a class="bouton" href="{{ path('app_series_index', {'page': numPage} ) }}" style="margin-bottom:15px">
+				Retour</a>
 
-			<table
-				class="table">
-				<!--<thead>
-												                    <tr>
-												                        <th>Title</th>
-												                        <th>Poster</th>
-												                        <th>Director</th>
-												                        <th>YoutubeTrailer</th>
-												                        <th>actions</th>
-												                    </tr>
-												                </thead>-->
-				<tbody id="afficheSeries">
-					{% for episode in episodes %}
-						<tr id="serie">
-                            <td>{{episode.season.series.title}}</td>
-							<td><img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/></td>
-							<td>{{episode.number}} {{ episode.title }}</td>
-
-							<td>
-								<a class="boutonModif" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
-                                <a class="boutonModif" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
-							</td>
-						</tr>
-					{% else %}
-						<tr>
-							<td colspan="11">no records found</td>
-						</tr>
-					{% endfor %}
-
-                    {% if pagination is defined and pagination == true %}
+			<div id="episodes">
+				{% for episode in episodes %}
+					<div class="episode">
+						<p>{{episode.season.series.title}}</p>
+						<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" , alt="Poster"/>
+						<p>{{episode.number}}
+							{{ episode.title }}</p>
+						<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afisher</a>
+						<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
+					</div>
+				{% else %}
+					<span colspan="11">Aucun épisode vu.</span>
+				{% endfor %}
+				{% if pagination is defined and pagination == true %}
 					<div class="navigation" style="margin-top:20px">
 						{{ knp_pagination_render(episodes) }}
 					</div>
-					{% endif %}
-
-					{# 
-															                <div class="bouton">
-															                    <a href="{{ path('app_series_index_page', {'page': series|length } ) }}"> Suivant > </a>
-															                </div>
-															                #}
-
-
-				    
-
-					{# Permet de gérer l'aleatoire #}
-					{#
-															                    {% set randomSerie = random(series) %}
-															                    <td>{{ randomSerie.title }}</td>
-															                        <td><img src="{{ path('poster_series_show', {'id': randomSerie.id} ) }}"/></td>
-															                        <td>{{ randomSerie.director }}</td>
-															                        <td>{{ randomSerie.youtubeTrailer }}</td>
-															                        <td>
-															                            <a href="{{ path('app_series_show', {'id': randomSerie.id}) }}">show</a>
-															                            {# <a href="{{ path('app_series_edit', {'id': randomSerie.id}) }}">edit</a> 
-															                        </td>
-															                    </tr>
-															                    #}
-				</tbody>
-			</table>
-			{# <a href="{{ path('app_series_new') }}">Create new</a> #}
+				{% endif %}
+			</div>
 		</div>
 	</div>
 {% endblock %}
-
-

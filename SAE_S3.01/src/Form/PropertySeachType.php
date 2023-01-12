@@ -59,30 +59,17 @@ class PropertySeachType extends AbstractType
             ]
         ]
         )
-        //->add('save', SubmitType::class)
-            /*->add('nom', null, [
+        ->add('nom', TextType::class, [
             'required' => false,
             'label' => false,
             'attr' => [
                 'placeholder' => 'Rechercher une série'
             ]
-            ])
-            ->add('dateSortie', null, [
-                'required' => false,
-                'label' => false
-            ])*/
-
-                ->add('nom', TextType::class, [
-                'required' => false,
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Rechercher une série'
-                ]
-            ]
-            )
-                ->add('avis', ChoiceType::class, [
-                'required' => false,
-                'choices' => [
+        ]
+        )
+        ->add('avis', ChoiceType::class, [
+            'required' => false,
+            'choices' => [
                     'Croissant' => 'ASC',
                     'Décroissant' => 'DESC',
                     '4-5 étoiles' => 5,

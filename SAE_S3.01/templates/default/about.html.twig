@@ -4,29 +4,20 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="style/styleAbout.css">
+	<link rel="stylesheet" type="text/css" href="style/styleAbout.css">
 {% endblock %}
 
 {% block body %}
-    <div id="tout">
-        <header>
-            <a href="{{ path('app_default') }}">Netflop</a>
-            <div id="id">
-                {% if app.user %}
-                    <a href="{{ path('app_logout') }}"><input name="deconnexion" type="submit" value="Déconnexion"></a>
-                {% else %}
-                    <a href="{{ path('app_login') }}"><input name="connexion" type="submit" value="Connexion"></a>
-                    <a href="{{ path('app_register') }}"><input name="inscription" type="submit" value="Inscription"></a>
-                {% endif %}
-            </div>
-        </header>
-        <div id="content">
-            <p>Bienvenue sur Netflop !</br></br> Netflop est un service de suivi de series sur inscription qui permet à nos utilisateurs de regarder les informations d'une serie sur un appareil connecté à internet et cela gratuitement. </br></br> Vous pouvez suivre une serie, regarder son descriptif, le nombre de saisons, la bande d'annonce et plus encore ...
-            </p>
-        </div>
-        <div id="button">
-            <a href="{{ path('app_default')}}"><input name="series" type="submit" value="Page d'accueil"></a>
-        </div>
-
-    </div>
-</div>{% endblock %}
+	<div id="tout">
+		<header>
+			<a href="{{ path('app_default') }}" class="title">Netflop</a>
+			<div id="id">
+				{% include 'header.html.twig' %}
+			</div>
+		</header>
+		<div id="content">
+			<p>Bienvenue sur Netflop !</p>
+		</br>
+	</br>
+	Netflop est un service de suivi de series sur inscription qui permet à nos utilisateurs de regarder les informations d'une serie sur un appareil connecté à internet et cela gratuitement.
+</br></br>Vous pouvez suivre une serie, regarder son descriptif, le nombre de saisons, la bande d'annonce et plus encore ...</p></div><div id="button"><a href="{{ path('app_default')}}"><input name="series" type="submit" value="Page d'accueil"></a></div></div></div>{% endblock %}

@@ -124,14 +124,20 @@ class SeriesController extends AbstractController
         $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
+        $ratingCollection = [];
+        foreach($rating as $rate){
+            $ratingCollection[$rate->getUser()->getId()] = $rate->getValue();
+        }
+
+
         if($numPage == NULL){
             $numPage = 1;
         }
 
         foreach($users as $user) {
-            if($user == $this->getUser()){
-                $value = 1;            
-            } 
+            if( $user == $this->getUser()) {
+                $value = 1;
+            }
         }
 
         return $this->render('series/show.html.twig', [
@@ -139,6 +145,7 @@ class SeriesController extends AbstractController
             'valeur' => $value,
             'numPage' => $numPage,
             'rating' => $rating,
+            'ratingCollection' => $ratingCollection,
         ]);
     }
 
