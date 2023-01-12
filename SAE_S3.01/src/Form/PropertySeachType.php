@@ -5,6 +5,7 @@ namespace App\Form;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use App\Entity\PropertySearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,13 +43,22 @@ class PropertySeachType extends AbstractType
                 'Talk-Show'=>'Talk-Show'
             ],
         ])
-        ->add('anneeDeSortie', ChoiceType::class, [
+        ->add('anneeDepart', IntegerType::class, [
             'required' => false,
-            'choices' => [
-                'Croissant' => 'ASC',
-                'Décroissant' => 'DESC'
-            ],
-        ])
+            'label' => false,
+            'attr' => [
+                'placeholder' => 'Sorti après le...'
+            ]
+        ]
+        )
+        ->add('anneeFin', IntegerType::class, [
+            'required' => false,
+            'label' => false,
+            'attr' => [
+                'placeholder' => 'Sorti avant le...'
+            ]
+        ]
+        )
         //->add('save', SubmitType::class)
             /*->add('nom', null, [
             'required' => false,
@@ -73,14 +83,13 @@ class PropertySeachType extends AbstractType
                 ->add('avis', ChoiceType::class, [
                 'required' => false,
                 'choices' => [
-                    'Tous' => null,
                     'Croissant' => 'ASC',
                     'Décroissant' => 'DESC',
-                    '5 étoiles' => 5,
-                    '4 étoiles' => 4,
-                    '3 étoiles' => 3,
-                    '2 étoiles' => 2,
-                    '1 étoile' => 1,
+                    '4-5 étoiles' => 5,
+                    '3-4 étoiles' => 4,
+                    '2-3 étoiles' => 3,
+                    '1-2 étoiles' => 2,
+                    '0-1 étoile' => 1,
                 ],
             ])
         ;

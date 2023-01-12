@@ -6,6 +6,7 @@ use App\Entity\Episode;
 use App\Entity\Series;
 use App\Entity\User;
 use App\Entity\Rating;
+use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SeriesType;
@@ -19,6 +20,28 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
+    #[Route('/test', name: 'app_series_test', methods: ['GET', 'POST'])]
+    public function test(EntityManagerInterface $entityManager, Request $request,
+    PaginatorInterface $paginator
+    ): Response
+    {
+        $genres = $entityManager->getRepository(Genre::class)->findAll();
+        $genre = $entityManager->getRepository(Genre::class)->findBy(['name' => 'Animation'])[0];
+        $seriesByGenre = $genre->getSeries();
+
+        $arrayGenre = array();
+        foreach($seriesByGenre as $serie){
+            array_push($arrayGenre, $serie);
+        }
+
+
+
+        return $this->render('series/test.html.twig', [
+            'seriesByGenre' => $seriesByGenre,
+            'array' => $arrayFinale,
+        ]);
+    }
+
 
     #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,
@@ -28,52 +51,111 @@ class SeriesController extends AbstractController
         $propertySearch = new PropertySearch();
         $form = $this->createForm(PropertySeachType::class,$propertySearch);
         $form->handleRequest($request);
+        
+
+        
 
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if ($form->isSubmitted() && $form->isValid()) {
-            $genre=$propertySearch->getGenre();
-            $anneeDeSortie=$propertySearch->getAnneeDeSortie();
-            $name = $propertySearch->getNom();
-            $avis = $propertySearch->getAvis();
-            if ($name) {
-                switch ($avis) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->andWhere('s.rating BETWEEN :rating-1 AND :rating+1')
-                            ->setParameter('name', '%'.$name.'%')
-                            ->setParameter('rating', $avis);
-                        break;
-                    case 'ASC':
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->orderBy('s.rating', 'ASC')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
-                    case 'DESC':
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->orderBy('s.rating', 'DESC')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
-                    default:
-                        $queryBuilder->where('s.title LIKE :name')
-                            ->setParameter('name', '%'.$name.'%');
-                        break;
+            $genreFromForm=$propertySearch->getGenre();
+            $anneeDepartFromForm=$propertySearch->getAnneeDepart();
+            $anneeFinFromForm=$propertySearch->getAnneeFin();
+            $nameFromForm = $propertySearch->getNom();
+            $avisFromForm = $propertySearch->getAvis();
 
+
+            // Toutes les séries
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+            
+            $series = $entityManager->getRepository(Series::class)->findAll();
+            $toutesLesSeries = array();
+            foreach($series as $serie){
+                array_push($toutesLesSeries, $serie);
+            }
+
+
+            // Genre
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+            if (strlen($genreFromForm) > 0) {
+                $genres = $entityManager->getRepository(Genre::class)->findAll();
+                $genre = $entityManager->getRepository(Genre::class)->findBy(['name' => $genreFromForm])[0];
+                $seriesByGenre = $genre->getSeries();
+
+                $arrayGenre = array();
+                foreach($seriesByGenre as $serie){
+                    array_push($arrayGenre, $serie);
                 }
-                $series = $queryBuilder->getQuery()->getResult();
             }
             else {
-                switch($avis) {
+                $arrayGenre = $toutesLesSeries;
+            }
+
+
+            // Name
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+            if (strlen($nameFromForm) > 0) {
+                $arrayName = array();
+                foreach($toutesLesSeries as $serie){
+                    if (str_contains($serie->getTitle(), $nameFromForm)) {
+                        array_push($arrayName, $serie);
+                    }
+                }
+            }
+            else {
+                $arrayName = $toutesLesSeries;
+            }
+
+
+            // Date début
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+            if (strlen($anneeDepartFromForm) > 0) {
+                $queryBuilder->where('s.yearStart >= :date')
+                    ->setParameter('date', $anneeDepartFromForm);
+                $seriesByAnneeDebut = $queryBuilder->getQuery()->getResult();
+                $arrayAnneeDebut = array();
+                foreach($seriesByAnneeDebut as $serie){
+                    array_push($arrayAnneeDebut, $serie);
+                }
+            }
+            else {
+                $arrayAnneeDebut = $toutesLesSeries;
+            }
+
+
+            // Date fin
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+            if (strlen($anneeFinFromForm) > 0) {
+                $queryBuilder->where('s.yearStart <= :date')
+                    ->setParameter('date', $anneeFinFromForm);
+
+                $seriesByAnneeFin = $queryBuilder->getQuery()->getResult();
+
+                $seriesAnneeFin = array();
+                foreach($seriesByAnneeFin as $serie){
+                    array_push($seriesAnneeFin, $serie);
+                }
+            }
+            else {
+                $seriesAnneeFin = $toutesLesSeries;
+            }
+
+
+            // Avis
+            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+            if (strlen($avisFromForm) > 0) {
+                switch ($avisFromForm) {
                     case 1:
                     case 2:
                     case 3:
                     case 4:
                     case 5:
                         $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
-                            ->setParameter('rating', $avis);
+                            ->setParameter('rating', $avisFromForm);
                         break;
                     case 'ASC':
                         $queryBuilder->orderBy('s.rating', 'ASC');
@@ -81,23 +163,30 @@ class SeriesController extends AbstractController
                     case 'DESC':
                         $queryBuilder->orderBy('s.rating', 'DESC');
                         break;
-                    case null:
-                        $series = $entityManager
-                        ->getRepository(Series::class)
-                        ->findBy([], ['title' => 'ASC']);
-                        break;
                 }
-                $series = $queryBuilder->getQuery()->getResult();
+                $seriesByAvis = $queryBuilder->getQuery()->getResult();
+
+                $arrayAvis = array();
+                foreach($seriesByAvis as $serie){
+                    array_push($arrayAvis, $serie);
+                }
+            }
+            else {
+                $arrayAvis = $toutesLesSeries;
             }
 
-            $series = $paginator->paginate($series, $request
+
+
+
+            $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $seriesAnneeFin);
+
+            $arrayIntersect = $paginator->paginate($arrayIntersect, $request
             ->query->getInt('page', 1, 10));
 
-
             return $this->render('series/index.html.twig', [
-                'series' => $series,
+                'series' => $arrayIntersect,
                 'form' => $form->createView(),
-                'pagination' => FALSE,
+                'pagination' => TRUE,
             ]);
         }else {
             $series = $entityManager

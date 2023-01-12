@@ -6,9 +6,9 @@ class PropertySearch
 {
 
     private $nom;
-    private $anneeDeSortie;
+    private $anneeDepart;
+    private $anneeFin;
     private $genre;
-
     private $avis;
    
     public function getNom(): ?string
@@ -23,14 +23,26 @@ class PropertySearch
         return $this;
     }
 
-    public function getAnneeDeSortie(): ?string
+    public function getAnneeDepart(): ?int
     {
-        return $this->anneeDeSortie;
+        return $this->anneeDepart;
     }
  
-    public function setAnneeDeSortie(string $anneeDeSortie): self
+    public function setAnneeDepart(int $anneeDepart): self
     {
-        $this->anneeDeSortie = $anneeDeSortie    ;
+        $this->anneeDepart = $anneeDepart    ;
+ 
+        return $this;
+    }
+
+    public function getAnneeFin(): ?int
+    {
+        return $this->anneeFin;
+    }
+ 
+    public function setAnneeFin(int $anneeFin): self
+    {
+        $this->anneeFin = $anneeFin    ;
  
         return $this;
     }
