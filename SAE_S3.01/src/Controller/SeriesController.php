@@ -120,7 +120,6 @@ class SeriesController extends AbstractController
     {
         $users = $series->getUser();
         $value = 0;
-        
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
         $sum = 0;
@@ -136,6 +135,9 @@ class SeriesController extends AbstractController
         if ($numPage == null) {
             $numPage = 1;
         }
+       
+        // get ?rating in the url
+        $limitRating = Request::createFromGlobals()->query->get('rating');
 
         foreach ($users as $user) {
             if ( $user == $this->getUser()) {
@@ -150,6 +152,7 @@ class SeriesController extends AbstractController
             'numPage' => $numPage,
             'rating' => $ratings,
             'avg' => $avg,
+            'limitRating' => $limitRating,
         ]);
     }
 

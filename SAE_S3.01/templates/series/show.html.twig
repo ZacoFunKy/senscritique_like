@@ -86,6 +86,12 @@
           <p>En cours</p>
         {% endif %}
         <h2>Commentaire ({{rating|length}})</h2>
+        <h4>Rechercher un commentaire</h4>
+        <div class="search">
+          <div class="search_rating jq-stars"></div>
+          <button class="reset_search">Reset filtre</button>
+        </div>
+        <h4>Commenter</h4>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
             {% set hasAlreadyRated = false %}
@@ -129,20 +135,37 @@
           {% endif %}
           {# Commentaire des autres utilisateurs #}
             {% if app.user.id is defined and app.user.id is not null %}
-              {% for review in rating %}
+              {% for review in rating %}   
                 {% if review != userReview %} 
-                  <div class="review_user">
-                    <div class="profil">
-                      <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                      <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
-                    </div>
-                    <div class="rate_part">
-                      <p>
-                        <div class="{{review.user.id}} jq-stars"></div>
-                      </p>
-                      <p>{{review.comment}}</p>
-                    </div>
-                  </div>
+                  {% if limitRating is defined %}
+                    {% if review.value == limitRating %}
+                      <div class="review_user">
+                        <div class="profil">
+                          <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                          <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        </div>
+                        <div class="rate_part">
+                          <p>
+                            <div class="{{review.user.id}} jq-stars"></div>
+                          </p>
+                          <p>{{review.comment}}</p>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% else %}
+                      <div class="review_user">
+                        <div class="profil">
+                          <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                          <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        </div>
+                        <div class="rate_part">
+                          <p>
+                            <div class="{{review.user.id}} jq-stars"></div>
+                          </p>
+                          <p>{{review.comment}}</p>
+                        </div>
+                      </div>
+                    {% endif %}                    
                   {% if app.user is defined %}
                     {% if review.user.id == app.user.id %}
                       <button class="modifier">Modifier</button>
@@ -258,6 +281,26 @@
         readOnly: true,
       });
     {% endfor %}
+
+    $(".search_rating").starRating({
+      totalStars: 5,
+      starShape: 'rounded',
+      starSize: 40,
+      emptyColor: 'lightgray',
+      hoverColor: 'red',
+      ratedColor: 'yellow',
+      useGradient: false,
+      disableAfterRate: false,
+      callback: function(currentRating, $el){
+            window.location.href = window.location.href.split('?')[0] + '?rating=' + currentRating;
+        }
+    });
+
+    var buttonResetFiltre = document.querySelector(".reset_search");
+    buttonResetFiltre.onclick = () => {
+      window.location.href = window.location.href.split('?')[0];
+    };
+
 
       $(".my-rating").starRating({
         totalStars: 5,
