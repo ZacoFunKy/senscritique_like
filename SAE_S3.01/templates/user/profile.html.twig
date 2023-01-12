@@ -20,14 +20,14 @@
 			<div class="resume">
 				<div class="avatar">
 					{% if user.photo is not null %}
-						<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}">
+						<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}" alt="Avatar">
 					{% else %}
-						<img width="150px" src="../images/avatar.png">
+						<img width="150px" src="../images/avatar.png" alt="Avatar">
 					{% endif %}
 				</div>
 				<span>{{user.name}}</span>
 				<span>{{user.email}}</span>
-				<span></span>
+				{# <span></span> #}
 				<a href="{{ path('app_series_index')}}">
 					<button class="bouton" type="button">Retour</button>
 				</a>
@@ -95,61 +95,40 @@
 			</div>
 			<div id="series-favorites">
 				<h2>Séries favorites</h2>
-				<table class="table">
-					<tbody id="afficheSeries">
-						{% for series in user.series %}
-							<tr class="serie">
-								<td>
-									<img src="{{ path('poster_series_show', {'id': series.id} ) }}"/>
-								</td>
-								<td>{{ series.title }}</td>
-								<td>
-									<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-								</td>
-								{% if user == app.user %}
-									<td>
-										<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
-									</td>
-								{% endif %}
-
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="11">Aucune série trouvée.</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+				<div id="series">
+					{% for series in user.series %}
+						<div class="serie">
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" , alt="Poster"/>
+							<p>{{ series.title }}</p>
+							<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+							{% if user == app.user %}
+								<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
+							{% endif %}
+						</div>
+					{% else %}
+						<span colspan="11">Aucune série favorite.</span>
+					{% endfor %}
+				</div>
 			</div>
 			<div id="historique">
 				<h2>Épisodes vus</h2>
-				<table class="table">
-					<tbody id="afficheSeries">
-						{% for episode in user.episode %}
-							<tr class="serie">
-								<td>
-									<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}"/>
-								</td>
-								<td>{{ episode.season.series.title }}</td>
-								<td>Épisode
-									{{ episode.number }}</td>
-								<td>"{{ episode.title }}"</td>
-								<td>
-									<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
-								</td>
-								{% if user == app.user %}
-									<td>
-										<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
-									</td>
-								{% endif %}
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="11">Aucun épisode trouvé.</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+				<div id="episodes">
+					{% for episode in user.episode %}
+						<div class="serie">
+							<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" , alt="Poster"/>
+							<p>{{ episode.season.series.title }}</p>
+							<p>Épisode
+								{{ episode.number }}</p>
+							<p>"{{ episode.title }}"</p>
+							<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
+							{% if user == app.user %}
+								<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
+							{% endif %}
+						</div>
+					{% else %}
+						<span colspan="11">Aucun épisode vu.</span>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
 	</div>

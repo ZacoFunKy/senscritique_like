@@ -120,22 +120,26 @@ select {
     margin: 1% 1% 0;
 }
 
-.serie {
-    margin: 5%;
+#series,
+#users,
+#episodes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 2% 0;
+}
+
+.serie,
+.user,
+.episode {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 0.2%;
 }
 
-#afficheSeries {
-    display: flex;
-}
-
-#afficheSeries .bouton {
-    margin: 2%;
-}
-
-td img {
+.serie img {
     height: 400px;
 }
 
@@ -145,12 +149,9 @@ button,
     border: none;
     color: black;
     padding: 10px 25px;
-    text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px;
     border-radius: 4px;
-    margin-right: 10%;
     cursor: pointer;
 }
 
