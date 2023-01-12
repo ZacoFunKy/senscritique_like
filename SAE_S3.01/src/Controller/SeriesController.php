@@ -88,17 +88,7 @@ class SeriesController extends AbstractController
                 }
                 $series = $queryBuilder->getQuery()->getResult();
             }
-
-            $series = $paginator->paginate($series, $request
-            ->query->getInt('page', 1, 10));
-
-
-            return $this->render('series/index.html.twig', [
-                'series' => $series,
-                'form' => $form->createView(),
-                'pagination' => FALSE,
-            ]);
-        }else {
+        } else {
             $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
@@ -170,9 +160,9 @@ class SeriesController extends AbstractController
         }
 
         foreach($users as $user) {
-            if($user == $this->getUser()){
-                $value = 1;            
-            } 
+            if( $user == $this->getUser()) {
+                $value = 1;
+            }
         }
 
         return $this->render('series/show.html.twig', [

@@ -18,29 +18,26 @@
 
 	<div id="tout">
 		<header>
-			<a href="{{path('app_series_index') }}?page={{numPage}}"><p class="title">Netflop</p></a>
-            {% include 'header.html.twig' %}
-        <style> 
-		header a p {
-            color: #f44336;
-			font-family: 'Bebas Neue', sans-serif;
-			font-size: 3vw;
-			letter-spacing: 4px;
-			text-shadow: 5px 3px 10px rgb(0, 0, 0);
-			text-decoration: none;
-            }
-        </style>
+			<a href="{{path('app_series_index') }}?page={{numPage}}" class="title">Netflop</a>
+			{% include 'header.html.twig' %}
+
 		</header>
 		<div id="content">
 			<div id="partGauche">
-                    {% if app.user.id is defined %}
-            {% if valeur == 1 %}
-                    <a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0','redirect': "1",'numPage': numPage}) }}"><i class="fa-solid fa-star fa-2xl" style="color:yellow"></i></a>
-                {% else %}
-                    <a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1','redirect': "1", 'numPage': numPage}) }}"><i class="fa-regular fa-star fa-2xl" style="color:yellow"></i></a>
-                {% endif %}
-        {% endif %}
-				<p id="titre">{{ series.title }}</p>
+				<div class="titre-favoris">
+					<p id="titre">{{ series.title }}</p>
+					{% if app.user.id is defined %}
+						{% if valeur == 1 %}
+							<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '0','redirect': " 1",'numPage': numPage}) }}">
+								<i class="fa-solid fa-heart fa-2xl" style="color:#f44336"></i>
+							</a>
+						{% else %}
+							<a href="{{ path('app_series_show_adds', {'series' : series.id, 'yesno' : '1','redirect': " 1", 'numPage' : numPage}) }}">
+								<i class="fa-regular fa-heart fa-2xl" style="color:#f44336"></i>
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
 			</br>
 			<p>{{ series.plot }}</p>
 			<p>{{ series.director }}</p>
@@ -91,29 +88,43 @@
         {% endif %}
 		<h2>Seasons</h2>
 		<ul>
-			<td>
-                <div class="w-25 mb-3">
-                    <select name="season" id="season" class="form-select">
-				{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-                    <option value="{{ season.number }}">Saison {{ season.number }}</option>
-				{% endfor %}
-                </select>
-                </div>
-                {% for season in series.seasons %}
-                    {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
-                        <p id="{{season.number}}" class="episode">{{episode.number}} {{ episode.title}}
-                        {% if app.user %}
-                            {% if episode in app.user.episode %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}"><i class="fa-solid fa-eye fa-xl"></i></a>
-                            {% else %}
-                                <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}"><i class="fa-solid fa-eye-slash fa-xl"></i></a>
-                            {% endif %}
-                        {% endif %}
-                        </p>
-                    {% endfor %}
-                {% endfor %}
-			</td>
-		</ul>  
+				<td>
+					<div class="w-25 mb-3">
+						<select name="season" id="season" class="form-select">
+							<option value="" selected></option>
+							{% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+								<option value="{{ season.number }}">Saison
+									{{ season.number }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<ul>
+						{% for season in series.seasons %}
+							<div id="{{season.number}}" class="seasonEpisode">
+								{% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
+
+									<li id="{{season.number}}" class="episode">
+										Episode
+										{{episode.number}}
+										{{ episode.title}}
+										{% if app.user %}
+											{% if episode in app.user.episode %}
+												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
+													<i class="fa-solid fa-eye fa-xl"></i>
+												</a>
+											{% else %}
+												<a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
+													<i class="fa-solid fa-eye-slash fa-xl"></i>
+												</a>
+											{% endif %}
+										{% endif %}
+									</li>
+								</br>
+							{% endfor %}
+						</div>
+					{% endfor %}
+				</td>
+			</ul>
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
@@ -319,30 +330,18 @@ rateButton.onclick = () => {
 }
 </script>
 <script>
-        var select = document.querySelector('select');
-        select.addEventListener('change', function() {
-            var selected = this.value;
-            var episodes = document.querySelectorAll('.episode');
-            for (var i = 0; i < episodes.length; i++) {
-                if (episodes[i].id == selected) {
-                    episodes[i].style.display = 'block';
-                } else {
-                    episodes[i].style.display = 'none';
-                }
-            }
-        });
-
-        window.onload = function() {
-            var selected = 1;
-            var episodes = document.querySelectorAll('.episode');
-            for (var i = 0; i < episodes.length; i++) {
-                if (episodes[i].id == selected) {
-                    episodes[i].style.display = 'block';
-                } else {
-                    episodes[i].style.display = 'none';
-                }
-            }
-        }
+var select = document.querySelector('select');
+select.value = "";
+select.addEventListener('change', function () {
+var selected = this.value;
+var saisonEpisode = document.querySelectorAll('.seasonEpisode');
+for (var i = 0; i < saisonEpisode.length; i++) {
+if (saisonEpisode[i].id == selected) {
+saisonEpisode[i].style.display = 'block';
+} else {
+saisonEpisode[i].style.display = 'none';
+}
+}
+});
 </script>
-#}
 {% endblock %}

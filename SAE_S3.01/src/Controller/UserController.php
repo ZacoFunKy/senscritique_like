@@ -10,7 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\User;
 use App\Entity\Country;
+use App\Entity\Rating;
+use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
+use App\Form\UserSearchFormType;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class UserController extends AbstractController
 {
@@ -44,13 +49,15 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/profile', name: 'app_user_profile')]
-    public function profile(EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/user/profile/{id}', name: 'app_user_profile')]
+    public function profile( $id, EntityManagerInterface $entityManager, Request $request): Response
     {
         $form = $this->createForm(UpdateFormType::class, $this->getUser());
         $form->handleRequest($request);
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
+        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('photo')->getData();
@@ -66,6 +73,8 @@ class UserController extends AbstractController
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
             'countries' => $countries,
+            'ratings' => $ratings,
+            'user' => $user,
         ]);
     }
 
@@ -76,6 +85,32 @@ class UserController extends AbstractController
     }
 
 
+    #[Route('/user/all', name: 'app_user_show_all')]
+    public function allUser(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findAll();
+        
+        $users = $paginator->paginate($users, $request
+        ->query->getInt('page', 1, 10));
+
+        $userSearch = new UserSearch();
+        $form = $this->createForm(UserSearchFormType::class, $userSearch);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // get the users that contain the search string in their name
+            $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u');
+            $queryBuilder->where('u.name LIKE :name')
+                ->setParameter('name', '%' . $userSearch->getNom() . '%');
+            $users = $queryBuilder->getQuery()->getResult();
+        }
+    
+        return $this->render('user/all.html.twig', [
+            'users' => $users,
+            'form' => $form->createView(),
+            'pagination' => false,
+        ]);
+    }
 
     
 }
