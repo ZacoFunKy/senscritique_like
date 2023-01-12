@@ -172,5 +172,28 @@ class PropertySearch
         }
         return $arrayAvis;
     }
+    public function triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect):array
+    {
+        if (strlen($avisFromForm) > 0) {
+            if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
+                $arrayRating = array();
+                foreach($arrayIntersect as $serie){
+                    $arrayRating[$serie->getId()] = $serie->getRating();
+                }
 
+                if ($avisFromForm == 'ASC') {
+                    asort($arrayRating);
+                }
+                else {
+                    arsort($arrayRating);
+                }
+
+                $arrayIntersect = array();
+                foreach($arrayRating as $x=>$x_value) {
+                    array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
+                }
+            }
+        }
+        return $arrayIntersect;
+    }
 }

@@ -20,50 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
-<<<<<<< HEAD
-    #[Route('/test', name: 'app_series_test', methods: ['GET', 'POST'])]
-    public function test(EntityManagerInterface $entityManager, Request $request,
-    PaginatorInterface $paginator
-    ): Response
-    {
-        $seriesByGenre = $entityManager->getRepository(Series::class)->findAll();
-        //$genre = $entityManager->getRepository(Genre::class)->findBy(['name' => 'Animation'])[0];
-        //$seriesByGenre = $genre->getSeries();
-
-        //$entityManager->getRepository(Series::class)->findBy(['id' => $x])[0];
-
-        $arrayGenre = array();
-        foreach($seriesByGenre as $serie){
-            array_push($arrayGenre, $serie);
-        }
-
-        $arrayRating = array();
-        foreach($arrayGenre as $serie){
-            $arrayRating[$serie->getId()] = $serie->getRating();
-        }
-        arsort($arrayRating);
-
-        $arrayGenre = array();
-        foreach($arrayRating as $x=>$x_value) {
-            array_push($arrayGenre, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
-        }
-/*
-        $arrayId = array();
-        foreach($arrayGenre as $serie){
-            array_push($arrayId, $serie->getId());
-        }*/
-
-
-
-        return $this->render('series/test.html.twig', [
-            'seriesByGenre' => $seriesByGenre,
-            'array' => $arrayGenre,
-        ]);
-    }
-
-
-=======
->>>>>>> 6b09274 (cleaning code (division en fonctions))
     #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
     public function index(EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator
@@ -100,71 +56,12 @@ class SeriesController extends AbstractController
             $arrayAnneeFin=$propertySearch->triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries);
 
             // Avis
-<<<<<<< HEAD
-            $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
-
-            if (strlen($avisFromForm) > 0) {
-                switch ($avisFromForm) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        $queryBuilder->where('s.rating BETWEEN :rating-1 AND :rating+1')
-                            ->setParameter('rating', $avisFromForm);
-                        break;
-                    case 'ASC':
-                        $queryBuilder->orderBy('s.rating', 'ASC');
-                        break;
-                    case 'DESC':
-                        $queryBuilder->orderBy('s.rating', 'DESC');
-                        break;
-                }
-                $seriesByAvis = $queryBuilder->getQuery()->getResult();
-
-                $arrayAvis = array();
-                foreach($seriesByAvis as $serie){
-                    array_push($arrayAvis, $serie);
-                }
-            }
-            else {
-                $arrayAvis = $toutesLesSeries;
-            }
-
-
-            // Combination de tous les filtres
-            $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $seriesAnneeFin);
-
-
-            // Tri les séries par ordre croissant / décroissant
-            if (strlen($avisFromForm) > 0) {
-                if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
-                    $arrayRating = array();
-                    foreach($arrayIntersect as $serie){
-                        $arrayRating[$serie->getId()] = $serie->getRating();
-                    }
-
-                    if ($avisFromForm == 'ASC') {
-                        asort($arrayRating);
-                    }
-                    else {
-                        arsort($arrayRating);
-                    }
-
-                    $arrayIntersect = array();
-                    foreach($arrayRating as $x=>$x_value) {
-                        array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
-                    }
-                }
-            }
-
-            // Paginator
-=======
             $arrayAvis=$propertySearch->triAvis($entityManager, $avisFromForm, $toutesLesSeries);
 
             // Intersect du tout
             $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $arrayAnneeFin);
->>>>>>> 6b09274 (cleaning code (division en fonctions))
+            $arrayIntersect = $propertySearch->triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect);
+            
             $arrayIntersect = $paginator->paginate($arrayIntersect, $request
             ->query->getInt('page', 1, 10));
 
