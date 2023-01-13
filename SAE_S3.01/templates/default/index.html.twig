@@ -19,9 +19,9 @@
     <div id="content">
       <h1>Quelques séries de notre catalogue:</h1>
       <ul>
-        {% for serie in series %}
-          <li>{{ serie.displayPoster() }}</li>
-        {% endfor %}
+          {% for serie in series %}
+            <li>{{ serie.displayPoster() }}</li>
+          {% endfor %}
       </ul>
       <div id="button">
         <a href="{{ path('app_series_index') }}"><input name="series" type="submit" value="Voir le catalogue" /></a>
