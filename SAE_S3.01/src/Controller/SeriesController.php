@@ -166,8 +166,8 @@ class SeriesController extends AbstractController
         ]);
     }
 
-    #[Route('/{series}/{episode}/set_seen/{yesno}/{all}', name: 'app_series_show_seen_adds', methods: ['GET'])]
-    public function addSeen(Episode $episode, $yesno, $all, EntityManagerInterface $entityManager): Response
+    #[Route('/{series}/{episode}/set_seen/{yesno}/', name: 'app_series_show_seen_adds', methods: ['GET'])]
+    public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser() != null) {
 
