@@ -156,7 +156,7 @@ class SeriesController extends AbstractController
         $users = $series->getUser();
         $value = 0;
         
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => '1']);
         $numPage = Request::createFromGlobals()->query->get('numPage');
         $sum = 0;
         foreach ($ratings as $rating){
@@ -340,7 +340,7 @@ class SeriesController extends AbstractController
             ->getRepository(Rating::class)
             ->findOneBy(
                 ['user' => $this->getUser(),
-                'series' => $series]
+                'series' => $series, 'verfied' => '1']
             );
         
         if ($rating != null) {
@@ -377,7 +377,7 @@ class SeriesController extends AbstractController
             $numPage = 1;
         }
 
-        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series, 'verfied' => '1']);
         if ($rating != null){
             $entityManager->remove($rating);
             $entityManager->flush();

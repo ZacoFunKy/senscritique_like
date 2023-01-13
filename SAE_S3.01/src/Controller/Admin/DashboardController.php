@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Entity\Rating;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -46,6 +47,9 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Permissions', 'fa fa-user', User::class),
             ])
             ,
+            MenuItem::subMenu('Commentaires', 'fa fa-comments')->setSubItems([
+                MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Rating::class),
+            ]),
             MenuItem::linkToRoute('Back to site', 'fa fa-home', 'app_series_index'),            
 
         ];
