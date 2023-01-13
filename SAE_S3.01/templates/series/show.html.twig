@@ -183,7 +183,9 @@
                       {{ season.number }}</option>
                   {% endfor %}
                 </select>
+                {% if app.user is defined and app.user is not null %}
                 <a href="#" class="btn btn-primary" id="seasonButton">See all season</a>
+                {% endif %}
               </div>
               <ul>
                 {% for season in series.seasons %}
@@ -249,7 +251,10 @@
     var button = document.querySelector("#seasonButton");
     button.addEventListener("click", () => {
       var select = document.querySelector("select");
-      // Todo
+      var season = select.options[select.selectedIndex].value;
+      // /{series}/{season}/set_seen/{yesno}/{all}
+      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 0, 'numPage': numPage}) }}".replace("0", season);
+    });
   </script>
 
   <script>
