@@ -153,10 +153,11 @@ class SeriesController extends AbstractController
         ]);
     }
 
-    #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
-    public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
+    #[Route('/{series}/{episode}/set_seen/{yesno}/{all}', name: 'app_series_show_seen_adds', methods: ['GET'])]
+    public function addSeen(Episode $episode, $yesno, $all, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser() != null) {
+
 
             if ($yesno == "1") {
                 $this->getUser()->addEpisode($episode);
@@ -308,4 +309,49 @@ class SeriesController extends AbstractController
 
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{series}/{season}/set_seen/{yesno}/{all}', name: 'app_series_show_seen_adds_all', methods: ['GET'])]
+    public function addSeenAll(Series $series, Season $season, $yesno, $all, EntityManagerInterface $entityManager): Response
+    {
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if ($numPage == null) {
+            $numPage = 1;
+        }
+
+        if ($this->getUser() != null){
+
+            if ($yesno == "1"){
+                if ($all == "1"){
+                    foreach ($season->getEpisodes() as $episode){
+                        $this->getUser()->addEpisode($episode);
+                    }
+                }else{
+                    $this->getUser()->addEpisode($season->getEpisodes()[0]);
+                }
+                $entityManager->flush();
+            }else{
+                if ($all == "1"){
+                    foreach ($season->getEpisodes() as $episode){
+                        $this->getUser()->removeEpisode($episode);
+                    }
+                }else{
+                    $this->getUser()->removeEpisode($season->getEpisodes()[0]);
+                }
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    } else {
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+         
+    }
+
+        /*
+        return $this->render('series/show.html.twig', [
+            'series' => $series
+        ]);*/
+    }
+
+    
 }

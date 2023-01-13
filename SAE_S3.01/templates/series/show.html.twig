@@ -67,6 +67,7 @@
                       readOnly: true
                     });
             </script>
+            <h2> {{avg}}/5</h2>
           </td>
 		    </ul>
 		    <h2>Bande d'annonce</h2>
@@ -182,6 +183,7 @@
                       {{ season.number }}</option>
                   {% endfor %}
                 </select>
+                <a href="#" class="btn btn-primary" id="seasonButton">See all season</a>
               </div>
               <ul>
                 {% for season in series.seasons %}
@@ -193,11 +195,11 @@
                         {{ episode.title}}
                         {% if app.user %}
                           {% if episode in app.user.episode %}
-                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage }) }}">
+                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
                               <i class="fa-solid fa-eye fa-xl"></i>
                             </a>
                           {% else %}
-                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage}) }}">
+                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage, 'all': 0}) }}">
                               <i class="fa-solid fa-eye-slash fa-xl"></i>
                             </a>
                           {% endif %}
@@ -242,6 +244,13 @@
       });
     </script>
   {% endif %}
+
+  <script>
+    var button = document.querySelector("#seasonButton");
+    button.addEventListener("click", () => {
+      var select = document.querySelector("select");
+      // Todo
+  </script>
 
   <script>
     {% for review in rating %}
