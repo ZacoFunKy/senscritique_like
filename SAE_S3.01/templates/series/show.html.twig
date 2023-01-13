@@ -168,7 +168,7 @@
 		      <tr>
 			      <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
 		      </tr>
-          <h2>Seasons</h2>
+          <h2>Saison(s)</h2>
           <ul>
             <td>
               <div class="w-25 mb-3">
@@ -180,19 +180,21 @@
                   {% endfor %}
                 </select>
                 {% if app.user is defined and app.user is not null %}
-                <a href="#" class="btn btn-primary" id="seasonButton">See all season</a>
+                <button class="btn btn-primary" id="seasonButton">Voir tous les épisodes d'une saison</button>
                 {% endif %}
               </div>
               <ul>
                 {% for season in series.seasons %}
+                  {% set episodeVu = 0 %}
                   <div id="{{season.number}}" class="seasonEpisode">
                     {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
                       <li id="{{season.number}}" class="episode">
                         Episode
                         {{episode.number}}
-                        {{ episode.title}}
+                        {{episode.title}}
                         {% if app.user %}
                           {% if episode in app.user.episode %}
+                            {% set episodeVu = episodeVu + 1 %}
                             <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
                               <i class="fa-solid fa-eye fa-xl"></i>
                             </a>
@@ -205,6 +207,8 @@
                       </li>
                       </br>
                     {% endfor %}
+                    {#Affiche le pourcentage vu de la saison à modif#}
+                    <p>{{ (episodeVu * 100) / season.episodes|length}}</p>
                   </div>
                 {% endfor %}
             </td>
