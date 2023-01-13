@@ -70,6 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isSuperAdmin = 0;
 
+
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="suspendu", type="boolean", nullable=false)
+     */
+    private $isSuspendu = 0;
+
     /**
      * @var \DateTime|null
      *
@@ -373,6 +382,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->isSuperAdmin,
             $this->photo,
         ] = $data;
+    }
+
+    public function getSuspendu(): ?bool
+    {
+        return $this->isSuspendu;
+    }
+
+    public function setSuspendu(bool $isSuspendu): self
+    {
+        if ($this->getIsSuperAdmin() || $this->getisAdmin()) {
+            $isSuspendu = false;
+            $this->isSuspendu = $isSuspendu;
+            return $this;
+        }
+        if ($isSuspendu) {
+            $this->setRoles(['ROLE_SUSPENDED']);
+        } else {
+            $this->setRoles(['ROLE_USER']);
+
+        $this->isSuspendu = $isSuspendu;
+        return $this;
+        }
     }
 
 }

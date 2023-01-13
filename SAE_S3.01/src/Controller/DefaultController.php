@@ -13,6 +13,11 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_default')]
     public function index(EntityManagerInterface $entityManager): Response
     {
+
+        if ($this->getUser() && $this->getUser()->getSuspendu()) {
+            return $this->render('default/suspended.html.twig');
+        }
+
         $a = rand(0,234);
         $b = rand(0,234);
         while ($b == $a) {

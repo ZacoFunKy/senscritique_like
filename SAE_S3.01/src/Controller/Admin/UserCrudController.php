@@ -35,6 +35,9 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
+            BooleanField::new('Suspendu')
+                ->setRequired(true)
+                ->setPermission('ROLE_ADMIN'),
             BooleanField::new('isAdmin')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
@@ -53,6 +56,9 @@ class UserCrudController extends AbstractCrudController
                 EmailField::new('email')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
+                BooleanField::new('Suspendu')
+                    ->setRequired(true)
+                    ->setPermission('ROLE_ADMIN'),
                 BooleanField::new('isAdmin')
                     ->setRequired(true)
                     ->setPermission('ROLE_SUPER_ADMIN'),
