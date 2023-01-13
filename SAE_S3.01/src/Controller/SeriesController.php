@@ -117,7 +117,8 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series, EntityManagerInterface $entityManager): Response
+    public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
+    PaginatorInterface $paginator ): Response
     {
         $users = $series->getUser();
         $value = 0;
@@ -143,6 +144,10 @@ class SeriesController extends AbstractController
                 $value = 1;
             }
         }
+
+
+        $ratings = $paginator->paginate($ratings, $request
+        ->query->getInt('page', 1, 10));
 
 
         return $this->render('series/show.html.twig', [
