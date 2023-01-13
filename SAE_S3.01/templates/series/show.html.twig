@@ -217,7 +217,7 @@
   </div>
   {% if app.user.id is defined and app.user.id is not null %}
     <script>
-      {% if userRating.user %}
+      {% if userRating.user is defined %}
         document.querySelector(".give_rating").style.display = "none";
       {% endif %}
 
@@ -268,7 +268,7 @@
         readOnly: true,
       });
     {% endfor %}
-
+    {% if userRating.user is defined %}
       $(".{{userRating.user.id}}").starRating({
         totalStars: 5,
         starShape: 'rounded',
@@ -281,7 +281,7 @@
         initialRating: {{userRating.value}},
         readOnly: true,
       });
-
+    {% endif %}
 
       $(".my-rating").starRating({
         totalStars: 5,
