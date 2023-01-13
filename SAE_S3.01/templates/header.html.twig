@@ -8,8 +8,6 @@
     {% set numPage = 1 %}
 {% endif %}
 
-
-
 {% if app.user is not null %}
 <div class="action">
       <div class="profile" onclick="menuToggle();">
@@ -29,12 +27,6 @@
           </li>
           <li>
             <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_user_favorite', {'numPage': numPage} )}}">Mes séries favorites</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_user_history', {'numPage': numPage} ) }}">Mon historique</a>
           </li>
           <li>
             <a class="option" href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
@@ -213,6 +205,14 @@
   header a {
     text-shadow: 0px 0px 0px black; 
   }
+
+  .pageActive {
+    background-color: #f44336;
+  }
+
+  .action .menu ul li:hover a.pageActive{
+    color: white;
+  }
   /*téléphone en portrait*/
   @media screen and (min-width: 340px) and (orientation: portrait) {
     .action .menu ul li a{
@@ -230,6 +230,16 @@
       function menuToggle() {
         const toggleMenu = document.querySelector(".menu");
         toggleMenu.classList.toggle("active");
+      }
+    </script>
+    <script>
+      const menu = document.querySelectorAll(".menu ul li a");
+      for (let i = 0; i < menu.length; i++) {
+        if (menu[i].href === location.href) {
+          menu[i].className += " pageActive";
+        } else if (location.href.includes(menu[i].href)) {
+          menu[i].className += " pageActive";
+        }
       }
     </script>
 {% endblock %}

@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Season;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
@@ -149,7 +150,8 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series, EntityManagerInterface $entityManager): Response
+    public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
+    PaginatorInterface $paginator ): Response
     {
         $users = $series->getUser();
         $value = 0;
@@ -165,6 +167,7 @@ class SeriesController extends AbstractController
         } else {
             $avg = 0;
         }
+        $avg = round($avg, 2);
                 
         if ($numPage == null) {
             $numPage = 1;
@@ -175,6 +178,15 @@ class SeriesController extends AbstractController
                 $value = 1;
             }
         }
+        $userRating = null;
+        foreach ($ratings as $rating) {
+            if ($rating->getUser() == $this->getUser()) {
+                $userRating = $rating;
+            }
+        }
+
+        $ratings = array_reverse($ratings);
+        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));  
 
 
         return $this->render('series/show.html.twig', [
@@ -183,13 +195,15 @@ class SeriesController extends AbstractController
             'numPage' => $numPage,
             'rating' => $ratings,
             'avg' => $avg,
+            'userRating' => $userRating,
         ]);
     }
 
-    #[Route('/{series}/{episode}/set_seen/{yesno}', name: 'app_series_show_seen_adds', methods: ['GET'])]
-    public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
+    #[Route('/{series}/{episode}/set_seen/{yesno}/{all}', name: 'app_series_show_seen_adds', methods: ['GET'])]
+    public function addSeen(Episode $episode, $yesno, $all, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser() != null) {
+
 
             if ($yesno == "1") {
                 $this->getUser()->addEpisode($episode);
@@ -316,6 +330,7 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
+
         //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
@@ -333,15 +348,16 @@ class SeriesController extends AbstractController
             $rating->setComment($comment);
             $rating->setDate(new \DateTime());
             $entityManager->flush();
-        } else {
-            $ranting = new Rating();
-            $ranting->setUser($this->getUser());
-            $ranting->setSeries($series);
-            $ranting->setValue($rate);
-            $ranting->setComment($comment);
-            $ranting->setDate(new \DateTime());
-            $entityManager->persist($ranting);
+        }else {
+            $rating = new Rating();
+            $rating->setUser($this->getUser());
+            $rating->setSeries($series);
+            $rating->setValue($rate);
+            $rating->setComment($comment);
+            $rating->setDate(new \DateTime());
+            $entityManager->persist($rating);
             $entityManager->flush();
+
         }
 
 
@@ -374,4 +390,36 @@ class SeriesController extends AbstractController
             Response::HTTP_SEE_OTHER
         );
     }
+
+    #[Route('/{series}/{season}/set_seen_all/', name: 'app_series_show_seen_adds_all', methods: ['GET'])]
+    public function addSeenAll(Series $series, Season $season, EntityManagerInterface $entityManager): Response
+    {
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+        if ($numPage == null) {
+            $numPage = 1;
+        }
+
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $series->getId()]);
+        $seasons = $entityManager->getRepository(Season::class)->findBy(['series' => $serie, 'number' => $season]);
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $seasons]);
+        $alreadyIn = true;
+        foreach ($episodes as $episode){
+            if (!$this->getUser()->getEpisode()->contains($episode)){
+                $alreadyIn = false;
+            }
+        }
+        if ($alreadyIn){
+            foreach ($episodes as $episode){
+                $this->getUser()->removeEpisode($episode);
+            }
+        }else{
+            foreach ($episodes as $episode){
+                $this->getUser()->addEpisode($episode);
+            }
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    }
+
+    
 }
