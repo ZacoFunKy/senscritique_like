@@ -337,6 +337,7 @@ class SeriesController extends AbstractController
                 $this->getUser()->addEpisode($episode);
             }
         }
+        $entityManager->flush();
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
 
