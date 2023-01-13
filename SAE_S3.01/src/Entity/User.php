@@ -375,4 +375,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ] = $data;
     }
 
+
+    public function setregenPassowrd(string $password): void
+    {
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $this->setPassword($hash);
+    }
+
+    public function getregenPassowrd(): string
+    {
+        return $this->password;
+    }
+
 }
