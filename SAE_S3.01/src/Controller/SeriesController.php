@@ -134,6 +134,7 @@ class SeriesController extends AbstractController
         } else {
             $avg = 0;
         }
+        $avg = round($avg, 2);
                 
         if ($numPage == null) {
             $numPage = 1;
@@ -144,10 +145,15 @@ class SeriesController extends AbstractController
                 $value = 1;
             }
         }
+        $userRating = null;
+        foreach ($ratings as $rating) {
+            if ($rating->getUser() == $this->getUser()) {
+                $userRating = $rating;
+            }
+        }
 
-
-        $ratings = $paginator->paginate($ratings, $request
-        ->query->getInt('page', 1, 10));
+        $ratings = array_reverse($ratings);
+        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));  
 
 
         return $this->render('series/show.html.twig', [
@@ -156,6 +162,7 @@ class SeriesController extends AbstractController
             'numPage' => $numPage,
             'rating' => $ratings,
             'avg' => $avg,
+            'userRating' => $userRating,
         ]);
     }
 
@@ -290,6 +297,14 @@ class SeriesController extends AbstractController
             $rating->setDate(new \DateTime());
             $entityManager->flush();
         }else {
+            $rating = new Rating();
+            $rating->setUser($this->getUser());
+            $rating->setSeries($series);
+            $rating->setValue($rate);
+            $rating->setComment($comment);
+            $rating->setDate(new \DateTime());
+            $entityManager->persist($rating);
+            $entityManager->flush();
 
         }
 
