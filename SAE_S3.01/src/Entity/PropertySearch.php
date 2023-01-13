@@ -10,6 +10,7 @@ class PropertySearch
     private $anneeFin;
     private $genre;
     private $avis;
+    private $suivi;
    
     public function getNom(): ?string
     {
@@ -58,6 +59,7 @@ class PropertySearch
  
         return $this;
     }
+    
     public function getAvis(): ?string
     {
          return $this->avis;
@@ -66,6 +68,18 @@ class PropertySearch
     public function setAvis(string $avis): self
     {
         $this->avis = $avis;
+
+        return $this;
+    }
+    
+    public function getSuivi(): ?bool
+    {
+         return $this->suivi;
+    }
+
+    public function setSuivi(bool $suivi): self
+    {
+        $this->suivi = $suivi;
 
         return $this;
     }
@@ -159,6 +173,8 @@ class PropertySearch
                 case 'DESC':
                     $queryBuilder->orderBy('r.value', 'DESC');
                     break;
+                default:
+                    break;
             }
             $ratingByvalue = $queryBuilder->getQuery()->getResult();
 
@@ -168,36 +184,49 @@ class PropertySearch
             }
 
             $arrayAvis = array();
-            foreach($seriesByAvis as $serie){
+            foreach ($seriesByAvis as $serie){
                 array_push($arrayAvis, $serie);
             }
-        }
-        else {
+        } else {
             $arrayAvis = $toutesLesSeries;
         }
         return $arrayAvis;
     }
+    
     public function triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect):array
     {
         if (strlen($avisFromForm) > 0) {
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
-                foreach($arrayIntersect as $serie){
+                foreach ($arrayIntersect as $serie){
                     $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $serie])[0];
                     $arrayRating[$serie->getId()] = $rating->getValue();
                 }
 
                 if ($avisFromForm == 'ASC') {
                     asort($arrayRating);
-                }
-                else {
+                } else {
                     arsort($arrayRating);
                 }
 
                 $arrayIntersect = array();
-                foreach($arrayRating as $x=>$x_value) {
+                foreach ($arrayRating as $x=>$x_value) {
                     array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
                 }
+            }
+        }
+        return $arrayIntersect;
+    }
+    
+    public function triSuivi($entityManager, $suiviFromForm, $arrayIntersect, $id):array
+    {
+        if ($suiviFromForm) {
+            $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
+            $seriesBySuivi = $user->getSeries();
+
+            $arrayIntersect = array();
+            foreach ($seriesBySuivi as $serie) {
+                array_push($arrayIntersect, $serie);
             }
         }
         return $arrayIntersect;

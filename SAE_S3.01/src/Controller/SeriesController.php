@@ -21,12 +21,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class SeriesController extends AbstractController
 {
     #[Route('/', name: 'app_series_index', methods: ['GET', 'POST'])]
-    public function index(EntityManagerInterface $entityManager, Request $request,
-    PaginatorInterface $paginator
+    public function index(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        PaginatorInterface $paginator
     ): Response
     {
         $propertySearch = new PropertySearch();
-        $form = $this->createForm(PropertySeachType::class,$propertySearch);
+        $form = $this->createForm(PropertySeachType::class, $propertySearch);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -35,6 +37,7 @@ class SeriesController extends AbstractController
             $anneeFinFromForm=$propertySearch->getAnneeFin();
             $nameFromForm = $propertySearch->getNom();
             $avisFromForm = $propertySearch->getAvis();
+            $suiviFromForm = $propertySearch->getSuivi();
 
             // Toutes les séries
             $series = $entityManager->getRepository(Series::class)->findAll();
@@ -44,26 +47,62 @@ class SeriesController extends AbstractController
             }
 
             // Genre
-            $arrayGenre=$propertySearch->triGenre($entityManager, $genreFromForm, $toutesLesSeries);
+            $arrayGenre=$propertySearch->triGenre(
+                $entityManager,
+                $genreFromForm,
+                $toutesLesSeries
+            );
 
             // Name
             $arrayName=$propertySearch->triName($nameFromForm, $toutesLesSeries);
 
             // Date début
-            $arrayAnneeDebut=$propertySearch->triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries);
+            $arrayAnneeDebut=$propertySearch->triAnneeDepart(
+                $entityManager,
+                $anneeDepartFromForm,
+                $toutesLesSeries
+            );
 
             // Date fin
-            $arrayAnneeFin=$propertySearch->triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries);
+            $arrayAnneeFin=$propertySearch->triAnneeFin(
+                $entityManager,
+                $anneeFinFromForm,
+                $toutesLesSeries
+            );
 
             // Avis
-            $arrayAvis=$propertySearch->triAvis($entityManager, $avisFromForm, $toutesLesSeries);
+            $arrayAvis=$propertySearch->triAvis(
+                $entityManager,
+                $avisFromForm,
+                $toutesLesSeries
+            );
+
+            // Suivi
+            if ($this->getUser() != null) {
+                $arraySuivi=$propertySearch->triSuivi(
+                    $entityManager,
+                    $suiviFromForm,
+                    $toutesLesSeries,
+                    $this->getUser()->getId()
+                );
+            } else {
+                $arraySuivi = $toutesLesSeries;
+            }
 
             // Intersect du tout
-            $arrayIntersect = array_intersect($arrayGenre, $arrayName, $arrayAvis, $arrayAnneeDebut, $arrayAnneeFin);
+            $arrayIntersect = array_intersect(
+                $arrayGenre,
+                $arrayName,
+                $arrayAvis,
+                $arrayAnneeDebut,
+                $arrayAnneeFin,
+                $arraySuivi
+            );
             $arrayIntersect = $propertySearch->triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect);
             
-            $arrayIntersect = $paginator->paginate($arrayIntersect, $request
-            ->query->getInt('page', 1, 10));
+            $arrayIntersect = $paginator->paginate(
+                $arrayIntersect,
+                $request->query->getInt('page', 1, 10));
 
             return $this->render('series/index.html.twig', [
                 'series' => $arrayIntersect,
@@ -87,12 +126,6 @@ class SeriesController extends AbstractController
                 'numPage' => $numPage,
             ]);
         }
-        $series = $paginator->paginate($series, $request->query->getInt('page', 1, 10));
-        return $this->render('series/index.html.twig', [
-            'series' => $series,
-            'form' => $form->createView(),
-            'pagination' => FALSE,
-        ]);
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
@@ -172,16 +205,22 @@ class SeriesController extends AbstractController
                 $numPage = 1;
             }
 
-            return $this->redirectToRoute('app_series_show', ['id' => $episode->getSeason()->getSeries()->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_series_show',
+                ['id' => $episode
+                    ->getSeason()
+                    ->getSeries()
+                    ->getId(),
+                'numPage' => $numPage],
+                Response::HTTP_SEE_OTHER
+            );
     } else {
-        return $this->redirectToRoute('app_series_show', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
-
+        return $this->redirectToRoute(
+            'app_series_show',
+            ['numPage' => $numPage],
+            Response::HTTP_SEE_OTHER
+        );
     }
-
-        /*
-        return $this->render('series/show.html.twig', [
-            'series' => $series
-        ]);*/
     }
 
     #[Route('/{series}/set_following/{yesno}/{redirect}', name: 'app_series_show_adds', methods: ['GET'])]
@@ -195,29 +234,36 @@ class SeriesController extends AbstractController
 
         if ($this->getUser() != null){
 
-            if ($yesno == "1"){
+            if ($yesno == "1") {
                 $this->getUser()->addSeries($series);
                 $entityManager->flush();
-            }else{
+            } else {
                 $this->getUser()->removeSeries($series);
                 $entityManager->flush();
             }
 
-            if ($redirect == "1"){
-                return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            if ($redirect == "1") {
+                return $this->redirectToRoute(
+                    'app_series_show',
+                    ['id' => $series->getId(),
+                    'numPage' => $numPage],
+                    Response::HTTP_SEE_OTHER
+                );
+            } else {
+                return $this->redirectToRoute(
+                    'app_user_favorite',
+                    ['numPage' => $numPage],
+                    Response::HTTP_SEE_OTHER
+                );
             }
-            else{
-                return $this->redirectToRoute('app_user_favorite', ['numPage' => $numPage], Response::HTTP_SEE_OTHER);
-            }
-    } else {
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
-         
-    }
-
-        /*
-        return $this->render('series/show.html.twig', [
-            'series' => $series
-        ]);*/
+        } else {
+            return $this->redirectToRoute(
+                'app_series_show',
+                ['id' => $series->getId(),
+                'numPage' => $numPage],
+                Response::HTTP_SEE_OTHER
+            );
+        }
     }
 
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]
@@ -275,13 +321,19 @@ class SeriesController extends AbstractController
         $respond->setStatusCode(200);
         $respond->send();
 
-        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $this->getUser(), 'series' => $series]);
-        if ($rating != null){
+        $rating = $entityManager
+            ->getRepository(Rating::class)
+            ->findOneBy(
+                ['user' => $this->getUser(),
+                'series' => $series]
+            );
+        
+        if ($rating != null) {
             $rating->setValue($rate);
             $rating->setComment($comment);
             $rating->setDate(new \DateTime());
             $entityManager->flush();
-        }else {
+        } else {
             $ranting = new Rating();
             $ranting->setUser($this->getUser());
             $ranting->setSeries($series);
@@ -293,8 +345,12 @@ class SeriesController extends AbstractController
         }
 
 
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
-
+        return $this->redirectToRoute(
+            'app_series_show',
+            ['id' => $series->getId(),
+            'numPage' => $numPage],
+            Response::HTTP_SEE_OTHER
+        );
     }
 
     #[Route('/series/rating/{id}/{user}/delete', name: 'rating_series_delete', methods: ['GET', 'POST'])]
@@ -311,7 +367,11 @@ class SeriesController extends AbstractController
             $entityManager->flush();
         }
 
-
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute(
+            'app_series_show',
+            ['id' => $series->getId(),
+            'numPage' => $numPage],
+            Response::HTTP_SEE_OTHER
+        );
     }
 }
