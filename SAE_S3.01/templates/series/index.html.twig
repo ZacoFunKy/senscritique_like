@@ -53,8 +53,10 @@
 			<div id="series">
 				{% for series in series %}
 					<div class="serie">
-						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
-						<p>{{ series.title }}</p>
+						<div class="poster">
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+							<p>{{ series.title }}</p>
+						</div>
 						{% if numPage is defined %}
 							<a class="bouton" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
 							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
