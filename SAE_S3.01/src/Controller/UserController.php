@@ -153,12 +153,24 @@ class UserController extends AbstractController
                 $email = $data['email'];
                 $email = explode('@', $email);
                 $user->setEmail($email[0] . $i . '@' . $email[1]);
-                $user->setPassword($data['name'] . $i);
+                //hash the password
+                $hash = password_hash($password, PASSWORD_BCRYPT);       
+                $user->setPassword($hash);
                 $user->setRoles(['ROLE_USER']);
-                $country = $entityManager->getRepository(Country::class)->findOneBy(['name' => "France" ]);
-                $user->setCountry($country);
-                $user->setIsBot(true);
-                $entityManager->persist($user);
+                //get a random country 
+                $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                if($country){
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }else {
+                    while(!$country){
+                        $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                    }
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }
             }
             $entityManager->flush();
 
