@@ -270,6 +270,7 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
+
         //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
@@ -282,14 +283,7 @@ class SeriesController extends AbstractController
             $rating->setDate(new \DateTime());
             $entityManager->flush();
         }else {
-            $ranting = new Rating();
-            $ranting->setUser($this->getUser());
-            $ranting->setSeries($series);
-            $ranting->setValue($rate);
-            $ranting->setComment($comment);
-            $ranting->setDate(new \DateTime());
-            $entityManager->persist($ranting);
-            $entityManager->flush();
+
         }
 
 
