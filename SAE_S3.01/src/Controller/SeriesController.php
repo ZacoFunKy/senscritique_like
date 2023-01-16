@@ -189,6 +189,7 @@ class SeriesController extends AbstractController
         }
 
         $ratings = array_reverse($ratings);
+        $allRatings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => 1]);
         $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));
 
 
@@ -197,6 +198,7 @@ class SeriesController extends AbstractController
             'valeur' => $value,
             'numPage' => $numPage,
             'rating' => $ratings,
+            'allRatings' => $allRatings,
             'avg' => $avg,
             'userRating' => $userRating,
         ]);
