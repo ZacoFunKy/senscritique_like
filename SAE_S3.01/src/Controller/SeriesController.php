@@ -355,6 +355,11 @@ class SeriesController extends AbstractController
             $rating->setUser($this->getUser());
             $rating->setSeries($series);
             $rating->setValue($rate);
+            if($this->getUser()->getisAdmin()) {
+                $rating->setVerified(true);
+            } else {
+            $rating->setVerified(false);
+            }
             $rating->setComment($comment);
             $rating->setDate(new \DateTime());
             $entityManager->persist($rating);
