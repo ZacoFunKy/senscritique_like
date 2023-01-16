@@ -56,20 +56,39 @@
 		    <ul>
           <td>
             <div id="rating"></div>
-                    <script>
-                    $("#rating").starRating({
-                      totalStars: 5,
-                      starShape: 'rounded',
-                      starSize: 40,
-                      emptyColor: 'lightgray',
-                      hoverColor: 'red',
-                      ratedColor: 'yellow',
-                      initialRating: {{avg}},
-                      readOnly: true
-                    });
-            </script>
+              {% if (nbNotes > 0) %}
+                <script>
+                  $("#rating").starRating({
+                    totalStars: 5,
+                    starShape: 'rounded',
+                    starSize: 40,
+                    emptyColor: 'lightgray',
+                    hoverColor: 'red',
+                    ratedColor: 'yellow',
+                    initialRating: {{avg}},
+                    readOnly: true
+                  });
+                </script>
+              {% else %}
+                <script>
+                  $("#rating").starRating({
+                    totalStars: 5,
+                    starShape: 'rounded',
+                    starSize: 40,
+                    emptyColor: 'lightgray',
+                    hoverColor: 'red',
+                    ratedColor: 'yellow',
+                    initialRating: 0,
+                    readOnly: true
+                  });
+                </script>
+              {% endif %}
             
-            <h2> {{ avg }}</h2>
+            {% if (nbNotes > 0) %}
+              <h2>{{ avg }}/5</h2>
+            {% else %}
+              <h2>{{ avg }}</h2>
+            {% endif %}
           </td>
 		    </ul>
         </br>
