@@ -58,7 +58,7 @@ class UserController extends AbstractController
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user, 'verified' => true]);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('photo')->getData();
