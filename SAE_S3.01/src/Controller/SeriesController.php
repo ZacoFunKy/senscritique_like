@@ -337,17 +337,18 @@ class SeriesController extends AbstractController
         $respond->setStatusCode(200);
         $respond->send();
 
-        $rating = $entityManager
+        $ratings = $entityManager
             ->getRepository(Rating::class)
             ->findOneBy(
                 ['user' => $this->getUser(),
-                'series' => $series, 'verfied' => '1']
+                'series' => $series]
             );
-        
-        if ($rating != null) {
-            $rating->setValue($rate);
-            $rating->setComment($comment);
-            $rating->setDate(new \DateTime());
+            
+
+        if ($ratings != null) {
+            $ratings->setValue($rate);
+            $ratings->setComment($comment);
+            $ratings->setDate(new \DateTime());
             $entityManager->flush();
         }else {
             $rating = new Rating();
@@ -378,7 +379,7 @@ class SeriesController extends AbstractController
             $numPage = 1;
         }
 
-        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series, 'verfied' => '1']);
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
         if ($rating != null){
             $entityManager->remove($rating);
             $entityManager->flush();
