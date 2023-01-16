@@ -51,6 +51,7 @@
           {% endfor %}
           </td>
 		    </ul>
+        </br>
         <h2>Avis</h2>
 		    <ul>
           <td>
@@ -70,14 +71,18 @@
             <h2> {{avg}}/5</h2>
           </td>
 		    </ul>
+        </br>
 		    <h2>Bande d'annonce</h2>
 		    <iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-		    <h2>IMDB</h2>
+        </br>
+        <h2>IMDB</h2>
 		    <p>
 			    <a href="https://www.imdb.com/title/{{series.imdb}}">Page imdb</a>
 		    </p>
+        </br>
 		    <h2>Récompense(s)</h2>
 		    <p>{{ series.awards }}</p>
+        </br>
 		    <h2>Année de début</h2>
 		    <p>{{ series.yearStart }}</p>
         <h2>Année de fin</h2>
@@ -86,6 +91,7 @@
         {% else %}
           <p>En cours</p>
         {% endif %}
+        </br>
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
