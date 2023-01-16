@@ -53,8 +53,25 @@
 			<div id="series">
 				{% for series in series %}
 					<div class="serie">
-						<div class="poster">
-							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+						<div class="poster">	
+
+							{% set sum = 0 %}
+							{% set nbNotes = 0 %}
+							{% for rating in ratings %}
+								{% if (rating.series == series) %}
+									{% set sum = sum + rating.value %}
+									{% set nbNotes = nbNotes + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% if (nbNotes != 0) %}
+								{% set avg = sum  / nbNotes %}
+							{% else %}
+								{% set avg = 0 %}
+							{% endif %}
+							{% set avg = avg|round(2) %}
+
+							<h2 id="moyenne">{{ avg }}/5</h2>
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image"/>
 							<p>{{ series.title }}</p>
 						</div>
 						{% if numPage is defined %}

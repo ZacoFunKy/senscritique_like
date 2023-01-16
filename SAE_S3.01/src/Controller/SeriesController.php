@@ -31,6 +31,8 @@ class SeriesController extends AbstractController
         $propertySearch = new PropertySearch();
         $form = $this->createForm(PropertySeachType::class, $propertySearch);
         $form->handleRequest($request);
+
+        $ratings = $entityManager->getRepository(Rating::class)->findAll();
         
         if ($form->isSubmitted() && $form->isValid()) {
             $genreFromForm=$propertySearch->getGenre();
@@ -109,6 +111,7 @@ class SeriesController extends AbstractController
                 'series' => $arrayIntersect,
                 'form' => $form->createView(),
                 'pagination' => TRUE,
+                'ratings' => $ratings,
             ]);
         }else {
             $series = $entityManager
@@ -125,6 +128,7 @@ class SeriesController extends AbstractController
                 'form' => $form->createView(),
                 'pagination' => TRUE,
                 'numPage' => $numPage,
+                'ratings' => $ratings,
             ]);
         }
     }
@@ -174,7 +178,7 @@ class SeriesController extends AbstractController
         }
 
         foreach ($users as $user) {
-            if ( $user == $this->getUser()) {
+            if ($user == $this->getUser()) {
                 $value = 1;
             }
         }
@@ -186,7 +190,7 @@ class SeriesController extends AbstractController
         }
 
         $ratings = array_reverse($ratings);
-        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));  
+        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));
 
 
         return $this->render('series/show.html.twig', [
