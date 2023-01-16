@@ -77,7 +77,7 @@
         </br>
         <h2>IMDB</h2>
 		    <p>
-			    <a href="https://www.imdb.com/title/" {{series.imdb}}>Page imdb</a>
+			    <a href="https://www.imdb.com/title/{{series.imdb}}">Page imdb</a>
 		    </p>
         </br>
 		    <h2>Récompense(s)</h2>
@@ -95,14 +95,6 @@
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
-            {% set hasAlreadyRated = false %}
-            {% set userReview = null %}
-            {% for review in rating %}
-              {% if review.user.id == app.user.id %}
-                {% set hasAlreadyRated = true %}
-                {% set userReview = review %}
-              {% endif %}
-            {% endfor %}
               <div class='give_rating'>
                 <div class="my-rating jq-stars"></div>
                 <button class="reset_rating">Réinitialiser la note</button>
@@ -115,33 +107,37 @@
         <div class="">
           {# Commentaire de l'utlisateur lorsqu'il est connecté #}
           {% if app.user.id is defined and app.user.id is not null %}
-            {% if userReview is not null %}
+            {% if userRating is not null %}
               <div class="review_user">
                 <div class="profil">
-                  <img src="{{ path('photo_user', {'id': userReview.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                  <a href="{{ path('app_user_profile', {'id': userReview.user.id}) }}">{{userReview.user.name}}</a>
+                  <img src="{{ path('photo_user', {'id': userRating.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                  <a href="{{ path('app_user_profile', {'id': userRating.user.id}) }}">{{userRating.user.name}}</a>
                 </div>
                 <div class="rate_part">
-                  <p><div class="{{userReview.user.id}} jq-stars"></div></p>
-                  <p>{{userReview.comment}}</p>                  
+                  <p><div class="{{userRating.user.id}} jq-stars"></div></p>
+                  <p>{{userRating.comment}}</p>                  
                 </div>
               </div>
               {% if app.user is defined %}
-                {% if userReview.user.id == app.user.id %}
+                {% if userRating.user.id == app.user.id %}
                   <button class="modifier">Modifier</button>
                   <button class="supprimer">Supprimer</button>
                 {% endif %}
               {% endif %}
             {% endif %}        
           {% endif %}
+                  <div class="navigation">
+					{{ knp_pagination_render(rating) }}
+				</div>
           {# Commentaire des autres utilisateurs #}
             {% if app.user.id is defined and app.user.id is not null %}
               {% for review in rating %}
-                {% if review != userReview %} 
+                {% if review != userRating %} 
                   <div class="review_user">
                     <div class="profil">
                       <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
                       <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                      <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
                     </div>
                     <div class="rate_part">
                       <p>
@@ -164,6 +160,7 @@
                   <div class="profil">
                     <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
                     <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                    <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
                   </div>
                   <div class="rate_part">
                     <p><div class="{{review.user.id}} jq-stars"></div></p>
@@ -227,9 +224,9 @@
   </div>
   {% if app.user.id is defined and app.user.id is not null %}
     <script>
-      if ({{hasAlreadyRated}}) {
+      {% if userRating.user is defined %}
         document.querySelector(".give_rating").style.display = "none";
-      }
+      {% endif %}
 
       var buttonModif = document.querySelector(".modifier");
       buttonModif.addEventListener("click", () => {
@@ -278,6 +275,21 @@
         readOnly: true,
       });
     {% endfor %}
+    
+    {% if userRating.user is defined and userRating.user is not null %}
+      $(".{{userRating.user.id}}").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 15,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+        initialRating: {{userRating.value}},
+        readOnly: true,
+      });
+    {% endif %}
 
       $(".my-rating").starRating({
         totalStars: 5,
@@ -338,10 +350,18 @@
 
   <script>
     var select = document.querySelector('select');
-    select.value = "";
+    select.value = 1;
+    var saisonEpisode = document.querySelectorAll('.seasonEpisode');
+    for (var i = 0; i < saisonEpisode.length; i++) {
+      if (saisonEpisode[i].id == 1) {
+        saisonEpisode[i].style.display = 'block';
+      } else {
+        saisonEpisode[i].style.display = 'none';
+      }
+    }
+    select.options[0] = null;
     select.addEventListener('change', function () {
       var selected = this.value;
-      var saisonEpisode = document.querySelectorAll('.seasonEpisode');
       for (var i = 0; i < saisonEpisode.length; i++) {
         if (saisonEpisode[i].id == selected) {
           saisonEpisode[i].style.display = 'block';
