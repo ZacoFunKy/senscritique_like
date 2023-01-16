@@ -70,6 +70,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isSuperAdmin = 0;
 
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="fake_account", type="boolean", nullable=true)
+     */
+    private $isBot= 0;
+
     /**
      * @var \DateTime|null
      *
@@ -333,6 +341,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto($photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+
+    public function getIsBot(): ?bool
+    {
+        return $this->isBot;
+    }
+
+    public function setIsBot(bool $isBot): self
+    {
+        $this->isBot = $isBot;
 
         return $this;
     }
