@@ -18,9 +18,26 @@
 		<div id="content">
 			<h1>Catalogue</h1>
 			{% if form is defined %}
-				{{ form_start(form) }}
-				{{ form_widget(form) }}
-				<input type="submit" value="Rechercher"/>
+				{% if app.user is not null %}
+					{{ form_start(form) }}
+					{{ form_row(form.anneeDepart) }}
+					{{ form_row(form.anneeFin) }}
+					{{ form_row(form.genre) }}
+					{{ form_row(form.avis) }}
+					{{ form_row(form.suivi) }}
+					{{ form_row(form.nom) }}
+				{% else %}
+					{{ form_start(form) }}
+					{{ form_row(form.anneeDepart) }}
+					{{ form_row(form.anneeFin) }}
+					{{ form_row(form.genre) }}
+					{{ form_row(form.avis) }}
+					<div id="suivi">
+						{{ form_row(form.suivi) }}
+					</div>
+					{{ form_row(form.nom) }}
+				{% endif %}
+				<input class="bouton" type="submit" value="Rechercher"/>
 				<style>
 					form {
 						display: flex;
@@ -28,8 +45,11 @@
 						justify-content: center;
 						margin: 2% 0;
 					}
+					form * {
+						margin: 0 1%;
+					}
 					input[type="text"] {
-						width: 80%;
+						width: 100%;
 						height: 30px;
 						border-radius: 5px;
 						border: 1px solid #ccc;
@@ -37,18 +57,10 @@
 						font-size: 1em;
 						color: black;
 					}
-
-					input[value="Rechercher"] {
-						background-color: #f44336;
-						border: none;
-						color: black;
-						padding: 10px 25px;
-						text-align: center;
-						text-decoration: none;
-						font-size: 1em;
-						border-radius: 4px;
-						cursor: pointer;
+					#suivi {
+						display: none;
 					}
+				
 				</style>
 				{{ form_end(form) }}
 			{% endif %}
@@ -60,7 +72,26 @@
 			<div id="series">
 				{% for series in series %}
 					<div class="serie">
-						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+						<div class="poster">
+							{% set sum = 0 %}
+							{% set nbNotes = 0 %}
+							{% for rating in ratings %}
+								{% if ((rating.series == series) and (rating.verified == 1)) %}
+									{% set sum = sum + rating.value %}
+									{% set nbNotes = nbNotes + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% if (nbNotes != 0) %}
+								{% set avg = sum  / nbNotes %}
+							{% else %}
+								{% set avg = 0 %}
+							{% endif %}
+							{% set avg = avg|round(2) %}
+
+							<h2 id="moyenne">{{ avg }}/5</h2>
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image"/>
+							<p>{{ series.title }}</p>
+						</div>
 						<p>{{ series.title }}</p>
 						{% if numPage is defined %}
 							<a class="bouton" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>

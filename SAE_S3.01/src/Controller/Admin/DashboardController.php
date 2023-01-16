@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Series;
 use App\Entity\User;
+use App\Entity\Rating;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -48,7 +49,8 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToRoute('Ajouter', 'fa-solid fa-robot', 'app_admin_user_new'),
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_delete'),
             ]),
-            MenuItem::subMenu('Comments', 'fa-solid fa-comment')->setSubItems([
+            MenuItem::subMenu('Commentaires', 'fa fa-comments')->setSubItems([
+                MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Rating::class),
                 MenuItem::linkToCrud('Ajouter', 'fa-solid fa-robot', Series::class),
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_comment_delete'),
             ])
@@ -57,7 +59,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToRoute('Ajouter', 'fa-solid fa-plus-large', 'app_admin_user_series_new'),
             ])
             ,
-            MenuItem::linkToRoute('Back to site', 'fa-solid fa-right-from-bracket', 'app_series_index'),            
+            MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', '/'),
 
         ];
     }

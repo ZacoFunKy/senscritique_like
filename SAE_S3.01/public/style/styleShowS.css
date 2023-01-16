@@ -49,7 +49,6 @@ header .title {
 	justify-content: space-between;
 	padding: 2%;
 	background-color: rgba(0, 0, 0, 0.63);
-
 }
 
 .titre-favoris {
@@ -72,6 +71,7 @@ header .title {
 
 #partDroite {
 	margin-right: 5%;
+	width: 30%;
 }
 
 #bouton {
@@ -95,14 +95,52 @@ header .title {
 	cursor: pointer;
 }
 
-/*episode*/
+button {
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding: 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1.2vh;
+	border-radius: 4px;
+	margin: 2% 0%;
+	cursor: pointer;
+}
+
+/* Commentaire */
+
+.review_user {
+	background-color: #424242;
+	padding: 2%;
+	display: flex;
+	border-radius: 10px;
+	margin-top: 2%;
+
+}
+
+.profil {
+	display: flex;
+	flex-direction: column;
+}
+
+.rate_part {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10%;
+}
+
+/* Episode */
 .rate,
 .review_user,
 .modfier,
 .supprimer,
 select,
 input {
+	color: black;
+}
 
+option {
 	color: black;
 }
 
@@ -116,14 +154,33 @@ input {
 	display: none;
 }
 
-
-/*
-#saison{
-	margin-top: 30%;
+#pourcentageEpisodeVu{
+	display: flex;
+	font-size: 20px;
+	align-items: center;	
 }
-#critique{
-	margin-top: 5%;
-}*/
+#pourcentageEpisodeVu p{
+	padding: 2%;
+}
+
+#pourcentageEpisodes{
+	background-color: #f44336;
+	border-radius: 100%;
+	color: black;
+}
+
+.navigation * * {
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding: 0.5% 1%;
+	text-decoration: none;
+	font-size: 1.5vh;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 2% 0.5%;
+}
+
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
 	header .title {
@@ -138,8 +195,33 @@ input {
 		display: block;
 		justify-content: left;
 	}
-}
+	#bouton a{
+		font-size: 1.5em;
+	}
+	#partGauche {	
+		font-size: 1.8em;
+		width: 90%;
 
+	}
+	#partDroite {
+		font-size: 1.8em;
+		margin-top:2%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-left: 35%;
+	}
+	#season{
+		width: 200px;
+		height: 40px;
+	}
+	#season select {
+		font-size: 1.5em;
+	}
+	#pourcentageEpisodeVu{
+		font-size: 1.5em;
+	}
+}
 /*téléphone landscape*/
 @media screen and (min-width: 340px) and (min-height:200px) and (max-height:500px) and (orientation: landscape) {
 	#content {

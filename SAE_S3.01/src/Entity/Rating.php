@@ -30,6 +30,16 @@ class Rating
      */
     private $value;
 
+
+
+     /**
+     * @var bool
+     *
+     * @ORM\Column(name="verified", type="boolean", nullable=true)
+     */
+    private $verified = 0;
+
+
     /**
      * @var string|null
      *
@@ -127,6 +137,28 @@ class Rating
         $this->series = $series;
 
         return $this;
+    }
+
+    public function getVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): self
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
+    public function getUserName(): ?string
+    {
+        return $this->user->getName();
+    }
+
+    public function getSeriesName(): ?string
+    {
+        return $this->series->getTitle();
     }
 
 

@@ -3,24 +3,27 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
-  	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
-{% endblock %}
-
-{% block javascripts %}
-        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
-        <script src="../../js/jquery.star-rating-svg.js"></script>
+	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
+	<div id="page">
 		<header>
 			<a href="{{path('app_default')}}" class="title">Netflop</a>
-            {{ form_start(form) }}
-            <div class="search">
-                {{ form_widget(form) }}
-                <button type="submit" class="btn btn-primary">Rechercher</button>
+        </header>
+        <body>
+            <div class="formulaire">
+                <div class="search">
+                    {{ form_start(form) }}
+                        <p>Nom</p>
+                        {{ form_widget(form.name) }}
+                        <p>Email</p>
+                        {{ form_widget(form.email) }}
+                        <p>Nombre d'utilisateur à créer</p>
+                        {{ form_widget(form.number) }}
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    {{ form_end(form) }}
+                </div>
             </div>
-            {{ form_end(form) }}
+        </body>
 {% endblock %}

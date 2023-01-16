@@ -120,6 +120,7 @@ select {
     margin: 1% 1% 0;
 }
 
+#ratings,
 #series,
 #users,
 #episodes {
@@ -129,6 +130,7 @@ select {
     margin: 2% 0;
 }
 
+.rating,
 .serie,
 .user,
 .episode {
@@ -162,4 +164,60 @@ button {
 .stop {
     margin-top: 8.5%;
     height: 43px;
+}
+.navigation {
+    text-align: center;
+}
+.navigation * * {
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding:5px 10px;
+	text-decoration: none;
+	font-size: 1.5vh;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+
+/*téléphone en portrait*/
+@media screen and (min-width: 340px) and (orientation: portrait) {
+    .infos-utilisateur {
+        flex-direction: column;
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+
+    .avatar {
+        width: 300px;
+        height: 300px;
+    }
+
+    .compte {
+        width: 100%;
+    }
+
+    .resume,
+    h2,
+    h3 {
+        font-size: 3em;
+    }
+
+    .info,
+    .contenu p {
+        font-size: 2em;
+    }
+
+    .bouton {
+        font-size: 30px;
+        border-radius: 15px;
+    }
+
+    .contenu * {
+        margin: 2% 2% 0;
+    }
+
+    .serie img {
+        height: 800px;
+    }
 }

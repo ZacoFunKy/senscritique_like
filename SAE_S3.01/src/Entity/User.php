@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="fake_account", type="boolean", nullable=false)
+     * @ORM\Column(name="fake_account", type="boolean", nullable=true)
      */
     private $isBot= 0;
 

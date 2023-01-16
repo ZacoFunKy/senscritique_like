@@ -58,7 +58,7 @@ class UserController extends AbstractController
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user, 'verified' => true]);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('photo')->getData();
@@ -149,16 +149,33 @@ class UserController extends AbstractController
             $data = $form->getData();
             for ($i = 0; $i < $data['number']; $i++) {
                 $user = new User();
-                $user->setName($data['name'] . $i);
+                $name = $data['name'] . $i;
+                $user->setName($name);
                 $email = $data['email'];
                 $email = explode('@', $email);
-                $user->setEmail($email[0] . $i . '@' . $email[1]);
-                $user->setPassword($data['name'] . $i);
+                $new_email = $email[0] . $i . '@' . $email[1];
+                $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                while($new_email_check){
+                    $new_email = $email[0] . rand(0, 1000) . '@' . $email[1];
+                    $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                }
+                $user->setEmail($new_email);
+                $hash = password_hash($name, PASSWORD_BCRYPT);       
+                $user->setPassword($hash);
                 $user->setRoles(['ROLE_USER']);
-                $country = $entityManager->getRepository(Country::class)->findOneBy(['name' => "France" ]);
-                $user->setCountry($country);
-                $user->setIsBot(true);
-                $entityManager->persist($user);
+                $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                if($country){
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }else {
+                    while(!$country){
+                        $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                    }
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }
             }
             $entityManager->flush();
 
@@ -253,8 +270,23 @@ class UserController extends AbstractController
         }
 
         $entityManager->flush();
+
+
+
+
         return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
 
+    }
+
+
+    #[Route('/user/count/fake_account', name: 'app_admin_user_count_fake_accounts')]
+    public function count_fake_account(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        echo "<script>
+        alert('Il y a " . count($user) . " comptes faux');
+        window.location.href='admin';
+        </script>";
     }
 
 

@@ -59,14 +59,6 @@ class PropertySeachType extends AbstractType
             ]
         ]
         )
-        ->add('nom', TextType::class, [
-            'required' => false,
-            'label' => false,
-            'attr' => [
-                'placeholder' => 'Rechercher une série'
-            ]
-        ]
-        )
         ->add('avis', ChoiceType::class, [
             'required' => false,
             'choices' => [
@@ -77,9 +69,22 @@ class PropertySeachType extends AbstractType
                     '2-3 étoiles' => 3,
                     '1-2 étoiles' => 2,
                     '0-1 étoile' => 1,
-                ],
-            ])
-        ;
+            ],
+        ]
+        )
+        ->add('suivi', CheckboxType::class, [
+            'required' => false,
+            'label' => "Suivis",
+        ]
+        )
+        ->add('nom', TextType::class, [
+            'required' => false,
+            'label' => false,
+            'attr' => [
+                'placeholder' => 'Rechercher une série'
+            ]
+        ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
