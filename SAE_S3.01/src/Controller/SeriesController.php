@@ -157,13 +157,14 @@ class SeriesController extends AbstractController
         $value = 0;
         
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
+        $ranting_verified = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => 1]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
         $sum = 0;
-        foreach ($ratings as $rating){
+        foreach ($ranting_verified as $rating){
             $sum += $rating->getValue();
         }
-        if (count($ratings) != 0) {
-            $avg = $sum / count($ratings);
+        if (count($ranting_verified) != 0) {
+            $avg = $sum / count($ranting_verified);
         } else {
             $avg = 0;
         }
@@ -174,7 +175,7 @@ class SeriesController extends AbstractController
         }
 
         foreach ($users as $user) {
-            if ( $user == $this->getUser()) {
+            if ($user == $this->getUser()) {
                 $value = 1;
             }
         }
@@ -186,7 +187,7 @@ class SeriesController extends AbstractController
         }
 
         $ratings = array_reverse($ratings);
-        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));  
+        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));
 
 
         return $this->render('series/show.html.twig', [
@@ -340,7 +341,7 @@ class SeriesController extends AbstractController
             ->getRepository(Rating::class)
             ->findOneBy(
                 ['user' => $this->getUser(),
-                'series' => $series]
+                'series' => $series, 'verfied' => '1']
             );
         
         if ($rating != null) {
@@ -377,7 +378,7 @@ class SeriesController extends AbstractController
             $numPage = 1;
         }
 
-        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series, 'verfied' => '1']);
         if ($rating != null){
             $entityManager->remove($rating);
             $entityManager->flush();
@@ -421,5 +422,48 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('{series}/{userid}/delete/rating_user', name: 'app_series_delete_rating_user', methods: ['GET'])]
+    public function deleteRatingUserAction(Series $series, $userid,  EntityManagerInterface $entityManager): Response
+    {
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+        if ($numPage == null) {
+            $numPage = 1;
+        }
+
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $userid]);
+
+        if ($this->getUser()->getisAdmin() == 0 ){
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        }
+
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        if ($rating != null){
+            $entityManager->remove($rating);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('{series}/{userid}/approve/rating_user', name: 'app_series_approve_rating_user', methods: ['GET'])]
+    public function approveRatingUser(Series $series, $userid, EntityManagerInterface $entityManager): Response
+    {
+
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+        if ($numPage == null) {
+            $numPage = 1;
+        }
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $userid]);
+
+        if ($this->getUser()->getisAdmin() == 0 ){
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        }
+
+        $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        if ($rating != null){
+            $rating->setVerified(1);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+    }
     
 }

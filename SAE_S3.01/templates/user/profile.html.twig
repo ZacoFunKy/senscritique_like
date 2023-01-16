@@ -94,12 +94,14 @@
 				{{ knp_pagination_render(ratings) }}
 				<div id="ratings">
 					{% for rating in ratings %}
-						<div class="rating">
-							<h3>{{ rating.series.title }}</h3>
-							<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
-							<p>{{ rating.comment }}</p>
-							<div class="{{rating.id}} jq-stars"></div>
-						</div>
+						{% if rating.verified == 1 %}
+							<div class="rating">
+								<h3>{{ rating.series.title }}</h3>
+								<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
+								<p>{{ rating.comment }}</p>
+								<div class="{{rating.id}} jq-stars"></div>
+							</div>
+						{% endif %}
 					{% else %}
 						<p>Aucune critique trouvée.</p>
 					{% endfor %}

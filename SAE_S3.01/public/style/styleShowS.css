@@ -154,13 +154,21 @@ option {
 	display: none;
 }
 
-/*
-#saison{
-	margin-top: 30%;
+#pourcentageEpisodeVu{
+	display: flex;
+	font-size: 20px;
+	align-items: center;	
 }
-#critique{
-	margin-top: 5%;
-}*/
+#pourcentageEpisodeVu p{
+	padding: 2%;
+}
+
+#pourcentageEpisodes{
+	background-color: #f44336;
+	border-radius: 100%;
+	color: black;
+}
+
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
 	header .title {

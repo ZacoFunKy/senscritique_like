@@ -132,30 +132,44 @@
           {# Commentaire des autres utilisateurs #}
             {% if app.user.id is defined and app.user.id is not null %}
               {% for review in rating %}
-                {% if review != userRating %} 
-                  <div class="review_user">
-                    <div class="profil">
-                      <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                      <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
-                      <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
-                    </div>
-                    <div class="rate_part">
-                      <p>
-                        <div class="{{review.user.id}} jq-stars"></div>
-                      </p>
-                      <p>{{review.comment}}</p>
-                    </div>
-                  </div>
-                  {% if app.user is defined %}
-                    {% if review.user.id == app.user.id %}
-                      <button class="modifier">Modifier</button>
-                      <button class="supprimer">Supprimer</button>
-                    {% endif %}
+                {% if review != userRating %}
+                  {% if review.verified == 1 %} 
+                    <div class="review_user">
+                      <div class="profil">
+                        <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                        <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
+                      </div>
+                      <div class="rate_part">
+                        <p>
+                          <div class="{{review.user.id}} jq-stars"></div>
+                        </p>
+                        <p>{{review.comment}}</p>
+                      </div>
+                    </div> 
+                  {% endif %}
+                  {% if review.verified == 0 and is_granted('ROLE_ADMIN') %}
+                    <div class="review_user" style="opacity:0.3">
+                      <div class="profil">
+                        <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                        <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
+                      </div>
+                      <div class="rate_part">
+                        <p>
+                          <div class="{{review.user.id}} jq-stars"></div>
+                        </p>
+                        <p>{{review.comment}}</p>
+                      </div>
+                    </div> 
+                    <a href="{{ path('app_series_approve_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="valider">Valider</button></a>
+                    <a href="{{ path('app_series_delete_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="supprimer">Supprimer</button></a>
                   {% endif %}
                 {% endif %}   
               {% endfor %}
             {% else %}
               {% for review in rating %}
+                {% if review.verified == 1 %} 
                 <div class="review_user">
                   <div class="profil">
                     <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
@@ -167,6 +181,7 @@
                     <p>{{review.comment}}</p>
                   </div>
                 </div>
+                {% endif %}
               {% endfor %}
             {% endif %}
          </div>
@@ -175,7 +190,7 @@
 		      <tr>
 			      <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
 		      </tr>
-          <h2>Seasons</h2>
+          <h2>Saison(s)</h2>
           <ul>
             <td>
               <div class="w-25 mb-3">
@@ -187,19 +202,21 @@
                   {% endfor %}
                 </select>
                 {% if app.user is defined and app.user is not null %}
-                <a href="#" class="btn btn-primary" id="seasonButton">See all season</a>
+                <button class="btn btn-primary" id="seasonButton">Voir tous les épisodes d'une saison</button>
                 {% endif %}
               </div>
               <ul>
                 {% for season in series.seasons %}
+                  {% set episodeVu = 0 %}
                   <div id="{{season.number}}" class="seasonEpisode">
                     {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
                       <li id="{{season.number}}" class="episode">
                         Episode
                         {{episode.number}}
-                        {{ episode.title}}
+                        {{episode.title}}
                         {% if app.user %}
                           {% if episode in app.user.episode %}
+                            {% set episodeVu = episodeVu + 1 %}
                             <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
                               <i class="fa-solid fa-eye fa-xl"></i>
                             </a>
@@ -212,6 +229,11 @@
                       </li>
                       </br>
                     {% endfor %}
+                    {# Affiche le pourcentage vu de la saison à modif #}
+                    <div id="pourcentageEpisodeVu">
+                      <p>Pourcentage d'épisodes vus</p>
+                      <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
+                    </div>
                   </div>
                 {% endfor %}
             </td>
@@ -256,7 +278,7 @@
       var select = document.querySelector("select");
       var season = select.options[select.selectedIndex].value;
       // /{series}/{season}/set_seen/{yesno}/{all}
-      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 0, 'numPage': numPage}) }}".replace("0", season);
+      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 99954865468, 'numPage': numPage}) }}".replace("99954865468", season);
     });
   </script>
 
