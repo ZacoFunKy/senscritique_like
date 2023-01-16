@@ -152,12 +152,17 @@ class UserController extends AbstractController
                 $user->setName($data['name'] . $i);
                 $email = $data['email'];
                 $email = explode('@', $email);
-                $user->setEmail($email[0] . $i . '@' . $email[1]);
-                //hash the password
+                $new_email = $email[0] . $i . '@' . $email[1];
+                $new_email = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                while($new_email){
+                    $new_email = $email[0] . rand(0, 1000) . '@' . $email[1];
+                    $new_email = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                }
+                $user->setEmail($new_email);
+                $password = $data['password'];
                 $hash = password_hash($password, PASSWORD_BCRYPT);       
                 $user->setPassword($hash);
                 $user->setRoles(['ROLE_USER']);
-                //get a random country 
                 $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
                 if($country){
                     $user->setCountry($country);
