@@ -156,11 +156,24 @@ h1 {
   width: 18vw;
   height: 25vw;
   overflow: hidden;
+  margin-bottom: 2%;
 }
 .poster img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.poster #moyenne {
+  z-index: 2;
+  position: relative;
+  top: 405px;
+  background: rgba(26, 26, 26, 0.7);
+  border: 1px solid rgb(255, 255, 255);
+  width: 25%;
+  color: #f7df1e;
+  margin: 10px;
 }
 
 .nePasAfficher {

@@ -100,8 +100,13 @@ class UserCrudController extends AbstractCrudController
                 ->setIcon('fa fa-plus')
                 ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'))
                 ->linkToRoute('app_admin_user_new');
+        })
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action
+                ->setLabel('Nombre de faux comptes')
+                ->setIcon('fa fa-user-secret')
+                ->linkToRoute('app_admin_user_count_fake_accounts');
         });
-        
     }
     
 }

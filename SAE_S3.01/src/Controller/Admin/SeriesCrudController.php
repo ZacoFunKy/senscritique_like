@@ -59,7 +59,8 @@ class SeriesCrudController extends AbstractCrudController
                 ->setLabel('Ajouter')
                 ->setIcon('fa fa-plus')
                 ->linkToRoute('app_admin_user_new');
-        });
+        })
+        ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
         
 }
