@@ -156,6 +156,8 @@
                         <p>{{review.comment}}</p>
                       </div>
                     </div> 
+                    <a href="{{ path('app_series_approve_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="valider">Valider</button></a>
+                    <a href="{{ path('app_series_delete_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="supprimer">Supprimer</button></a>
                   {% endif %}
                   {% if app.user is defined %}
                     {% if review.user.id == app.user.id %}
