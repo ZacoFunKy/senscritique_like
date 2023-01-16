@@ -53,16 +53,33 @@ class Actor
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * Permet d'obtenir l'id d'un acteur
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir le nom d'un acteur
+     *
+     * @return ?string
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Permet de parametrer le nom d'un acteur
+     *
+     * @param string $name le nom de l'acteur
+     *
+     * @return self
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -78,6 +95,13 @@ class Actor
         return $this->series;
     }
 
+    /**
+     * Permet d'ajouter une série à un acteur
+     *
+     * @param Series $series la série à ajouter
+     *
+     * @return self
+     */
     public function addSeries(Series $series): self
     {
         if (!$this->series->contains($series)) {
@@ -87,6 +111,13 @@ class Actor
         return $this;
     }
 
+    /**
+     * Permet de supprimer une série dans la liste des séries de l'acteur
+     *
+     * @param Series $series la série à supprimer
+     *
+     * @return self
+     */
     public function removeSeries(Series $series): self
     {
         $this->series->removeElement($series);

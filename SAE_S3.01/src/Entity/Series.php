@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -135,16 +134,33 @@ class Series
         $this->seasons = new ArrayCollection();
     }
 
+    /**
+     * Permet d'obtenir l'id d'une série
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir le titre de la série
+     *
+     * @return ?string
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * Permet de définir le titre d'une série
+     *
+     * @param string $title
+     *
+     * @return self
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -152,11 +168,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le résumé de la série
+     *
+     * @return ?string
+     */
     public function getPlot(): ?string
     {
         return $this->plot;
     }
 
+    /**
+     * Permet de définir le résumé d'une série
+     *
+     * @param ?string $plot
+     *
+     * @return self
+     */
     public function setPlot(?string $plot): self
     {
         $this->plot = $plot;
@@ -164,11 +192,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le lien de la base de données de la série
+     *
+     * @return ?string
+     */
     public function getImdb(): ?string
     {
         return $this->imdb;
     }
 
+    /**
+     * Permet de définir le lien de la base de données
+     *
+     * @param string $imdb
+     *
+     * @return self
+     */
     public function setImdb(string $imdb): self
     {
         $this->imdb = $imdb;
@@ -176,11 +216,22 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le poster de la série
+     *
+     */
     public function getPoster()
     {
         return $this->poster;
     }
 
+    /**
+     * Permet de définir le poster de la série
+     *
+     * $poster le poster de la série
+     *
+     * @return self
+     */
     public function setPoster($poster): self
     {
         $this->poster = $poster;
@@ -188,11 +239,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le directeur de la série
+     *
+     * @return ?string
+     */
     public function getDirector(): ?string
     {
         return $this->director;
     }
 
+    /**
+     * Permet de définir le directeur de la série
+     *
+     * @param ?string $director
+     *
+     * @return self
+     */
     public function setDirector(?string $director): self
     {
         $this->director = $director;
@@ -200,11 +263,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le trailer de youtube de la série
+     *
+     * @return ?string
+     */
     public function getYoutubeTrailer(): ?string
     {
         return $this->youtubeTrailer;
     }
 
+    /**
+     * Permet de définir le trailer youtube de la série
+     *
+     * @param ?string $youtubeTrailer
+     *
+     * @return self
+     */
     public function setYoutubeTrailer(?string $youtubeTrailer): self
     {
         $this->youtubeTrailer = $youtubeTrailer;
@@ -212,11 +287,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir les récompenses de la série
+     *
+     * @return ?string
+     */
     public function getAwards(): ?string
     {
         return $this->awards;
     }
 
+    /**
+     * Permet de définir les récompenses de la série
+     *
+     * @param ?string $awards les récompenses de la série
+     *
+     * @return self
+     */
     public function setAwards(?string $awards): self
     {
         $this->awards = $awards;
@@ -224,11 +311,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir l'année de début de la série
+     *
+     * @return ?int
+     */
     public function getYearStart(): ?int
     {
         return $this->yearStart;
     }
 
+    /**
+     * Permet de définir l'année de début de la série
+     *
+     * @param ?int $yearStart
+     *
+     * @return self
+     */
     public function setYearStart(?int $yearStart): self
     {
         $this->yearStart = $yearStart;
@@ -236,11 +335,23 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet d'obtenir l'année de fin de la série
+     *
+     * @return ?int
+     */
     public function getYearEnd(): ?int
     {
         return $this->yearEnd;
     }
 
+    /**
+     * Permet de définir l'année de fin de la série
+     *
+     * @param ?int $yearEnd
+     *
+     * @return self
+     */
     public function setYearEnd(?int $yearEnd): self
     {
         $this->yearEnd = $yearEnd;
@@ -249,6 +360,8 @@ class Series
     }
 
     /**
+     * Permet d'obtenir la liste des pays dans lesquelles la série a été crée
+     *
      * @return Collection<int, Country>
      */
     public function getCountry(): Collection
@@ -256,6 +369,13 @@ class Series
         return $this->country;
     }
 
+    /**
+     * Permet d'ajouter un pays à la liste des pays de la série
+     *
+     * @param Country $country
+     *
+     * @return self
+     */
     public function addCountry(Country $country): self
     {
         if (!$this->country->contains($country)) {
@@ -266,6 +386,13 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer un pays de la liste des pays de la série
+     *
+     * @param Country $country
+     *
+     * @return self
+     */
     public function removeCountry(Country $country): self
     {
         if ($this->country->removeElement($country)) {
@@ -276,6 +403,8 @@ class Series
     }
 
     /**
+     * Permet d'obtenir la liste des utilisateurs qui suivent la série
+     *
      * @return Collection<int, User>
      */
     public function getUser(): Collection
@@ -283,6 +412,13 @@ class Series
         return $this->user;
     }
 
+    /**
+     * Permet d'ajouter un utilisateur à la liste des utilisateurs qui suivent la série
+     *
+     * @param User $user
+     *
+     * @return self
+     */
     public function addUser(User $user): self
     {
         if (!$this->user->contains($user)) {
@@ -293,6 +429,13 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer un utilisateur de la liste des utilisateurs qui suivent la série
+     *
+     * @param User $user
+     *
+     * @return self
+     */
     public function removeUser(User $user): self
     {
         if ($this->user->removeElement($user)) {
@@ -303,6 +446,8 @@ class Series
     }
 
     /**
+     * Permet d'obtenir la liste des acteurs qui jouent dans la série
+     *
      * @return Collection<int, Actor>
      */
     public function getActor(): Collection
@@ -310,6 +455,13 @@ class Series
         return $this->actor;
     }
 
+    /**
+     * Permet d'ajouter un acteur à la liste des acteurs ayant jouer dans la série
+     *
+     * @param Actor $actor
+     *
+     * @return self
+     */
     public function addActor(Actor $actor): self
     {
         if (!$this->actor->contains($actor)) {
@@ -320,6 +472,13 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer un acteur de la série
+     *
+     * @param Actor $actor
+     *
+     * @return self
+     */
     public function removeActor(Actor $actor): self
     {
         if ($this->actor->removeElement($actor)) {
@@ -330,6 +489,8 @@ class Series
     }
 
     /**
+     * Permet d'obtenir la liste des genres de la série
+     *
      * @return Collection<int, Genre>
      */
     public function getGenre(): Collection
@@ -337,6 +498,13 @@ class Series
         return $this->genre;
     }
 
+    /**
+     * Permet d'ajouter un genre à la série
+     *
+     * @param Genre $genre
+     *
+     * @return self
+     */
     public function addGenre(Genre $genre): self
     {
         if (!$this->genre->contains($genre)) {
@@ -347,6 +515,13 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer un genre de la série
+     *
+     * @param Genre $genre
+     *
+     * @return self
+     */
     public function removeGenre(Genre $genre): self
     {
         if ($this->genre->removeElement($genre)) {
@@ -357,6 +532,8 @@ class Series
     }
 
     /**
+     * Permet d'afficher a liste des saisons de la série
+     *
      * @return Collection<int, Season>
      */
     public function getSeasons(): Collection
@@ -364,6 +541,13 @@ class Series
         return $this->seasons;
     }
 
+    /**
+     * Permet d'ajouter une saison à la série
+     *
+     * @param Season $season
+     *
+     * @return self
+     */
     public function addSeason(Season $season): self
     {
         if (!$this->seasons->contains($season)) {
@@ -374,29 +558,50 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer une saison de la série
+     *
+     * @param Season $season
+     *
+     * @return self
+     */
     public function removeSeason(Season $season): self
     {
         if ($this->seasons->removeElement($season)) {
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless already changed) REVOIR
             if ($season->getSeries() === $this) {
                 $season->setSeries(null);
             }
         }
-
         return $this;
     }
 
-    public function displayPoster() {
+    /**
+     * Permet d'affihcer le poster de la série
+     *
+     * @return self
+     */
+    public function displayPoster()
+    {
         $poster = stream_get_contents($this->getPoster());
         $poster = base64_encode($poster);
         echo '<img src="data:poster/jpeg;base64,'.$poster.'" alt="Poster"/>';
     }
 
-    public function getEmbedTrailerLink() {
-        return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer,'=')+1);
+    /**
+     * Permet de définir l'année de fin de la série
+     *
+     * @param ?int $yearEnd
+     *
+     * @return self
+     */
+    public function getEmbedTrailerLink()
+    {
+        return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer, '=')+1);
     }
 
-    public function __toString() {
+    public function __toString(): string
+    {
         return $this->getId();
     }
 

@@ -54,17 +54,34 @@ class ExternalRating
      * })
      */
     private $source;
-
+    
+    /**
+     * Permet d'obtenir l'id de la note
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir la valeur d'une note
+     *
+     * @return ?string
+     */
     public function getValue(): ?string
     {
         return $this->value;
     }
 
+    /**
+     * Permet de définir la valeur d'une notation
+     *
+     *@param string $value la nouvelle valeure de la notation
+     *
+     * @return self
+     */
     public function setValue(string $value): self
     {
         $this->value = $value;
@@ -72,11 +89,23 @@ class ExternalRating
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le nombre de votes
+     *
+     * @return ?int
+     */
     public function getVotes(): ?int
     {
         return $this->votes;
     }
 
+    /**
+     * Permet de définir le nombre de vote
+     *
+     *@param ?int $votes le nombre de vote
+     *
+     * @return self
+     */
     public function setVotes(?int $votes): self
     {
         $this->votes = $votes;
@@ -84,11 +113,23 @@ class ExternalRating
         return $this;
     }
 
+    /**
+     * Permet d'obtenir la série de la notation
+     *
+     * @return ?Series
+     */
     public function getSeries(): ?Series
     {
         return $this->series;
     }
 
+    /**
+     * Permet de définir la série de la notation
+     *
+     *@param ?Series $series la nouvelle serie de la notation
+     *
+     * @return self
+     */
     public function setSeries(?Series $series): self
     {
         $this->series = $series;
@@ -96,17 +137,27 @@ class ExternalRating
         return $this;
     }
 
+    /**
+     * Permet d'obtenir la source de la notation
+     *
+     * @return ?ExternalRatingSource
+     */
     public function getSource(): ?ExternalRatingSource
     {
         return $this->source;
     }
 
+    /**
+     * Permet de définir la source de la notation
+     *
+     *@param ?ExternalRatingSource $source la nouvelle source de la notation
+     *
+     * @return self
+     */
     public function setSource(?ExternalRatingSource $source): self
     {
         $this->source = $source;
 
         return $this;
     }
-
-
 }

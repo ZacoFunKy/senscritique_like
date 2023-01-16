@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -13,7 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -22,11 +20,9 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-    
     public function configureFields(string $pageName): iterable
     {
-
-        if($this->isGranted('IS_IMPERSONATOR') && $this->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('IS_IMPERSONATOR') && $this->isGranted('ROLE_SUPER_ADMIN')) {
             return [
             IdField::new('id')
                 ->onlyOnIndex()
@@ -74,11 +70,11 @@ class UserCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //Permet d'incarner un utilisateur en tant qu'administrateur
         $impersonate = Action::new('impersonate', 'Incarner', 'fas fa-user-secret')
         ->linkToUrl(function (User $entity) {
             return 'series/?_switch_user='.$entity->getEmail();
         });
-
 
     return parent::configureActions($actions)
         ->add(Crud::PAGE_INDEX, $impersonate)
@@ -100,7 +96,5 @@ class UserCrudController extends AbstractCrudController
                 ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'))
                 ->linkToRoute('app_admin_user_new');
         });
-        
     }
-    
 }

@@ -11,12 +11,24 @@ class PropertySearch
     private $genre;
     private $avis;
     private $suivi;
-   
+    
+    /**
+     * Permet d'obtenir le nom de la barre de recherche
+     *
+     * @return ?string
+     */
     public function getNom(): ?string
     {
         return $this->nom;
     }
- 
+    
+    /**
+     * Permet de définir le nom de la barre de recherche
+     *
+     * @param string $nom le nom de la barre de recherche
+     *
+     * @return self
+     */
     public function setNom(string $nom): self
     {
         $this->nom = $nom    ;
@@ -24,11 +36,23 @@ class PropertySearch
         return $this;
     }
 
+    /**
+     * Permet d'obtenir l'année de départ
+     *
+     * @return ?int
+     */
     public function getAnneeDepart(): ?int
     {
         return $this->anneeDepart;
     }
- 
+    
+    /**
+     * Permet de définir l'année de départ
+     *
+     * @param int $anneeDepart l'année de départ
+     *
+     * @return self
+     */
     public function setAnneeDepart(int $anneeDepart): self
     {
         $this->anneeDepart = $anneeDepart    ;
@@ -36,11 +60,23 @@ class PropertySearch
         return $this;
     }
 
+    /**
+     * Permet d'obtenir l'année de fin
+     *
+     * @return ?int
+     */
     public function getAnneeFin(): ?int
     {
         return $this->anneeFin;
     }
- 
+    
+    /**
+     * Permet de définir l'année de fin
+     *
+     * @param int $anneeFin l'annee de fin de la barre de recherche
+     *
+     * @return self
+     */
     public function setAnneeFin(int $anneeFin): self
     {
         $this->anneeFin = $anneeFin    ;
@@ -48,11 +84,23 @@ class PropertySearch
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le genre de la barre de recherche
+     *
+     * @return ?string
+     */
     public function getGenre(): ?string
     {
         return $this->genre;
     }
  
+    /**
+     * Permet de définir le nom de la barre de recherche
+     *
+     * @param string $genre le genre de la barre de recherche
+     *
+     * @return self
+     */
     public function setGenre(string $genre): self
     {
         $this->genre = $genre;
@@ -60,11 +108,23 @@ class PropertySearch
         return $this;
     }
     
+    /**
+     * Permet d'obtenir l'avis de la barre de recherche
+     *
+     * @return ?string
+     */
     public function getAvis(): ?string
     {
          return $this->avis;
     }
 
+    /**
+     * Permet de définir l'avis de la barre de recherche
+     *
+     * @param string $avis l'avis de la barre de recherche
+     *
+     * @return self
+     */
     public function setAvis(string $avis): self
     {
         $this->avis = $avis;
@@ -72,11 +132,23 @@ class PropertySearch
         return $this;
     }
     
+    /**
+     * Permet de savoir si la barre de commentaire est suivi
+     *
+     * @return ?bool
+     */
     public function getSuivi(): ?bool
     {
          return $this->suivi;
     }
 
+    /**
+     * Permet de changer l'état de
+     *
+     * @param string $nom le nom de la barre de recherche
+     *
+     * @return self
+     */
     public function setSuivi(bool $suivi): self
     {
         $this->suivi = $suivi;

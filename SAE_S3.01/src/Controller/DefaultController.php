@@ -20,7 +20,7 @@ class DefaultController extends AbstractController
         }
         $c = rand(0, 234);
         while ($c == $a || $c == $b) {
-            $c = rand(0,234);
+            $c = rand(0, 234);
         }
 
         $series = $entityManager
@@ -48,6 +48,7 @@ class DefaultController extends AbstractController
             'series' => $series,
         ]);
     }
+    
     #[Route('/about', name: 'app_about')]
     public function about(): Response
     {

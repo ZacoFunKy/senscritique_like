@@ -52,16 +52,33 @@ class Season
         $this->episodes = new ArrayCollection();
     }
 
+    /**
+     * Permet d'obtenir l'id de la saison
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir le numéro de la saison
+     *
+     * @return ?int
+     */
     public function getNumber(): ?int
     {
         return $this->number;
     }
 
+    /**
+     * Permet de définir le numéro de la saison
+     *
+     * @param int $number le numéro de la saison
+     *
+     * @return self
+     */
     public function setNumber(int $number): self
     {
         $this->number = $number;
@@ -69,11 +86,23 @@ class Season
         return $this;
     }
 
+    /**
+     * Permet d'obtenir la série lié à la saison
+     *
+     * @return ?Series
+     */
     public function getSeries(): ?Series
     {
         return $this->series;
     }
 
+    /**
+     * Permet de définir la série de la saison
+     *
+     * @param ?Series $series la série lié à la saison
+     *
+     * @return self
+     */
     public function setSeries(?Series $series): self
     {
         $this->series = $series;
@@ -82,6 +111,8 @@ class Season
     }
 
     /**
+     * Permet d'obtenir la collection d'épisode de la saison
+     *
      * @return Collection<int, Episode>
      */
     public function getEpisodes(): Collection
@@ -89,6 +120,13 @@ class Season
         return $this->episodes;
     }
 
+    /**
+     * Permet d'ajouter un épisode à la liste des épisodes de la saison
+     *
+     * @param Episode $episode l'épisode à ajouter à la liste
+     *
+     * @return self
+     */
     public function addEpisode(Episode $episode): self
     {
         if (!$this->episodes->contains($episode)) {
@@ -99,15 +137,21 @@ class Season
         return $this;
     }
 
+    /**
+     * Permet de supprimer un épisode de la liste des épisodes de la saison
+     *
+     * @param Episode $episode
+     *
+     * @return self
+     */
     public function removeEpisode(Episode $episode): self
     {
         if ($this->episodes->removeElement($episode)) {
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless already changed) REVOIR
             if ($episode->getSeason() === $this) {
                 $episode->setSeason(null);
             }
         }
-
         return $this;
     }
 

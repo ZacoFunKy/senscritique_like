@@ -32,9 +32,9 @@ class SeriesController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $genreFromForm=$propertySearch->getGenre();
-            $anneeDepartFromForm=$propertySearch->getAnneeDepart();
-            $anneeFinFromForm=$propertySearch->getAnneeFin();
+            $genreFromForm = $propertySearch->getGenre();
+            $anneeDepartFromForm = $propertySearch->getAnneeDepart();
+            $anneeFinFromForm = $propertySearch->getAnneeFin();
             $nameFromForm = $propertySearch->getNom();
             $avisFromForm = $propertySearch->getAvis();
             $suiviFromForm = $propertySearch->getSuivi();
@@ -126,7 +126,7 @@ class SeriesController extends AbstractController
             ]);
         }
     }
-
+    
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

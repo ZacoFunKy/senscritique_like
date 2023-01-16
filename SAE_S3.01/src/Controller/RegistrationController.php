@@ -16,7 +16,10 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator,EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,
+    UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator,
+    EntityManagerInterface $entityManager
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -30,6 +33,8 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            //Pemret de définir la date d'enregistrement
             $user->setRegisterDate(new \DateTime('@'.strtotime('Europe/Paris')));
             $entityManager->persist($user);
             $entityManager->flush();
