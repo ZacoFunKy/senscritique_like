@@ -51,6 +51,7 @@
           {% endfor %}
           </td>
 		    </ul>
+        </br>
         <h2>Avis</h2>
 		    <ul>
           <td>
@@ -70,14 +71,18 @@
             <h2> {{avg}}/5</h2>
           </td>
 		    </ul>
+        </br>
 		    <h2>Bande d'annonce</h2>
 		    <iframe width="560" height="315" src="{{ series.getEmbedtrailerLink }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-		    <h2>IMDB</h2>
+        </br>
+        <h2>IMDB</h2>
 		    <p>
 			    <a href="https://www.imdb.com/title/{{series.imdb}}">Page imdb</a>
 		    </p>
+        </br>
 		    <h2>Récompense(s)</h2>
 		    <p>{{ series.awards }}</p>
+        </br>
 		    <h2>Année de début</h2>
 		    <p>{{ series.yearStart }}</p>
         <h2>Année de fin</h2>
@@ -86,6 +91,7 @@
         {% else %}
           <p>En cours</p>
         {% endif %}
+        </br>
         <h2>Commentaire ({{rating|length}})</h2>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
@@ -95,6 +101,17 @@
                 <input type="text" id="commentaire" placeholder="Commentaire">
                 <button class="rate">Commenter</button>
                 <button class="annuler">Annuler</button>
+              </div>
+          {% endif %}
+        {% endif %}
+                {% if app.user is defined %}
+          {% if app.user.id is defined and app.user.id is not null %}
+              <div class='modify_rating' style="display: none">
+                <div class="modified-rating jq-stars"></div>
+                <button class="modify_reset_rating">Réinitialiser la note</button>
+                <input type="text" id="commentaire_modify" placeholder="Commentaire">
+                <button class="modify_rate">Commenter</button>
+                <button class="modify_annuler">Annuler</button>
               </div>
           {% endif %}
         {% endif %}
@@ -126,30 +143,44 @@
           {# Commentaire des autres utilisateurs #}
             {% if app.user.id is defined and app.user.id is not null %}
               {% for review in rating %}
-                {% if review != userRating %} 
-                  <div class="review_user">
-                    <div class="profil">
-                      <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
-                      <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
-                      <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
-                    </div>
-                    <div class="rate_part">
-                      <p>
-                        <div class="{{review.user.id}} jq-stars"></div>
-                      </p>
-                      <p>{{review.comment}}</p>
-                    </div>
-                  </div>
-                  {% if app.user is defined %}
-                    {% if review.user.id == app.user.id %}
-                      <button class="modifier">Modifier</button>
-                      <button class="supprimer">Supprimer</button>
-                    {% endif %}
+                {% if review != userRating %}
+                  {% if review.verified == 1 %} 
+                    <div class="review_user">
+                      <div class="profil">
+                        <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                        <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
+                      </div>
+                      <div class="rate_part">
+                        <p>
+                          <div class="{{review.user.id}} jq-stars"></div>
+                        </p>
+                        <p>{{review.comment}}</p>
+                      </div>
+                    </div> 
+                  {% endif %}
+                  {% if review.verified == 0 and is_granted('ROLE_ADMIN') %}
+                    <div class="review_user" style="opacity:0.3">
+                      <div class="profil">
+                        <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                        <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
+                      </div>
+                      <div class="rate_part">
+                        <p>
+                          <div class="{{review.user.id}} jq-stars"></div>
+                        </p>
+                        <p>{{review.comment}}</p>
+                      </div>
+                    </div> 
+                    <a href="{{ path('app_series_approve_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="valider">Valider</button></a>
+                    <a href="{{ path('app_series_delete_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="supprimer">Supprimer</button></a>
                   {% endif %}
                 {% endif %}   
               {% endfor %}
             {% else %}
               {% for review in rating %}
+                {% if review.verified == 1 %} 
                 <div class="review_user">
                   <div class="profil">
                     <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
@@ -161,6 +192,7 @@
                     <p>{{review.comment}}</p>
                   </div>
                 </div>
+                {% endif %}
               {% endfor %}
             {% endif %}
          </div>
@@ -169,7 +201,7 @@
 		      <tr>
 			      <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
 		      </tr>
-          <h2>Seasons</h2>
+          <h2>Saison(s)</h2>
           <ul>
             <td>
               <div class="w-25 mb-3">
@@ -181,19 +213,21 @@
                   {% endfor %}
                 </select>
                 {% if app.user is defined and app.user is not null %}
-                <a href="#" class="btn btn-primary" id="seasonButton">See all season</a>
+                <button class="btn btn-primary" id="seasonButton">Voir tous les épisodes d'une saison</button>
                 {% endif %}
               </div>
               <ul>
                 {% for season in series.seasons %}
+                  {% set episodeVu = 0 %}
                   <div id="{{season.number}}" class="seasonEpisode">
                     {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
                       <li id="{{season.number}}" class="episode">
                         Episode
                         {{episode.number}}
-                        {{ episode.title}}
+                        {{episode.title}}
                         {% if app.user %}
                           {% if episode in app.user.episode %}
+                            {% set episodeVu = episodeVu + 1 %}
                             <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
                               <i class="fa-solid fa-eye fa-xl"></i>
                             </a>
@@ -206,6 +240,11 @@
                       </li>
                       </br>
                     {% endfor %}
+                    {# Affiche le pourcentage vu de la saison à modif #}
+                    <div id="pourcentageEpisodeVu">
+                      <p>Pourcentage d'épisodes vus</p>
+                      <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
+                    </div>
                   </div>
                 {% endfor %}
             </td>
@@ -224,7 +263,7 @@
 
       var buttonModif = document.querySelector(".modifier");
       buttonModif.addEventListener("click", () => {
-        document.querySelector(".give_rating").style.display = "block";
+        document.querySelector(".modify_rating").style.display = "block";
         document.querySelector(".modifier").style.display = "none";
         document.querySelector(".supprimer").style.display = "none";
         
@@ -241,6 +280,13 @@
         document.querySelector(".modifier").style.display = "inline";
         document.querySelector(".supprimer").style.display = "inline";
       });
+
+      var buttonSuppr = document.querySelector(".modify_annuler");
+      buttonSuppr.addEventListener("click", () => {
+        document.querySelector(".modify_rating").style.display = "none";
+        document.querySelector(".modifier").style.display = "inline";
+        document.querySelector(".supprimer").style.display = "inline";
+      });
     </script>
   {% endif %}
 
@@ -250,7 +296,7 @@
       var select = document.querySelector("select");
       var season = select.options[select.selectedIndex].value;
       // /{series}/{season}/set_seen/{yesno}/{all}
-      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 0, 'numPage': numPage}) }}".replace("0", season);
+      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 99954865468, 'numPage': numPage}) }}".replace("99954865468", season);
     });
   </script>
 
@@ -295,6 +341,17 @@
         useGradient: false,
         disableAfterRate: false,
       });  
+
+            $(".modified-rating").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 40,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+      });  
   
     var buttonReset = document.querySelector(".reset_rating");
     buttonReset.onclick = () => {
@@ -314,6 +371,26 @@
         disableAfterRate: false,
       });
     }
+
+
+     var buttonReset = document.querySelector(".modify_reset_rating");
+    buttonReset.onclick = () => {
+      $(".modified-rating").starRating('unload');
+      const stars = [...document.getElementsByClassName("jq-star")];
+      stars.forEach((star) => {
+        star.remove();
+      });
+      $(".modified-rating").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 40,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+      });
+    }
   </script>
   
   <script>
@@ -323,6 +400,31 @@
     console.log(valeur);
     let text = document.querySelector("#commentaire").value;
     const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+    const data = {value: valeur, text: text};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    location.reload();
+  }
+
+
+  const rateModifyButton = document.querySelector(".modify_rate");
+  rateModifyButton.onclick = () => {
+    let valeur = $(".modified-rating").starRating('getRating');
+    console.log(valeur);
+    let text = document.querySelector("#commentaire_modify").value;
+    const url = "{{ path('modifify_rating_series_show', {'id': series.id}) }}";
     const data = {value: valeur, text: text};
     fetch(url, {
       method: 'POST',
