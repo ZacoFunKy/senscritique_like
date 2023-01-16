@@ -157,9 +157,9 @@ class SeriesController extends AbstractController
     public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator ): Response
     {
+
         $users = $series->getUser();
         $value = 0;
-        
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
         $ranting_verified = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => 1]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
@@ -177,6 +177,9 @@ class SeriesController extends AbstractController
         if ($numPage == null) {
             $numPage = 1;
         }
+       
+        // get ?rating in the url
+        $limitRating = Request::createFromGlobals()->query->get('rating');
 
         foreach ($users as $user) {
             if ($user == $this->getUser()) {
@@ -191,6 +194,7 @@ class SeriesController extends AbstractController
         }
 
         $ratings = array_reverse($ratings);
+        $allRatings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => 1]);
         $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));
 
 
@@ -199,6 +203,7 @@ class SeriesController extends AbstractController
             'valeur' => $value,
             'numPage' => $numPage,
             'rating' => $ratings,
+            'allRatings' => $allRatings,
             'avg' => $avg,
             'userRating' => $userRating,
         ]);

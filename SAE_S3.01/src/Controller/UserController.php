@@ -58,7 +58,7 @@ class UserController extends AbstractController
 
         $countries = $entityManager->getRepository(Country::class)->findAll();
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user]);
+        $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user, 'verified' => true]);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('photo')->getData();
@@ -270,8 +270,23 @@ class UserController extends AbstractController
         }
 
         $entityManager->flush();
+
+
+
+
         return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
 
+    }
+
+
+    #[Route('/user/count/fake_account', name: 'app_admin_user_count_fake_accounts')]
+    public function count_fake_account(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        echo "<script>
+        alert('Il y a " . count($user) . " comptes faux');
+        window.location.href='admin';
+        </script>";
     }
 
 

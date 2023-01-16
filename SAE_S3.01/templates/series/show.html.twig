@@ -92,7 +92,12 @@
           <p>En cours</p>
         {% endif %}
         </br>
-        <h2>Commentaire ({{rating|length}})</h2>
+        <h2>Commentaire ({{allRatings|length}})</h2>
+        {# Histogramme des notes #}
+          {% if app.user.id is defined and app.user.id is not null %}
+            {% include 'histogram.svg.twig' %}
+          {% endif %}
+        <h4>Commenter</h4>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
               <div class='give_rating'>
