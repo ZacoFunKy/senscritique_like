@@ -170,7 +170,6 @@ class SeriesController extends AbstractController
         if (count($ranting_verified) != 0) {
             $avg = $sum / count($ranting_verified);
             $avg = round($avg, 2);
-            $avg .= "/5";
         } else {
             $avg = "Pas d'avis";
         }
@@ -206,6 +205,7 @@ class SeriesController extends AbstractController
             'rating' => $ratings,
             'allRatings' => $allRatings,
             'avg' => $avg,
+            'nbNotes' => $sum,
             'userRating' => $userRating,
         ]);
     }
