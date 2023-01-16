@@ -150,11 +150,11 @@ h1 {
   padding: 0.2%;
 }
 .serie {
-  width: 19%;
+  width: 18vw;
 }
 .poster{
-  width: 35vh;
-  height: 45vh;
+  width: 18vw;
+  height: 25vw;
   overflow: hidden;
 }
 .poster img {
@@ -211,6 +211,15 @@ h1 {
   #content h1 {
     font-size: 4em;
   }
+  .serie {
+    width: 19%;
+  }
+  .poster{
+    width: 35vh;
+    height: 45vh;
+    overflow: hidden;
+  }
+  .poster i
   /* Liste des utilisateurs */
   #user_search_form_nom {
     font-size: 2em;
@@ -223,6 +232,16 @@ h1 {
   #boutonRecherche {
     font-size: 2em;
   }
+  /*Poster*/
+  .serie {
+    width: auto;
+  }
+  .poster{
+    width: auto;
+    height: 20vh;
+    overflow: hidden;
+  }
+  
 }
 
 /*téléphone landscape*/
@@ -251,6 +270,15 @@ h1 {
   .serie p {
     font-size: 1.5em;
   }
+    /*Poster*/
+    .serie {
+      width: auto;
+    }
+    .poster{
+      width: auto;
+      height: 30vh;
+      overflow: hidden;
+    }
 }
 
 /*tablette landscape*/
