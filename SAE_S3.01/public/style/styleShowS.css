@@ -110,9 +110,9 @@ button {
 
 /* Commentaire */
 
-.review_user{
+.review_user {
 	background-color: #424242;
-	padding:2%;
+	padding: 2%;
 	display: flex;
 	border-radius: 10px;
 	margin-top: 2%;

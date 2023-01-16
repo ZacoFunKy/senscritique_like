@@ -1,0 +1,72 @@
+{% set zeroStar = 0 %}
+{% set oneStar = 0 %}
+{% set twoStars = 0 %}
+{% set threeStars = 0 %}
+{% set fourStars = 0 %}
+{% set fiveStars = 0 %}
+{% for review in rating %}
+    {% if review.value == 0 or review.value == 0.5 %}
+        {% set zeroStar = zeroStar + 30 %}
+    {% endif %}
+    {% if review.value == 1 or review.value == 1.5 %}
+        {% set oneStar = oneStar + 30 %}
+    {% endif %}
+    {% if review.value == 2 or review.value == 2.5 %}
+        {% set twoStars = twoStars + 30 %}
+    {% endif %}
+    {% if review.value == 3 or review.value == 3.5 %}
+        {% set threeStars = threeStars + 30 %}
+    {% endif %}
+    {% if review.value == 4 or review.value == 4.5 %}
+        {% set fourStars = fourStars + 30 %}
+    {% endif %}
+    {% if review.value == 5 %}
+        {% set fiveStars = fiveStars + 30 %}
+    {% endif %}
+{% endfor %}
+<svg class="histogram" width="100%" height="100" aria-labelledby="title desc" role="img">
+  <title id="title">Histogramme des notes</title>
+  <desc id="desc">Histogramme des notes pour cette série</desc>
+    <g class="bar">
+        <text y="9.5" dy=".35em">5* : {{ fiveStars / 30 }} critiques</text>
+        <rect x="125" width="{{ fiveStars }}" height="19" rx="10" />
+    </g>
+    <g class="bar">
+        <text y="28" dy=".35em">4* : {{ fourStars / 30 }} critiques</text>
+        <rect x="125" y="20" width="{{ fourStars }}" height="19" rx="10" />
+    </g>
+    <g class="bar">
+        <text y="48" dy=".35em">3* : {{ threeStars / 30 }} critiques</text>
+        <rect x="125" y="40" width="{{ threeStars }}" height="19" rx="10" />
+    </g>
+    <g class="bar">
+        <text y="68" dy=".35em">2* : {{ twoStars / 30 }} critiques</text>
+        <rect x="125" y="60" width="{{ twoStars }}" height="19" rx="10" />
+    </g>
+    <g class="bar">
+        <text y="88" dy=".35em">1* : {{ oneStar / 30 }} critiques</text>
+        <rect x="125" y="80" width="{{ oneStar }}" height="19" rx="10" />
+    </g>
+    <g class="bar">
+        <text y="108" dy=".35em">0* : {{ zeroStar / 30 }} critiques</text>
+        <rect x="125" y="100" width="{{ zeroStar }}" height="19" rx="10" />
+    </g>
+</svg>
+<style>
+    svg.histogram {
+        padding: 10px;
+        background-color: #424242;
+        border-radius: 15px;
+    }
+
+    svg.histogram .bar {
+        fill: white;
+        height: 21px;
+        cursor: pointer;
+    }
+
+    svg.histogram .bar:hover rect {
+        fill: #f44336;
+        transition: fill 0.2s ease;
+    }
+</style>
