@@ -371,6 +371,52 @@ class SeriesController extends AbstractController
         );
     }
 
+
+
+    #[Route('/series/rating/modify/{id}', name: 'modifify_rating_series_show', methods: ['GET', 'POST'])]
+    public function showModifyRating(Series $series, EntityManagerInterface $entityManager): Response
+    {
+
+        $numPage = Request::createFromGlobals()->query->get('numPage');
+
+        if ($numPage == null) {
+            $numPage = 1;
+        }
+        $request = Request::createFromGlobals();
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+        $rate = $data['value'];
+        $comment = $data['text'];
+
+
+        //Respond to the fetch for it to be a 200
+        $respond = new Response();
+        $respond->setStatusCode(200);
+        $respond->send();
+
+        $ratings = $entityManager
+            ->getRepository(Rating::class)
+            ->findOneBy(
+                ['user' => $this->getUser(),
+                'series' => $series]
+            );
+            
+
+        $ratings->setValue($rate);
+        $ratings->setComment($comment);
+        $ratings->setDate(new \DateTime());
+        $entityManager->flush();
+
+
+        return $this->redirectToRoute(
+            'app_series_show',
+            ['id' => $series->getId(),
+            'numPage' => $numPage],
+            Response::HTTP_SEE_OTHER
+        );
+    }
+
+
     #[Route('/series/rating/{id}/{user}/delete', name: 'rating_series_delete', methods: ['GET', 'POST'])]
     public function deleteRating(Series $series, EntityManagerInterface $entityManager, User $user){
         $numPage = Request::createFromGlobals()->query->get('numPage');
