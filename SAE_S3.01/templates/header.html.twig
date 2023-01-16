@@ -1,92 +1,107 @@
 {% block stylesheets %}
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-{% endblock %}
-
-{% block body %}
-
-{% if numPage is not defined %}
-    {% set numPage = 1 %}
-{% endif %}
-
-{% if app.user is not null %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+{% endblock %} 
+{% block body %} {% if numPage is not defined %} {% set numPage =
+1 %} {% endif %} {% if app.user is not null %}
 <div class="action">
-      <div class="profile" onclick="menuToggle();">
-          {% if app.user.photo is not null %}
-        <img src="{{ path('photo_user', {'id': app.user.id} ) }}" alt="image de profil">
-        {% else %}
-        <img src="{{ asset('images/avatar.png') }}" alt="image de profil">
-        {% endif %}
-      </div>
-      <div class="menu">
-        <ul>
-          <li>
-            <p class="name" style="color:white; font-weight: bold ">Bonjour {{ app.user.name }}</p>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_user_profile', {'id': app.user.id} ) }}">Mon compte</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
-          </li>
-          {% if is_granted('ROLE_ADMIN') %}
-          <li>
-            <a class="option" href="{{ path('admin') }}">Dashboard Admin</a>
-          </li>
-          {% endif %}
-          {% if is_granted('IS_IMPERSONATOR') %}
-          <li>
-            <a class="option" href="{{ impersonation_exit_url() }}">Désincarner</a>
-          </li>
-          {% endif %}
-          <li>
-            <a class="option" href="{{ path('app_about') }}">A propos</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_logout')}}">Déconnexion</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    {% else %}
-    <div class="action">
-      <div class="profile" onclick="menuToggle();">
-        <img src="{{ asset('images/avatar.png') }}" alt="image de profil">
-      </div>
-      <div class="menu">
-        <ul>
-          <li>
-            <a class="option" href="{{ path('app_login') }}">Connexion</a>
-          </li>
-          <li>
-            <a class="option" href="{{ path('app_register') }}">Créer un compte</a>
-          </li>
-          <li>
-           <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
-           </li>
-          <li>
-            <a class="option" href="{{ path('app_user_show_all') }}">Liste d'utilisateurs</a>
-          </li>
-           <li>
-            <a class="option" href="{{ path('app_about') }}">A propos</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+  <div class="profile" onclick="menuToggle();">
+    {% if app.user.photo is not null %}
+    <img
+      src="{{ path('photo_user', { id: app.user.id }) }}"
+      alt="image de profil"
+    />
+    {% else %} <img src="{{ asset("images/avatar.png") }}" alt="image de
+    profil"> {% endif %}
+  </div>
+  <div class="menu">
+    <ul>
+      <li>
+        <p class="name" style="color: white; font-weight: bold; ">
+          Bonjour {{ app.user.name }}
+        </p>
+      </li>
+      {% if is_granted('ROLE_ADMIN') %}
+      <li>
+        <p class="role" style="color: #f44336; font-weight:lighter">Admin</a>
+      </li>
+      {% elseif is_granted('IS_IMPERSONATOR') %}
+      <li>
+        <p class="role" style="color: #f44336; font-weight:lighter">Super Admin</a>
+      </li>
+      {% endif %}
+      <li>
+        <a
+          class="option"
+          href="{{ path('app_user_profile', { id: app.user.id }) }}"
+          >Mon compte</a
+        >
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_user_show_all') }}"
+          >Liste d'utilisateurs</a
+        >
+      </li>
+      {% if is_granted('ROLE_ADMIN') %}
+      <li>
+        <a class="option" href="{{ path('admin') }} " style="color: #f44336">Dashboard Admin</a>
+      </li>
+      {% endif %} {% if is_granted('IS_IMPERSONATOR') %}
+      <li>
+        <a class="option" href="{{ impersonation_exit_url() }}" style="color: #f44336">Désincarner</a>
+      </li>
+      {% endif %}
+      <li>
+        <a class="option" href="{{ path('app_about') }}">A propos</a>
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_logout') }}">Déconnexion</a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% else %}
+<div class="action">
+  <div class="profile" onclick="menuToggle();">
+    <img src="{{ asset('images/avatar.png') }}" alt="image de profil" />
+  </div>
+  <div class="menu">
+    <ul>
+      <li>
+        <a class="option" href="{{ path('app_login') }}">Connexion</a>
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_register') }}">Créer un compte</a>
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_series_index') }}">Catalogue</a>
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_user_show_all') }}"
+          >Liste d'utilisateurs</a
+        >
+      </li>
+      <li>
+        <a class="option" href="{{ path('app_about') }}">A propos</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
 {% endif %}
-
 
 <style>
-
-* {
+  * {
     margin: 0;
     padding: 0;
   }
-  
-  header .menu a{
+
+  header .menu a {
     color: #f44336;
     font-size: small;
   }
@@ -95,7 +110,7 @@
     top: 20px;
     right: 30px;
   }
-  
+
   .action .profile {
     position: relative;
     width: 60px;
@@ -103,8 +118,10 @@
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
+    border: 3px solid #a80b00;
+    background: #a80b00;
   }
-  
+
   .action .profile img {
     position: absolute;
     top: 0;
@@ -113,7 +130,7 @@
     height: 100%;
     object-fit: cover;
   }
-  
+
   .action .menu {
     position: absolute;
     top: 120px;
@@ -127,13 +144,13 @@
     visibility: hidden;
     opacity: 0;
   }
-  
+
   .action .menu.active {
     top: 80px;
     visibility: visible;
     opacity: 1;
   }
-  
+
   .action .menu::before {
     content: "";
     position: absolute;
@@ -144,7 +161,7 @@
     background: #f44336;
     transform: rotate(45deg);
   }
-  
+
   .action .menu h3 {
     width: 100%;
     text-align: center;
@@ -154,13 +171,13 @@
     color: #555;
     line-height: 1.5em;
   }
-  
+
   .action .menu h3 span {
     font-size: 14px;
     color: #cecece;
     font-weight: 300;
   }
-  
+
   .action .menu ul li {
     list-style: none;
     padding: 2% 0;
@@ -168,18 +185,18 @@
     display: flex;
     align-items: center;
   }
-  
+
   .action .menu ul li img {
     max-width: 20px;
     margin-right: 10px;
     opacity: 0.5;
     transition: 0.5s;
   }
-  
+
   .action .menu ul li:hover img {
     opacity: 1;
   }
-  
+
   .action .menu ul li a {
     display: inline-block;
     text-decoration: none;
@@ -187,14 +204,14 @@
     font-weight: 500;
     transition: 0.5s;
   }
-  
+
   .action .menu ul li:hover a {
     color: #f44336;
   }
 
-  .option{
+  .option {
     background-color: #424242;
-    padding:2vh 2vh;
+    padding: 2vh 2vh;
     width: 200px;
     border-radius: 10px;
   }
@@ -203,43 +220,41 @@
     margin-right: 0px;
   }
   header a {
-    text-shadow: 0px 0px 0px black; 
+    text-shadow: 0px 0px 0px black;
   }
 
   .pageActive {
     background-color: #f44336;
   }
 
-  .action .menu ul li:hover a.pageActive{
+  .action .menu ul li:hover a.pageActive {
     color: white;
   }
   /*téléphone en portrait*/
   @media screen and (min-width: 340px) and (orientation: portrait) {
-    .action .menu ul li a{
+    .action .menu ul li a {
       font-size: 1.5em;
     }
-    .name{
+    .name {
       font-size: 1.8em;
     }
-  
-  
-}
-  </style>
+  }
+</style>
 
-    <script>
-      function menuToggle() {
-        const toggleMenu = document.querySelector(".menu");
-        toggleMenu.classList.toggle("active");
-      }
-    </script>
-    <script>
-      const menu = document.querySelectorAll(".menu ul li a");
-      for (let i = 0; i < menu.length; i++) {
-        if (menu[i].href === location.href) {
-          menu[i].className += " pageActive";
-        } else if (location.href.includes(menu[i].href)) {
-          menu[i].className += " pageActive";
-        }
-      }
-    </script>
+<script>
+  function menuToggle() {
+    const toggleMenu = document.querySelector(".menu");
+    toggleMenu.classList.toggle("active");
+  }
+</script>
+<script>
+  const menu = document.querySelectorAll(".menu ul li a");
+  for (let i = 0; i < menu.length; i++) {
+    if (menu[i].href === location.href) {
+      menu[i].className += " pageActive";
+    } else if (location.href.includes(menu[i].href)) {
+      menu[i].className += " pageActive";
+    }
+  }
+</script>
 {% endblock %}
