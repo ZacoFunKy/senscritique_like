@@ -92,7 +92,12 @@
           <p>En cours</p>
         {% endif %}
         </br>
-        <h2>Commentaire ({{rating|length}})</h2>
+        <h2>Commentaire ({{allRatings|length}})</h2>
+        {# Histogramme des notes #}
+          {% if app.user.id is defined and app.user.id is not null %}
+            {% include 'histogram.svg.twig' %}
+          {% endif %}
+        <h4>Commenter</h4>
         {% if app.user is defined %}
           {% if app.user.id is defined and app.user.id is not null %}
               <div class='give_rating'>
@@ -101,6 +106,17 @@
                 <input type="text" id="commentaire" placeholder="Commentaire">
                 <button class="rate">Commenter</button>
                 <button class="annuler">Annuler</button>
+              </div>
+          {% endif %}
+        {% endif %}
+                {% if app.user is defined %}
+          {% if app.user.id is defined and app.user.id is not null %}
+              <div class='modify_rating' style="display: none">
+                <div class="modified-rating jq-stars"></div>
+                <button class="modify_reset_rating">Réinitialiser la note</button>
+                <input type="text" id="commentaire_modify" placeholder="Commentaire">
+                <button class="modify_rate">Commenter</button>
+                <button class="modify_annuler">Annuler</button>
               </div>
           {% endif %}
         {% endif %}
@@ -252,7 +268,7 @@
 
       var buttonModif = document.querySelector(".modifier");
       buttonModif.addEventListener("click", () => {
-        document.querySelector(".give_rating").style.display = "block";
+        document.querySelector(".modify_rating").style.display = "block";
         document.querySelector(".modifier").style.display = "none";
         document.querySelector(".supprimer").style.display = "none";
         
@@ -266,6 +282,13 @@
       var buttonSuppr = document.querySelector(".annuler");
       buttonSuppr.addEventListener("click", () => {
         document.querySelector(".give_rating").style.display = "none";
+        document.querySelector(".modifier").style.display = "inline";
+        document.querySelector(".supprimer").style.display = "inline";
+      });
+
+      var buttonSuppr = document.querySelector(".modify_annuler");
+      buttonSuppr.addEventListener("click", () => {
+        document.querySelector(".modify_rating").style.display = "none";
         document.querySelector(".modifier").style.display = "inline";
         document.querySelector(".supprimer").style.display = "inline";
       });
@@ -323,6 +346,17 @@
         useGradient: false,
         disableAfterRate: false,
       });  
+
+            $(".modified-rating").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 40,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+      });  
   
     var buttonReset = document.querySelector(".reset_rating");
     buttonReset.onclick = () => {
@@ -342,6 +376,26 @@
         disableAfterRate: false,
       });
     }
+
+
+     var buttonReset = document.querySelector(".modify_reset_rating");
+    buttonReset.onclick = () => {
+      $(".modified-rating").starRating('unload');
+      const stars = [...document.getElementsByClassName("jq-star")];
+      stars.forEach((star) => {
+        star.remove();
+      });
+      $(".modified-rating").starRating({
+        totalStars: 5,
+        starShape: 'rounded',
+        starSize: 40,
+        emptyColor: 'lightgray',
+        hoverColor: 'red',
+        ratedColor: 'yellow',
+        useGradient: false,
+        disableAfterRate: false,
+      });
+    }
   </script>
   
   <script>
@@ -351,6 +405,31 @@
     console.log(valeur);
     let text = document.querySelector("#commentaire").value;
     const url = "{{ path('rating_series_show', {'id': series.id}) }}";
+    const data = {value: valeur, text: text};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    location.reload();
+  }
+
+
+  const rateModifyButton = document.querySelector(".modify_rate");
+  rateModifyButton.onclick = () => {
+    let valeur = $(".modified-rating").starRating('getRating');
+    console.log(valeur);
+    let text = document.querySelector("#commentaire_modify").value;
+    const url = "{{ path('modifify_rating_series_show', {'id': series.id}) }}";
     const data = {value: valeur, text: text};
     fetch(url, {
       method: 'POST',
