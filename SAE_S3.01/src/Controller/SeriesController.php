@@ -175,7 +175,7 @@ class SeriesController extends AbstractController
         }
 
         foreach ($users as $user) {
-            if ( $user == $this->getUser()) {
+            if ($user == $this->getUser()) {
                 $value = 1;
             }
         }
@@ -187,7 +187,7 @@ class SeriesController extends AbstractController
         }
 
         $ratings = array_reverse($ratings);
-        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));  
+        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1, 10));
 
 
         return $this->render('series/show.html.twig', [
