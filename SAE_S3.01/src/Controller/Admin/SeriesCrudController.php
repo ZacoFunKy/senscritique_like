@@ -23,18 +23,6 @@ class SeriesCrudController extends AbstractCrudController
         return Series::class;
     }
 
-    /*
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            DateField::new('yearStart'),
-            DateField::new('yearEnd'),
-        ];
-    }*/
-
-
     public function configureActions(Actions $actions): Actions
     {
         $avis = Action::new('avis', 'Avis', 'fa fa-comment')

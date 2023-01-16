@@ -30,7 +30,7 @@ class UserCrudController extends AbstractCrudController
             return [
             IdField::new('id')
                 ->onlyOnIndex()
-                ->setSortable(true), 
+                ->setSortable(true),
             TextField::new('name'),
             EmailField::new('email')
                 ->setRequired(true)
@@ -48,8 +48,7 @@ class UserCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['disabled' => true]),
             CollectionField::new('roles'),
             ];
-        } 
-        else {
+        } else {
             return [
                 IdField::new('id')
                     ->onlyOnIndex(),

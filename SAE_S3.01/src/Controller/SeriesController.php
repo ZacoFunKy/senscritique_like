@@ -6,7 +6,6 @@ use App\Entity\Episode;
 use App\Entity\Series;
 use App\Entity\User;
 use App\Entity\Rating;
-use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SeriesType;
@@ -54,7 +53,7 @@ class SeriesController extends AbstractController
                 $toutesLesSeries
             );
 
-            // Name
+            // Nom
             $arrayName=$propertySearch->triName($nameFromForm, $toutesLesSeries);
 
             // Date début
@@ -108,22 +107,21 @@ class SeriesController extends AbstractController
             return $this->render('series/index.html.twig', [
                 'series' => $arrayIntersect,
                 'form' => $form->createView(),
-                'pagination' => TRUE,
+                'pagination' => true,
             ]);
-        }else {
+        } else {
             $series = $entityManager
             ->getRepository(Series::class)
             ->findBy([], ['title' => 'ASC']);
 
-            $series = $paginator->paginate($series, $request
-            ->query->getInt('page', 1, 10));
+            $series = $paginator->paginate($series, $request->query->getInt('page', 1, 10));
 
             $numPage = $request->query->getInt('page', 1, 10);
     
             return $this->render('series/index.html.twig', [
                 'series' => $series,
                 'form' => $form->createView(),
-                'pagination' => TRUE,
+                'pagination' => true,
                 'numPage' => $numPage,
             ]);
         }
@@ -151,12 +149,13 @@ class SeriesController extends AbstractController
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
-    PaginatorInterface $paginator ): Response
+    PaginatorInterface $paginator): Response
     {
         $users = $series->getUser();
         $value = 0;
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
-        $ranting_verified = $entityManager->getRepository(Rating::class)->findBy(['series' => $series, 'verified' => 1]);
+        $ranting_verified = $entityManager->getRepository(Rating::class)
+        ->findBy(['series' => $series, 'verified' => 1]);
         $numPage = Request::createFromGlobals()->query->get('numPage');
         $sum = 0;
         foreach ($ranting_verified as $rating){
@@ -172,9 +171,6 @@ class SeriesController extends AbstractController
         if ($numPage == null) {
             $numPage = 1;
         }
-       
-        // get ?rating in the url
-        $limitRating = Request::createFromGlobals()->query->get('rating');
 
         foreach ($users as $user) {
             if ($user == $this->getUser()) {
@@ -335,7 +331,6 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
-
         //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
@@ -359,7 +354,7 @@ class SeriesController extends AbstractController
             $rating->setUser($this->getUser());
             $rating->setSeries($series);
             $rating->setValue($rate);
-            if($this->getUser()->getisAdmin()) {
+            if ($this->getUser()->getisAdmin()) {
                 $rating->setVerified(true);
             } else {
             $rating->setVerified(false);
@@ -370,7 +365,6 @@ class SeriesController extends AbstractController
             $entityManager->flush();
 
         }
-
 
         return $this->redirectToRoute(
             'app_series_show',
@@ -396,7 +390,6 @@ class SeriesController extends AbstractController
         $data = json_decode($content, true);
         $rate = $data['value'];
         $comment = $data['text'];
-
 
         //Respond to the fetch for it to be a 200
         $respond = new Response();
@@ -461,7 +454,7 @@ class SeriesController extends AbstractController
         $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $seasons]);
         $alreadyIn = true;
         foreach ($episodes as $episode){
-            if (!$this->getUser()->getEpisode()->contains($episode)){
+            if (!$this->getUser()->getEpisode()->contains($episode)) {
                 $alreadyIn = false;
             }
         }
@@ -469,13 +462,15 @@ class SeriesController extends AbstractController
             foreach ($episodes as $episode){
                 $this->getUser()->removeEpisode($episode);
             }
-        }else{
+        }else {
             foreach ($episodes as $episode){
                 $this->getUser()->addEpisode($episode);
             }
         }
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
+         Response::HTTP_SEE_OTHER
+        );
     }
 
     #[Route('{series}/{userid}/delete/rating_user', name: 'app_series_delete_rating_user', methods: ['GET'])]
@@ -489,7 +484,8 @@ class SeriesController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $userid]);
 
         if ($this->getUser()->getisAdmin() == 0 ){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(),
+             'numPage' => $numPage], Response::HTTP_SEE_OTHER);
         }
 
         $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
@@ -497,7 +493,8 @@ class SeriesController extends AbstractController
             $entityManager->remove($rating);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(),
+         'numPage' => $numPage], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('{series}/{userid}/approve/rating_user', name: 'app_series_approve_rating_user', methods: ['GET'])]
@@ -511,7 +508,9 @@ class SeriesController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $userid]);
 
         if ($this->getUser()->getisAdmin() == 0 ){
-            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
+             Response::HTTP_SEE_OTHER
+            );
         }
 
         $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
@@ -519,7 +518,8 @@ class SeriesController extends AbstractController
             $rating->setVerified(1);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
+         Response::HTTP_SEE_OTHER);
     }
     
 }
