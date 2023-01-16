@@ -46,7 +46,10 @@ les utilisateurs
 		{% endif %}
 		<a class="bouton" href="{{ path('app_series_index') }}" style="margin-bottom: 15px">
 			Retour</a>
-		<div id="users">
+			<div class="navigation" style="margin-top:30px">
+				{{ knp_pagination_render(users) }}
+			</div>
+			<div id="users">
 			{% for user in users %}
 				<div class="user">
 					{% if user.photo is not null %}
