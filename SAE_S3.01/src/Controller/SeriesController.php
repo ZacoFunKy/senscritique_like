@@ -365,34 +365,35 @@ class SeriesController extends AbstractController
     #[Route('/series/add_series/{imdb}', name: 'app_series_add', methods: ['GET', 'POST'])]
     public function newSeries(Request $request, EntityManagerInterface $entityManager, $imdb): Response
     {
-        // Check if a serie in the database already exist it it does then update it 
+        // Check if a serie in the database already exist it it does then update it
 
         $url = "http://www.omdbapi.com/?apikey=42404c61&i=" . $imdb ."&type=series&r=json";
         $obj = json_decode(file_get_contents($url));
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
-        if($serie != null){
+        if ($serie != null) {
             $serie->setTitle($obj->Title);
-            $yearStart = substr($obj->Year,0, 4);
-            $yearEnd= substr($obj->Year,5, 9);
-            if($yearEnd == "-"){
+            $yearStart = substr($obj->Year, 0, 4);
+            $yearEnd= substr($obj->Year, 5, 9);
+            if ($yearEnd == "-") {
                 $yearEnd = null;
-            }else{
+            } else {
                 $serie->setYearEnd((int)$yearEnd);
             }
             // Convert the years into int
             $yearEnd = (int)$yearEnd;
             $yearStart = (int)$yearStart;
             $serie->setYearStart($yearStart);
-            if($obj->totalSeasons == "N/A"){
+            if ($obj->totalSeasons == "N/A") {
                 $obj->totalSeasons = null;
-            }else{
+            } else {
                 $obj->totalSeasons = (int)$obj->totalSeasons;
-                $season_check = $entityManager->getRepository(Season::class)->findOneBy(['number' => 1, 'series' => $serie]);
-                if($season_check == null){
+                $i=0;
+                while($i < $obj->totalSeasons && $entityManager->getRepository(Season::class)->findOneBy(['number' => $i+1, 'series' => $serie]) == null){
                     $season = new Season();
-                    $season->setNumber(1);
+                    $season->setNumber($i+1);
                     $season->setSeries($serie);
                     $entityManager->persist($season);
+                    $i++;
                 }
             }
             $poster = file_get_contents($obj->Poster);
@@ -400,51 +401,57 @@ class SeriesController extends AbstractController
             $serie->setPlot($obj->Plot);
             $serie->setImdb($imdb);
             $genre = explode(",", $obj->Genre);
-            foreach($genre as $g){
-                $genre_check = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
-                if($genre_check != null){
-                    $serie->addGenre($genre_check);
+            foreach ($genre as $g) {
+                $genreCheck = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
+                if ($genreCheck != null) {
+                    $serie->addGenre($genreCheck);
                 }
             }
             $entityManager->flush();
             return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
         }else {
-            $series = new Series();
-            $series->setTitle($obj->Title);
-            $yearStart = substr($obj->Year,0,4);
-            $yearEnd= substr($obj->Released,5, 9);
-            if($yearEnd == "-"){
+            $serie = new Series();
+            $serie->setTitle($obj->Title);
+            $yearStart = substr($obj->Year, 0, 4);
+            $yearEnd= substr($obj->Year, 5, 9);
+            if ($yearEnd == "-") {
                 $yearEnd = null;
+            } else {
+                $serie->setYearEnd((int)$yearEnd);
             }
-            // Convert the years into int 
-            $yearStart = (int)$yearStart;
+            // Convert the years into int
             $yearEnd = (int)$yearEnd;
-            if($obj->totalSeasons == "N/A"){
+            $yearStart = (int)$yearStart;
+            $serie->setYearStart($yearStart);
+            if ($obj->totalSeasons == "N/A") {
                 $obj->totalSeasons = null;
-            }else{
+            } else {
                 $obj->totalSeasons = (int)$obj->totalSeasons;
-                $season = new Season();
-                $season->setNumber(1);
-                $season->setSeries($series);
-                $entityManager->persist($season);
+                //$season_check = $entityManager->getRepository(Season::class)->findOneBy(['number' => 1, 'series' => $serie]);
+                //if ($season_check == null) {
+                    for ($i=0; $i<$obj->totalSeasons; $i++) {
+                        $season = new Season();
+                        $season->setNumber($i+1);
+                        $season->setSeries($serie);
+                        $entityManager->persist($season);
+                    }
+                    
+                //}
             }
-            $series->setYearStart($yearStart);
-            $series->setYearEnd($yearEnd);
             $poster = file_get_contents($obj->Poster);
-            $series->setPoster($poster);
-            $series->setPlot($obj->Plot);
-            $series->setImdb($imdb);
-            // Cut the genre befor each , 
+            $serie->setPoster($poster);
+            $serie->setPlot($obj->Plot);
+            $serie->setImdb($imdb);
             $genre = explode(",", $obj->Genre);
-            foreach($genre as $g){
-                $genre_check = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
-                if($genre_check != null){
-                    $series->addGenre($genre_check);
+            foreach ($genre as $g) {
+                $genreCheck = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $g]);
+                if ($genreCheck != null) {
+                    $serie->addGenre($genreCheck);
                 }
             }
-            $entityManager->persist($series);
+            $entityManager->persist($serie);
             $entityManager->flush();
-            return $this->redirectToRoute('admin', ['error' => "Nouvelle serie ajouté"], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
         
         }
       
