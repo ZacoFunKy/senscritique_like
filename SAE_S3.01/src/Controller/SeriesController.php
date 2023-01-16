@@ -169,10 +169,11 @@ class SeriesController extends AbstractController
         }
         if (count($ranting_verified) != 0) {
             $avg = $sum / count($ranting_verified);
+            $avg = round($avg, 2);
+            $avg .= "/5";
         } else {
-            $avg = 0;
+            $avg = "Pas d'avis";
         }
-        $avg = round($avg, 2);
                 
         if ($numPage == null) {
             $numPage = 1;
