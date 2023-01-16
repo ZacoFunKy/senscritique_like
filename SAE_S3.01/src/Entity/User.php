@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\DBAL\Types\Types;
 
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -389,21 +390,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isSuspendu;
     }
 
-    public function setSuspendu(bool $isSuspendu): self
+    public function setSuspendu(bool $isSuspendu)
     {
         if ($this->getIsSuperAdmin() || $this->getisAdmin()) {
             $isSuspendu = false;
             $this->isSuspendu = $isSuspendu;
             return $this;
         }
-        if ($isSuspendu) {
-            $this->setRoles(['ROLE_SUSPENDED']);
-        } else {
-            $this->setRoles(['ROLE_USER']);
-
         $this->isSuspendu = $isSuspendu;
-        return $this;
+        if ($isSuspendu) {
+            $this->emptyRoles();
+            $this->setRoles(['ROLE_SUSPENDU']);
+        } else {
+            $this->emptyRoles();
+            $this->setRoles(['ROLE_USER']);
         }
+        return $this;
+    }
+
+    public function emptyRoles()
+    {
+        $this->roles = [];
     }
 
 }

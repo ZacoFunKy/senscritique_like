@@ -35,9 +35,6 @@ security:
     access_control:
         # Path admin is accessible for ROLE_ADMIN and ROLE_PREVIOUS_ADMIN
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_PREVIOUS_ADMIN] }
-        # The role ROLE_SUSPENDED has no access to any page except the logout page
-        - { path: ^/series, roles: [ROLE_SUSPENDED] }
-        - { path: ^/user, roles: [ROLE_SUSPENDED] }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
