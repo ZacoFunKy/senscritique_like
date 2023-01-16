@@ -140,7 +140,22 @@
                         </p>
                         <p>{{review.comment}}</p>
                       </div>
-                    </div>
+                    </div> 
+                  {% endif %}
+                  {% if review.verified == 0 and is_granted('ROLE_ADMIN') %}
+                    <div class="review_user" style="opacity:0.3">
+                      <div class="profil">
+                        <img src="{{ path('photo_user', {'id': review.user.id} ) }}" alt="photo de profil" width="50" height="50">
+                        <a href="{{ path('app_user_profile', {'id': review.user.id}) }}">{{review.user.name}}</a>
+                        <p>{{review.date | date("d")}}/{{review.date | date("m")}}/{{review.date | date("o")}}</p>
+                      </div>
+                      <div class="rate_part">
+                        <p>
+                          <div class="{{review.user.id}} jq-stars"></div>
+                        </p>
+                        <p>{{review.comment}}</p>
+                      </div>
+                    </div> 
                   {% endif %}
                   {% if app.user is defined %}
                     {% if review.user.id == app.user.id %}

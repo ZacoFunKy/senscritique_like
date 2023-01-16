@@ -35,7 +35,7 @@ class Rating
      /**
      * @var bool
      *
-     * @ORM\Column(name="verified", type="boolean", nullable=false)
+     * @ORM\Column(name="verified", type="boolean", nullable=true)
      */
     private $verified = 0;
 
