@@ -172,10 +172,11 @@ class SeriesController extends AbstractController
         }
         if (count($ranting_verified) != 0) {
             $avg = $sum / count($ranting_verified);
+            $avg = round($avg, 2);
+            $avg .= "/5";
         } else {
-            $avg = 0;
+            $avg = "Pas d'avis";
         }
-        $avg = round($avg, 2);
                 
         if ($numPage == null) {
             $numPage = 1;
@@ -211,6 +212,7 @@ class SeriesController extends AbstractController
             'userRating' => $userRating,
         ]);
     }
+
 
     #[Route('/{series}/{episode}/set_seen/{yesno}/', name: 'app_series_show_seen_adds', methods: ['GET'])]
     public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
