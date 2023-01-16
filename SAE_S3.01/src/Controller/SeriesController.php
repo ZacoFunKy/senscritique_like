@@ -153,6 +153,7 @@ class SeriesController extends AbstractController
     public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator ): Response
     {
+
         $users = $series->getUser();
         $value = 0;
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
