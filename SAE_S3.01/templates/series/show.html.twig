@@ -165,12 +165,6 @@
                     <a href="{{ path('app_series_approve_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="valider">Valider</button></a>
                     <a href="{{ path('app_series_delete_rating_user', {'userid': review.user.id, 'series': series}) }}"><button class="supprimer">Supprimer</button></a>
                   {% endif %}
-                  {% if app.user is defined %}
-                    {% if review.user.id == app.user.id %}
-                      <button class="modifier">Modifier</button>
-                      <button class="supprimer">Supprimer</button>
-                    {% endif %}
-                  {% endif %}
                 {% endif %}   
               {% endfor %}
             {% else %}
@@ -284,7 +278,7 @@
       var select = document.querySelector("select");
       var season = select.options[select.selectedIndex].value;
       // /{series}/{season}/set_seen/{yesno}/{all}
-      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 0, 'numPage': numPage}) }}".replace("0", season);
+      window.location.href = "{{ path('app_series_show_seen_adds_all', {'series': series.id, 'season' : 99954865468, 'numPage': numPage}) }}".replace("99954865468", season);
     });
   </script>
 
