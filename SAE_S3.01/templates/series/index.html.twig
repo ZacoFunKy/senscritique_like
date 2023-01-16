@@ -18,8 +18,25 @@
 		<div id="content">
 			<h1>Catalogue</h1>
 			{% if form is defined %}
-				{{ form_start(form) }}
-				{{ form_widget(form) }}
+				{% if app.user is not null %}
+					{{ form_start(form) }}
+					{{ form_row(form.anneeDepart) }}
+					{{ form_row(form.anneeFin) }}
+					{{ form_row(form.genre) }}
+					{{ form_row(form.avis) }}
+					{{ form_row(form.suivi) }}
+					{{ form_row(form.nom) }}
+				{% else %}
+					{{ form_start(form) }}
+					{{ form_row(form.anneeDepart) }}
+					{{ form_row(form.anneeFin) }}
+					{{ form_row(form.genre) }}
+					{{ form_row(form.avis) }}
+					<div id="suivi">
+						{{ form_row(form.suivi) }}
+					</div>
+					{{ form_row(form.nom) }}
+				{% endif %}
 				<input class="bouton" type="submit" value="Rechercher"/>
 				<style>
 					form {
@@ -40,7 +57,9 @@
 						font-size: 1em;
 						color: black;
 					}
-
+					#suivi {
+						display: none;
+					}
 				
 				</style>
 				{{ form_end(form) }}

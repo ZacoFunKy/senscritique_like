@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -35,6 +36,9 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
+            BooleanField::new('isBot')
+                ->setFormTypeOptions(['disabled' => true])
+                ->setSortable(true),
             BooleanField::new('isAdmin')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
@@ -53,6 +57,9 @@ class UserCrudController extends AbstractCrudController
                 EmailField::new('email')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
+                BooleanField::new('isBot')
+                    ->setFormTypeOptions(['disabled' => true])
+                    ->setSortable(true),
                 BooleanField::new('isAdmin')
                     ->setRequired(true)
                     ->setPermission('ROLE_SUPER_ADMIN'),
@@ -71,8 +78,7 @@ class UserCrudController extends AbstractCrudController
         $impersonate = Action::new('impersonate', 'Incarner', 'fas fa-user-secret')
         ->linkToUrl(function (User $entity) {
             return 'series/?_switch_user='.$entity->getEmail();
-        })
-    ;
+        });
 
 
     return parent::configureActions($actions)
@@ -88,7 +94,13 @@ class UserCrudController extends AbstractCrudController
                 ->setLabel('Modifier')
                 ->setIcon('fa fa-edit');
         })
-        ;
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action
+                ->setLabel('Ajouter')
+                ->setIcon('fa fa-plus')
+                ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'))
+                ->linkToRoute('app_admin_user_new');
+        });
         
     }
     

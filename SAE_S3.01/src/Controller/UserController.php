@@ -10,10 +10,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\User;
 use App\Entity\Country;
+use App\Entity\Series;
 use App\Entity\Rating;
 use App\Entity\UserSearch;
 use App\Form\UpdateFormType;
+use App\Form\UserCreateFormType;
 use App\Form\UserSearchFormType;
+use App\Form\CommentNewFormType;
+
 class UserController extends AbstractController
 {
     #[Route('/user/favoris', name: 'app_user_favorite')]
@@ -134,6 +138,142 @@ class UserController extends AbstractController
             'pagination' => false,
         ]);
     }
+
+    #[Route('/user/admin/new', name: 'app_admin_user_new')]
+    public function new(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $form = $this->createForm(UserCreateFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            for ($i = 0; $i < $data['number']; $i++) {
+                $user = new User();
+                $name = $data['name'] . $i;
+                $user->setName($name);
+                $email = $data['email'];
+                $email = explode('@', $email);
+                $new_email = $email[0] . $i . '@' . $email[1];
+                $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                while($new_email_check){
+                    $new_email = $email[0] . rand(0, 1000) . '@' . $email[1];
+                    $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
+                }
+                $user->setEmail($new_email);
+                $hash = password_hash($name, PASSWORD_BCRYPT);       
+                $user->setPassword($hash);
+                $user->setRoles(['ROLE_USER']);
+                $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                if($country){
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }else {
+                    while(!$country){
+                        $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
+                    }
+                    $user->setCountry($country);
+                    $user->setIsBot(true);
+                    $entityManager->persist($user);
+                }
+            }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('user/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/user/admin/delete', name: 'app_admin_user_delete')]
+    public function delete(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // delete all the users with isBot to true
+
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
+            foreach ($comment as $c) {
+                $entityManager->remove($c);
+            }
+        }
+
+        $entityManager->flush();
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $entityManager->remove($u);
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('admin', ['error' => 'Les utilisateurs ont bien été supprimés']);
+    }
+
+
+    #[Route('/user/comment/new', name: 'app_admin_user_comment_new')]
+    public function new_comment(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $form = $this->createForm(CommentNewFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment_exemple = array();
+            $comment_exemple[0] = "C'est vraiment un bon film";
+            $comment_exemple[1] = "J'ai adoré ce film";
+            $comment_exemple[2] = "Je n'ai pas aimé ce film";
+            $comment_exemple[3] = "Je n'ai pas compris ce film";
+            $data = $form->getData();
+            $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+            if($user==null){
+                return $this->redirectToRoute('admin', ['error' => 'No bot user']);
+            }
+            if(count($user)<$data['number']){
+                return $this->redirectToRoute('admin', ['error' => 'Not enough users']);
+            }
+            // get the serie id in the url 
+            $serie = $request->query->get('id');
+            $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $serie]);
+            for ($i = 0; $i < $data['number']; $i++) {
+                $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user[$i], 'series' => $serie]);
+                if($rating==null){
+                    $comment = new Rating();
+                    $comment->setUser($user[$i]);
+                    $comment->setSeries($serie);
+                    $comment->setValue(rand(0,5));
+                    $comment->setDate(new \DateTime());
+                    $comment->setComment($comment_exemple[rand(0,3)]);
+                    $entityManager->persist($comment);
+                }
+            }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin', ['error' => 'Commentaires ajoutés']);
+        }
+
+        return $this->render('user/commentaire_new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+        
+    }
+
+    #[Route('/user/comment/delete', name: 'app_admin_user_comment_delete')]
+    public function delete_comment(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // delete all the comments publish by the users which isBot is true
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        foreach ($user as $u) {
+            $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
+            foreach ($comment as $c) {
+                $entityManager->remove($c);
+            }
+        }
+
+        $entityManager->flush();
+        return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
+
+    }
+
 
     
 }
