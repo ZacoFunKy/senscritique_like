@@ -72,12 +72,11 @@
 			<div id="series">
 				{% for series in series %}
 					<div class="serie">
-						<div class="poster">	
-
+						<div class="poster">
 							{% set sum = 0 %}
 							{% set nbNotes = 0 %}
 							{% for rating in ratings %}
-								{% if (rating.series == series) %}
+								{% if ((rating.series == series) and (rating.verified == 1)) %}
 									{% set sum = sum + rating.value %}
 									{% set nbNotes = nbNotes + 1 %}
 								{% endif %}
