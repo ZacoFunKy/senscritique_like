@@ -156,6 +156,7 @@ h1 {
   width: 18vw;
   height: 25vw;
   overflow: hidden;
+  margin-bottom: 2%;
 }
 .poster img {
   width: 100%;
