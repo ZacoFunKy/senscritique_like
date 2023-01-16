@@ -72,6 +72,11 @@ class PropertySeachType extends AbstractType
             ],
         ]
         )
+        ->add('suivi', CheckboxType::class, [
+            'required' => false,
+            'label' => "Suivis",
+        ]
+        )
         ->add('nom', TextType::class, [
             'required' => false,
             'label' => false,
