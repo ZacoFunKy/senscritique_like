@@ -165,6 +165,20 @@ button {
     margin-top: 8.5%;
     height: 43px;
 }
+.navigation {
+    text-align: center;
+}
+.navigation * * {
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding:5px 10px;
+	text-decoration: none;
+	font-size: 1.5vh;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
 
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
