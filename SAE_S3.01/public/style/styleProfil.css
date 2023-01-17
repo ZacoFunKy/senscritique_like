@@ -1,3 +1,4 @@
+/* CSS du fichier user/profile.html.twig */
 @import url('https://fonts.googleapis.com/css?family=Poppins:300, 400, 500, 600, 700, 800, 900 &display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
 
@@ -165,18 +166,20 @@ button {
     margin-top: 8.5%;
     height: 43px;
 }
+
 .navigation {
     text-align: center;
 }
+
 .navigation * * {
-	background-color: #f44336;
-	border: none;
-	color: black;
-	padding:5px 10px;
-	text-decoration: none;
-	font-size: 1.5vh;
-	border-radius: 4px;
-	cursor: pointer;
+    background-color: #f44336;
+    border: none;
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    font-size: 1.5vh;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 

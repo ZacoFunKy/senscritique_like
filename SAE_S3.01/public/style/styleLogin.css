@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
+/* CSS du fichier security/login.html.twig*/
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
 
@@ -44,25 +44,25 @@ header a {
 }
 
 #c {
-    display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 
 #connection {
-    margin-top: 5%;
-    background-color: rgba(0, 0, 0, 0.63);
-    display: flex;
-    width: 400px;
-    height: fit-content;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 2%;
+	margin-top: 5%;
+	background-color: rgba(0, 0, 0, 0.63);
+	display: flex;
+	width: 400px;
+	height: fit-content;
+	flex-direction: column;
+	align-items: center;
+	padding-bottom: 2%;
 }
 
 #connection * {
-    margin-top: 2%;
-    margin-left: 2%;
-    margin-bottom: 2%;
+	margin-top: 2%;
+	margin-left: 2%;
+	margin-bottom: 2%;
 
 }
 
@@ -71,36 +71,42 @@ input {
 }
 
 .btn {
-    background-color: #f44336;
-    border: none;
-    color: black;
-    padding: 10px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    font-size: 16px;
-    border-radius: 4px;
-    margin-right: 10%;
-    cursor: pointer;
+	background-color: #f44336;
+	border: none;
+	color: black;
+	padding: 10px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	font-size: 16px;
+	border-radius: 4px;
+	margin-right: 10%;
+	cursor: pointer;
 }
+
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
 
-	header a {
-        font-size: 10vw;
-    }
+	header {
+		font-size: 1.5vh;
+	}
+	header a{
+		font-size: 10vw;
+	}
 
-    #connection {
+	#connection {
 		width: 700px;
 		font-size: 1.8vh;
-		padding:5% 0 ;
+		padding: 5% 0;
 	}
+
 	.btn {
 		height: 4vh;
 		font-size: 2vh;
 	}
-	input{
+
+	input {
 		height: 2vh;
 	}
 }
@@ -116,17 +122,21 @@ input {
 	header a {
 		font-size: 7vw;
 	}
+
 	#connection {
 		width: 700px;
 		font-size: 5vh;
-		padding:5% 0 ;
+		padding: 5% 0;
 	}
+
 	.btn {
 		font-size: 5vh;
 	}
-	input{
+
+	input {
 		height: 5vh;
 	}
+
 	input * {
 		font-size: 6vh;
 	}

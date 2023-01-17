@@ -1,34 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  Netflop France - Accueil
+Netflop France - Accueil
 {% endblock %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" type="text/css" href="style/styleIndex.css" />
+<link rel="stylesheet" type="text/css" href="style/styleIndex.css" />
 {% endblock %}
 
 {% block body %}
-  <div id="tout">
-    <header>
-      <a href="{{ path('app_default') }}" class="title">Netflop</a>
-      <div id="id">
-        {% include 'header.html.twig' %}
-      </div>
-    </header>
-      {% for message in app.flashes('danger') %}
-          {{ message }}
-        {% endfor %}
-    <div id="content">
-      <h1>Quelques séries de notre catalogue:</h1>
-      <ul>
-          {% for serie in series %}
-            <li>{{ serie.displayPoster() }}</li>
-          {% endfor %}
-      </ul>
-      <div id="button">
-        <a href="{{ path('app_series_index') }}"><input name="series" type="submit" value="Voir le catalogue" /></a>
-      </div>
+<div id="tout">
+  <header>
+    <a href="{{ path('app_default') }}" class="title">Netflop
+    </a>
+    <div id="id">
+      <!--Inclusion du menu-->
+      {% include 'header.html.twig' %}
+    </div>
+  </header>
+  {% for message in app.flashes('danger') %}
+    {{ message }}
+  {% endfor %}
+  <div id="content">
+    <h1>Quelques séries de notre catalogue:</h1>
+    <ul>
+      {% for serie in series %}
+        <li>{{ serie.displayPoster() }}</li>
+      {% endfor %}
+    </ul>
+    <div id="button">
+      <a href="{{ path('app_series_index') }}">
+        <input name="series" type="submit" value="Voir le catalogue" />
+      </a>
     </div>
   </div>
+</div>
 {% endblock %}

@@ -1,41 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Netflop - Inscription
+{% block title %}
+Netflop - Inscription
 {% endblock %}
 
 {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="style/styleRegiste.css">
+<link rel="stylesheet" type="text/css" href="style/styleRegiste.css">
 {% endblock %}
 
 {% block body %}
 
-	<div id="tout">
-		<header>
-			<a href="{{ path('app_default') }}">Netflop</a>
-			<div id="id">
-				{% include 'header.html.twig' %}
+<div id="tout">
+	<header>
+		<a href="{{ path('app_default') }}">Netflop</a>
+		<div id="id">
+			<!--Inclusion du menu-->
+			{% include 'header.html.twig' %}
+		</div>
+	</header>
+	<div id="c">
+		<div id="connection">
+			<h1>Inscription</h1>
+			{{ form_start(registrationForm) }}
+			<p>Email</p>
+			{{ form_row(registrationForm.email) }}
+			<p>Nom</p>
+			{{ form_row(registrationForm.name) }}
+			<p>Mot de passe</p>
+			{{ form_row(registrationForm.plainPassword) }}
+			<p>Pays</p>
+			{{ form_row(registrationForm.country) }}
+			<div id="checkbox">
+				<p>Accepter les conditions d'utilisation</p>
+				{{ form_row(registrationForm.agreeTerms) }}
 			</div>
-		</header>
-		<div id="c">
-			<div id="connection">
-				<h1>Inscription</h1>
-				{{ form_start(registrationForm) }}
-				<p>Email</p>
-				{{ form_row(registrationForm.email) }}
-				<p>Nom</p>
-				{{ form_row(registrationForm.name) }}
-				<p>Mot de passe</p>
-				{{ form_row(registrationForm.plainPassword) }}
-				<p>Pays</p>
-				{{ form_row(registrationForm.country) }}
-				<div id="checkbox">
-					<p>Accepter les conditions d'utilisation</p>
-					{{ form_row(registrationForm.agreeTerms) }}
-				</div>
-				{{ form_row(registrationForm.captcha) }}
-				<button type="submit" class="btn">Entrer</button>
-				{{ form_end(registrationForm) }}
-			</div>
+			{{ form_row(registrationForm.captcha) }}
+			<button type="submit" class="btn">Entrer</button>
+			{{ form_end(registrationForm) }}
 		</div>
 	</div>
+</div>
 {% endblock %}

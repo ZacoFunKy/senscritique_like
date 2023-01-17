@@ -4,112 +4,115 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
+<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
-		<header>
-			<a href="{{path('app_default')}}" class="title">Netflop</a>
-			<div id="id">
-				{% include 'header.html.twig' %}
-			</div>
-		</header>
-		<div id="content">
-			<h1>Catalogue</h1>
-			{% if form is defined %}
-				{% if app.user is not null %}
-					{{ form_start(form) }}
-					{{ form_row(form.anneeDepart) }}
-					{{ form_row(form.anneeFin) }}
-					{{ form_row(form.genre) }}
-					{{ form_row(form.avis) }}
-					{{ form_row(form.suivi) }}
-					{{ form_row(form.nom) }}
-				{% else %}
-					{{ form_start(form) }}
-					{{ form_row(form.anneeDepart) }}
-					{{ form_row(form.anneeFin) }}
-					{{ form_row(form.genre) }}
-					{{ form_row(form.avis) }}
-					<div id="suivi">
-						{{ form_row(form.suivi) }}
-					</div>
-					{{ form_row(form.nom) }}
-				{% endif %}
-				<input class="bouton" type="submit" value="Rechercher"/>
-				<style>
-					form {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						margin: 2% 0;
-					}
-					form * {
-						margin: 0 1%;
-					}
-					input[type="text"] {
-						width: 100%;
-						height: 30px;
-						border-radius: 5px;
-						border: 1px solid #ccc;
-						padding: 5px;
-						font-size: 1em;
-						color: black;
-					}
-					#suivi {
-						display: none;
-					}
-				
-				</style>
-				{{ form_end(form) }}
-			{% endif %}
-			{% if pagination is defined and pagination == true %}
-				<div class="navigation">
-					{{ knp_pagination_render(series) }}
-				</div>
-			{% endif %}
-			<div id="series">
-				{% for series in series %}
-					<div class="serie">
-						<div class="poster">
-							{% set sum = 0 %}
-							{% set nbNotes = 0 %}
-							{% for rating in ratings %}
-								{% if ((rating.series == series) and (rating.verified == 1)) %}
-									{% set sum = sum + rating.value %}
-									{% set nbNotes = nbNotes + 1 %}
-								{% endif %}
-							{% endfor %}
-							{% if (nbNotes != 0) %}
-								{% set avg = sum  / nbNotes %}
-							{% else %}
-								{% set avg = 0 %}
-							{% endif %}
-							{% set avg = avg|round(2) %}
+<div id="tout">
+	<header>
+		<a href="{{path('app_default')}}" class="title">Netflop</a>
+		<div id="id">
+			{% include 'header.html.twig' %}
+		</div>
+	</header>
+	<div id="content">
+		<h1>Catalogue</h1>
+		{% if form is defined %}
+		{% if app.user is not null %}
+		{{ form_start(form) }}
+		{{ form_row(form.anneeDepart) }}
+		{{ form_row(form.anneeFin) }}
+		{{ form_row(form.genre) }}
+		{{ form_row(form.avis) }}
+		{{ form_row(form.suivi) }}
+		{{ form_row(form.nom) }}
+		{% else %}
+		{{ form_start(form) }}
+		{{ form_row(form.anneeDepart) }}
+		{{ form_row(form.anneeFin) }}
+		{{ form_row(form.genre) }}
+		{{ form_row(form.avis) }}
+		<div id="suivi">
+			{{ form_row(form.suivi) }}
+		</div>
+		{{ form_row(form.nom) }}
+		{% endif %}
+		<input class="bouton" type="submit" value="Rechercher" />
+		<style>
+			form {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 2% 0;
+			}
 
-							{% if (nbNotes > 0) %}
-								<h2 id="moyenne">{{ avg }}/5</h2>
-							{% else %}
-								<h2 id="moyenne">Null</h2>
-							{% endif %}
+			form * {
+				margin: 0 1%;
+			}
 
-							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image"/>
-							<p>{{ series.title }}</p>
-						</div>
-						<p>{{ series.title }}</p>
-						{% if numPage is defined %}
-							<a class="bouton" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
-							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
-						{% else %}
-							<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+			input[type="text"] {
+				width: 100%;
+				height: 30px;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+				padding: 5px;
+				font-size: 1em;
+				color: black;
+			}
+
+			#suivi {
+				display: none;
+			}
+		</style>
+		{{ form_end(form) }}
+		{% endif %}
+		{% if pagination is defined and pagination == true %}
+		<div class="navigation">
+			{{ knp_pagination_render(series) }}
+		</div>
+		{% endif %}
+		<div id="series">
+			{% for series in series %}
+			<div class="serie">
+				<div class="poster">
+					{% set sum = 0 %}
+					{% set nbNotes = 0 %}
+					{% for rating in ratings %}
+						{% if ((rating.series == series) and (rating.verified == 1)) %}
+							{% set sum = sum + rating.value %}
+							{% set nbNotes = nbNotes + 1 %}
 						{% endif %}
-					</div>
+					{% endfor %}
+					{% if (nbNotes != 0) %}
+						{% set avg = sum / nbNotes %}
+					{% else %}
+						{% set avg = 0 %}
+					{% endif %}
+					{% set avg = avg|round(2) %}
+
+					{% if (nbNotes > 0) %}
+						<h2 id="moyenne">{{ avg }}/5</h2>
+					{% else %}
+						<h2 id="moyenne">Null</h2>
+					{% endif %}
+
+					<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image" />
+					<p>{{ series.title }}</p>
+				</div>
+				<p>{{ series.title }}</p>
+				{% if numPage is defined %}
+					<a class="bouton"
+						href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
+					<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
 				{% else %}
-					<span colspan="11">Pas de séries trouvées.</span>
-				{% endfor %}
+					<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+					<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
+				{% endif %}
 			</div>
+			{% else %}
+				<span colspan="11">Pas de séries trouvées.</span>
+			{% endfor %}
 		</div>
 	</div>
+</div>
 {% endblock %}
