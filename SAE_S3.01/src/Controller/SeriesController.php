@@ -94,7 +94,7 @@ class SeriesController extends AbstractController
             } else {
                 $arraySuivi = $toutesLesSeries;
             }
-
+            
             // Intersect du tout
             $arrayIntersect = array_intersect(
                 $arrayGenre,
@@ -492,8 +492,10 @@ class SeriesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $title = $data['title'];
+            $title = str_replace(" ", "&", $title);
             // Ask the api http://www.omdbapi.com/ for the serie with the title apiKey = 42404c61
-            $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $data['title'] ."&type=series&r=json";
+            $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $title ."&type=series&r=json";
             $obj = json_decode(file_get_contents($url));
             $series = [];
 
@@ -534,15 +536,11 @@ class SeriesController extends AbstractController
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
         if ($serie != null) {
             $serie->setTitle($obj->Title);
-            $yearStart = substr($obj->Year, 0, 4);
-            $yearEnd= substr($obj->Year, 5, 9);
-            if ($yearEnd == "-") {
-                $yearEnd = null;
-            } else {
-                $serie->setYearEnd((int)$yearEnd);
-            }
-            // Convert the years into int
-            $yearEnd = (int)$yearEnd;
+            $years=explode("–", $obj->Year);
+            $yearStart = $years[0];
+            $yearEnd= $years[1];
+            $serie->setAwards($obj->Awards);
+            $serie->setYearEnd((int)$yearEnd);
             $yearStart = (int)$yearStart;
             $serie->setYearStart($yearStart);
             if ($obj->totalSeasons == "N/A") {
@@ -574,13 +572,10 @@ class SeriesController extends AbstractController
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
-            $yearStart = substr($obj->Year, 0, 4);
-            $yearEnd= substr($obj->Year, 5, 9);
-            if ($yearEnd == "-") {
-                $yearEnd = null;
-            } else {
-                $serie->setYearEnd((int)$yearEnd);
-            }
+            $years=explode("–", $obj->Year);
+            $yearStart = $years[0];
+            $yearEnd= $years[1];
+            $serie->setAwards($obj->Awards);
             // Convert the years into int
             $yearEnd = (int)$yearEnd;
             $yearStart = (int)$yearStart;
@@ -589,19 +584,18 @@ class SeriesController extends AbstractController
                 $obj->totalSeasons = null;
             } else {
                 $obj->totalSeasons = (int)$obj->totalSeasons;
-                //$season_check = $entityManager->getRepository(Season::class)->findOneBy(['number' => 1, 'series' => $serie]);
-                //if ($season_check == null) {
-                    for ($i=0; $i<$obj->totalSeasons; $i++) {
-                        $season = new Season();
-                        $season->setNumber($i+1);
-                        $season->setSeries($serie);
-                        $entityManager->persist($season);
-                    }
-                    
-                //}
+                for ($i=0; $i<$obj->totalSeasons; $i++) {
+                    $season = new Season();
+                    $season->setNumber($i+1);
+                    $season->setSeries($serie);
+                    $entityManager->persist($season);
+                }
             }
-            $poster = file_get_contents($obj->Poster);
-            $serie->setPoster($poster);
+            if ($obj->Poster != "N/A") {
+                $poster = file_get_contents($obj->Poster);
+                $serie->setPoster($poster);
+            }
+            
             $serie->setPlot($obj->Plot);
             $serie->setImdb($imdb);
             $genre = explode(",", $obj->Genre);
