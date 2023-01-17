@@ -1,92 +1,126 @@
 # SAE_S3.01
 
+# Guide de déploiement
 
 
-## Getting started
+## Table des matières
+1.[Installation de symfony](#installation-de-symfony)
+2.[Configuration de la base de donnée](#configuration-BD)
+3.[Configuration de l’application](#configuration-de-lapplication)
+4.[Implémentation d’un super admin](#implem-super-admin)
+5.[Génération d'utilisateurs aléatoires](#generation-Utilisateur-Alea)
+6.[Génération de commentaires aléatoires](#generation-Commentaires-Alea)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+&nbsp;
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab-ce.iut.u-bordeaux.fr/projet-groupe/sae_s3.01.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab-ce.iut.u-bordeaux.fr/projet-groupe/sae_s3.01/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Installation de symfony <a id="installation-de-symfony"></a>
 
 ***
+Pour installer symfony il faut télécharger l'outil en ligne de commande [symfony](https://symfony.com/download) (choisissez les binaires AMD64), placez les dans un dossier (par exemple symfony) et ajoutez ce dossier dans votre $PATH.
 
-# Editing this README
+Pour ajoutez ce dossier dans votre $PATH il faut tout d'abord accéder à votre fichier .bashrc, pour cela faite la commande 
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```
+export PATH=$PATH:$HOME/symfony
+```
+Voici un exemple ci-dessous:
+![](img/InstallationSymfony.png "Installation Symfony")
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Symfony et les commandes symfony devraient maintenant fonctionner.
+Nous allons maintenant passer à la configuration de la base de données.
 
-## Name
-Choose a self-explaining name for your project.
+&nbsp;
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Configuration de la base de données <a id="configuration-BD"></a> 
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+***
+Pour pouvoir lancer l'application, il vous faut la base de données MySQL/MariaDB correspondante.
+Cette base de données est nommée shows et elle est contenu, au format .zip, dans le dossier qui contient le guide de déploiement.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Maintenant que vous posséder la base de données, il faut l'importer dans votre base MySQL. Pour cela accéder à votre système de gestion de base de données. On prendra comme exemple phpMyAdmin.
+Lorsque vous vous êtes connecté, en haut de votre page faites importer comme le montre l’image ci-dessous:
+![](img/base_de_donnees.png "Déploiement base de données")
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Sélectionner la base shows.sql.zip comme fichier à importer.
+Vous avez maintenant la base de données de votre application qui est accessible.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Il faut maintenant lier la base de données à l’application.
+Pour cela il faut modifier le fichier .env de l’application symfony et ajouter la ligne suivante:
+```
+DATABASE_URL=mysql://[identifiant]:[motdepasse]@[serveur de la base de données]:3306/[nom de la base de données]
+```
+Les mots entre crochet sont à remplacer par de vrai variables.
+Exemple ci-dessous :
+![](img/configEnv.png "Déploiement base de données")
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+&nbsp;
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### Configuration de l’application <a id="configuration-de-lapplication"></a> 
+***
+Pour finir la configuration de l’application il vous faut installer les différents composants requis pour son bon fonctionnement, pour cela il faut taper dans un terminal la commande :
+```
+$ symfony composer install
+```
+Maintenant vous avez tous les composants pour faire fonctionner l’application, il ne vous reste plus écrire dans un terminal la commande:
+```
+$ symfony serve
+```
+Puis de lancer votre navigateur web et de mettre en URL http://127.0.0.1:8000/
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+&nbsp;
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### Implémentation d’un super admin <a id="implem-super-admin"></a> 
+***
+L’application permet la création d’un super administrateur permettant de nommer des utilisateurs administrateur.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Pour créer un super administrateur il faut tout d’abord lancer l’application, puis ouvrir un terminal de commande, aller dans le répertoire courant du projet et lancer la commande suivante:
+```
+$ symfony console create:super-admin [email] [nom] [mot de passe] [pays] 
+```
+Les mots entre crochet sont à remplacer par de vrai variables.
+Voici un exemple ci-dessous:
+![](img/commandeSuperAdmin.png "Commande super-admin")
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+&nbsp;
 
-## License
-For open source projects, say how it is licensed.
+### Génération d'utilisateurs aléatoires <a id="generation-Utilisateur-Alea"></a> 
+***
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+L'application permet aux administrateurs de générer des utilisateurs aléatoires dans la base de données.
+Pour cela il faut se connecter à un compte administrateur puis aller dans le Dashboard administrateur.
+
+Ensuite il faut aller dans l'onglet users et aller dans ajouter comme indiquez dans l'image ci-dessous:
+![](img/GenerationUtilisateurAleatoire.png "Génération d'utilisateur aléatoire")
+
+Pour ajouter les utilisateurs il faut renseigner le nom et l'email que les utilisateurs auront. Un numéro s'ajoutera à la suite du nom ainsi qu'a la suite de l'email avant le @.
+**Pour les emails il faut obligatoirement mettre les @.**
+Puis dans la catégorie nombre il faut renseigner le nombre de faux que vous voulez générer.
+
+Exemple de faux comptes:
+![](img/ExempleFauxCompte.png "Exemple de faux comptes")
+
+Pour pouvoir supprimer **tous les faux comptes utilisateurs** vous disposez d'un bouton se situant en dessous de celui de l'ajout de faux comptes.
+
+![](img/SupprimerFauxComptes.png "Suppression des faux comptes")
+
+&nbsp;
+
+### Génération de commentaires aléatoires <a id="generation-Commentaires-Alea"></a> 
+***
+Pour ajouter de faux commentaires à une série, il faut **obligatoirement** avoir de faux comptes utilisateurs.
+
+Lorsque les faux comptes ont été créer, vous pouvez vous rendre dans l'onglet commentaires puis aller dans la catégorie ajouter.
+
+Choisissez ensuite la série dans laquelle il faut ajouter les faux commentaires puis cliquez sur les 3 petit points.
+
+![](img/CreationFauxCommentaire.png "Création de faux comptes")
+
+Puis ajoutez le nombre de faux commentaires que vous souhaitez.
+
+### Ajouter des séries via OMDB <a id="ajout_series_omdb"></a> 
+***
+Pour ajouter des séries à la base de données il faut se rendre dans le dashboard admin et cliquer sur l'onglet série puis dans ajouter.
+Vous vous retrouverez normalement sur cette page:
+![](img/ImageAjoutSerie.png "Ajout de série")
+
+Sur cette page, chercher le nom de la série à ajouter puis ajouter là.
