@@ -539,7 +539,7 @@ class SeriesController extends AbstractController
                 $yearEnd= $years[1];
             } else {
                 $yearStart = $obj->Year;
-                $yearEnd= null;
+                $yearEnd= -10;
             }
             $serie->setAwards($obj->Awards);
             $serie->setYearEnd((int)$yearEnd);
@@ -582,7 +582,7 @@ class SeriesController extends AbstractController
                 $yearEnd= $years[1];
             } else {
                 $yearStart = $obj->Year;
-                $yearEnd= null;
+                $yearEnd= -10;
             }
             $serie->setAwards($obj->Awards);
             // Convert the years into int

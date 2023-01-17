@@ -111,7 +111,7 @@
       <h2>Année de début</h2>
       <p>{{ series.yearStart }}</p>
       <h2>Année de fin</h2>
-      {% if series.yearEnd is not null or series.yearEnd!=0%}
+      {% if series.yearEnd is not null and series.yearEnd!=-10%}
         <p>{{ series.yearEnd }}</p>
       {% else %}
         <p>En cours</p>
