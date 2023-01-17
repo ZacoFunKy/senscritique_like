@@ -199,8 +199,21 @@ class PropertySearch
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
                 foreach ($arrayIntersect as $serie){
-                    $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $serie])[0];
-                    $arrayRating[$serie->getId()] = $rating->getValue();
+                    $rating = $entityManager
+                        ->getRepository(Rating::class)
+                        ->findBy(['series' => $serie, 'verified' => '1']);
+                    
+                    // Calcul de la moyenne
+                    $moyenne = 0;
+                    $nbNotes = 0;
+                    foreach ($rating as $note) {
+                        $nbNotes += 1;
+                        $moyenne += $note->getValue();
+                    }
+                    if ($nbNotes > 0) {
+                        $moyenne = round($moyenne/$nbNotes, 2);
+                        $arrayRating[$serie->getId()] = $moyenne;
+                    }
                 }
 
                 if ($avisFromForm == 'ASC') {

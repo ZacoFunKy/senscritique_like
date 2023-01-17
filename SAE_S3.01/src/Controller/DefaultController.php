@@ -60,4 +60,15 @@ class DefaultController extends AbstractController
             'controller_name' => 'DefaultController',
         ]);
     }
+    /**
+     * @Route("/histogram.svg", name="histogram")
+     */
+    public function rating($ratings)
+    {
+        return $this->render(
+            'series/histogram.svg.twig',
+            [ 'rating' => $ratings ],
+            new Response('', 200, ['Content-Type' => 'image/svg+xml'])
+        );
+    }
 }

@@ -91,15 +91,19 @@
 		<div class="contenu">
 			<div id="critiques">
 				<h2>Récapitulatifs des critiques</h2>
-				{{ knp_pagination_render(ratings) }}
+				<div class="navigation">
+					{{ knp_pagination_render(ratings) }}
+				</div>
 				<div id="ratings">
 					{% for rating in ratings %}
-						<div class="rating">
-							<h3>{{ rating.series.title }}</h3>
-							<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
-							<p>{{ rating.comment }}</p>
-							<div class="{{rating.id}} jq-stars"></div>
-						</div>
+						{% if rating.verified == 1 %}
+							<div class="rating">
+								<h3>{{ rating.series.title }}</h3>
+								<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
+								<p>{{ rating.comment }}</p>
+								<div class="{{rating.id}} jq-stars"></div>
+							</div>
+						{% endif %}
 					{% else %}
 						<p>Aucune critique trouvée.</p>
 					{% endfor %}
@@ -107,8 +111,11 @@
 			</div>
 			<div id="series-favorites">
 				<h2>Séries favorites</h2>
-				<div id="series">
+				<div class="navigation">
 					{{ knp_pagination_render(series) }}
+				</div>
+				<div id="series">
+					
 					{% for series in series %}
 						<div class="serie">
 							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
@@ -127,7 +134,11 @@
 			</div>
 			<div id="historique">
 				<h2>Épisodes vus</h2>
+				<div class="navigation">
+					{{ knp_pagination_render(episodes) }}
+				</div>
 				<div id="episodes">
+					
 					{% for episode in episodes %}
 						<div class="episode">
 							<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" alt="Poster"/>
@@ -145,14 +156,11 @@
 					{% else %}
 						<td colspan="11">Aucun épisode trouvé.</td>
 					{% endfor %}
-					<div class="navigation">
-						{{ knp_pagination_render(episodes) }}
-					</div>
+				
 				</div>
 			</div>
 		</div>
 	</div>
-
 
 	<script>
 		{% for rating in ratings %}

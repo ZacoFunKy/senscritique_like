@@ -150,17 +150,30 @@ h1 {
   padding: 0.2%;
 }
 .serie {
-  width: 19%;
+  width: 18vw;
 }
-.poster{
-  width: 35vh;
-  height: 45vh;
+.poster {
+  width: 18vw;
+  height: 25vw;
   overflow: hidden;
+  margin-bottom: 2%;
 }
 .poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1;
+}
+
+.poster #moyenne {
+  z-index: 2;
+  position: relative;
+  top: 405px;
+  background: rgba(26, 26, 26, 0.7);
+  border: 1px solid rgb(255, 255, 255);
+  width: 25%;
+  color: #f7df1e;
+  margin: 10px;
 }
 
 .nePasAfficher {
@@ -211,6 +224,7 @@ h1 {
   #content h1 {
     font-size: 4em;
   }
+
   /* Liste des utilisateurs */
   #user_search_form_nom {
     font-size: 2em;
@@ -222,6 +236,14 @@ h1 {
   }
   #boutonRecherche {
     font-size: 2em;
+  }
+  /*Poster*/
+  .serie {
+    width: 40vw;
+  }
+  .poster {
+    width: 40vw;
+    height: 25vh;
   }
 }
 
@@ -250,6 +272,14 @@ h1 {
   .bouton,
   .serie p {
     font-size: 1.5em;
+  }
+  /*Poster*/
+  .serie {
+    width: 25vw;
+  }
+  .poster {
+    width: 25vw;
+    height: 30vh;
   }
 }
 

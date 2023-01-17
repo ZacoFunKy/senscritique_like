@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Series;
 use App\Entity\User;
+use App\Entity\Rating;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -44,20 +46,17 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
             MenuItem::subMenu('Users', 'fa fa-users')->setSubItems([
                 MenuItem::linkToCrud('Permissions', 'fa fa-user', User::class),
-            ])
-            ,
-            MenuItem::linkToRoute('Back to site', 'fa fa-home', 'app_series_index'),            
+                MenuItem::linkToRoute('Ajouter', 'fa-solid fa-robot', 'app_admin_user_new'),
+                MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_delete'),
+            ]),
+            MenuItem::subMenu('Commentaires', 'fa fa-comments')->setSubItems([
+                MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Rating::class),
+                MenuItem::linkToCrud('Ajouter', 'fa-solid fa-robot', Series::class),
+                MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_comment_delete'),
+            ]),
+            MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', '/'),
 
         ];
-    }
-
-    public function configureUserMenu(UserInterface $user): UserMenu
-    {
-        return parent::configureUserMenu($user)
-        ->addMenuItems([
-            MenuItem::linkToRoute('Back to site', 'fa-solid fa-earth-americas', 'app_series_index'),            
-        ])
-        ;
     }
     
 }

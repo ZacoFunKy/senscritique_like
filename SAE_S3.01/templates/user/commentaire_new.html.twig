@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+{% block title %}
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
+{% endblock %}
+
+{% block javascripts %}
+        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
+        <script src="../../js/jquery.star-rating-svg.js"></script>
+{% endblock %}
+
+{% block body %}
+	<div id="page">
+		<header>
+			<a href="{{path('app_default')}}" class="title">Netflop</a>
+        </header>
+        <body>
+            <div class="formulaire">
+                <div class="search">
+                    <h1> Ajouter des commentaires</h1>
+                    {{ form_start(form) }}
+                    <p>Nombre</p>
+                    {{ form_widget(form.number) }}
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </body>
+{% endblock %}
