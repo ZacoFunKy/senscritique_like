@@ -92,6 +92,12 @@ class SeriesController extends AbstractController
                 $arraySuivi = $toutesLesSeries;
             }
 
+            echo count($arrayGenre)."\n";
+            echo count($arrayName)."\n";
+            echo count($arrayAvis)."\n";
+            echo count($arrayAnneeDebut)."\n";
+            echo count($arrayAnneeFin)."\n";
+            echo count($arraySuivi)."\n";
             // Intersect du tout
             $arrayIntersect = array_intersect(
                 $arrayGenre,
