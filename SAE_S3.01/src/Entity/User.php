@@ -80,10 +80,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="bot", type="boolean", nullable=true)
+     * @ORM\Column(name="fake_account", type="boolean", nullable=true)
      */
-    private $isBot = 0;
-
+    private $isBot= 0;
+    
     /**
      * @var \DateTime|null
      *
