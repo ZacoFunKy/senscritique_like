@@ -57,40 +57,42 @@
       <h2>Avis</h2>
       <ul>
         <td>
-          <div id="rating"></div>
-          {% if (nbNotes > 0) %}
-            <script>
-              $("#rating").starRating({
-                totalStars: 5,
-                starShape: 'rounded',
-                starSize: 40,
-                emptyColor: 'lightgray',
-                hoverColor: 'red',
-                ratedColor: 'yellow',
-                initialRating: {{ avg }},
-                readOnly: true
-                    });
-            </script>
-          {% else %}
-            <script>
-              $("#rating").starRating({
-                totalStars: 5,
-                starShape: 'rounded',
-                starSize: 40,
-                emptyColor: 'lightgray',
-                hoverColor: 'red',
-                ratedColor: 'yellow',
-                initialRating: 0,
-                readOnly: true
-              });
-            </script>
-          {% endif %}
+          <div id="noteSerie">
+            <div id="rating"></div>
+            {% if (nbNotes > 0) %}
+              <script>
+                $("#rating").starRating({
+                  totalStars: 5,
+                  starShape: 'rounded',
+                  starSize: 40,
+                  emptyColor: 'lightgray',
+                  hoverColor: 'red',
+                  ratedColor: 'yellow',
+                  initialRating: {{ avg }},
+                  readOnly: true
+                      });
+              </script>
+            {% else %}
+              <script>
+                $("#rating").starRating({
+                  totalStars: 5,
+                  starShape: 'rounded',
+                  starSize: 40,
+                  emptyColor: 'lightgray',
+                  hoverColor: 'red',
+                  ratedColor: 'yellow',
+                  initialRating: 0,
+                  readOnly: true
+                });
+              </script>
+            {% endif %}
 
-          {% if (nbNotes > 0) %}
-            <h2>{{ avg }}/5</h2>
-          {% else %}
-            <h2>{{ avg }}</h2>
-          {% endif %}
+            {% if (nbNotes > 0) %}
+              <h2>{{ avg }}/5</h2>
+            {% else %}
+              <h2>{{ avg }}</h2>
+            {% endif %}
+          </div>
         </td>
       </ul>
       </br>
