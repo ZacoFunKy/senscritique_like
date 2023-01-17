@@ -14,6 +14,7 @@
         <body>
             <div class="formulaire">
                 <div class="search">
+                    <h1> Ajouter des bots</h1>
                     {{ form_start(form) }}
                         <p>Nom</p>
                         {{ form_widget(form.name) }}
@@ -21,7 +22,7 @@
                         {{ form_widget(form.email) }}
                         <p>Nombre d'utilisateur à créer</p>
                         {{ form_widget(form.number) }}
-                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
                     {{ form_end(form) }}
                 </div>
             </div>

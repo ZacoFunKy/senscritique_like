@@ -3,8 +3,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
-  	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
+	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -14,13 +13,20 @@
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
+	<div id="page">
 		<header>
 			<a href="{{path('app_default')}}" class="title">Netflop</a>
-            {{ form_start(form) }}
-            <div class="search">
-                {{ form_widget(form) }}
-                <button type="submit" class="btn btn-primary">Rechercher</button>
+        </header>
+        <body>
+            <div class="formulaire">
+                <div class="search">
+                    <h1> Ajouter des commentaires</h1>
+                    {{ form_start(form) }}
+                    <p>Nombre</p>
+                    {{ form_widget(form.number) }}
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    {{ form_end(form) }}
+                </div>
             </div>
-            {{ form_end(form) }}
+        </body>
 {% endblock %}

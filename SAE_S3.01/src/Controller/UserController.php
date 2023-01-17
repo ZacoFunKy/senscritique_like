@@ -76,14 +76,34 @@ class UserController extends AbstractController
         $series = $user->getSeries();
         $userEpisode = $user->getEpisode();
 
-        //Permet de paginer les commentaires écrits par l'utilisateur
-        $ratings = $paginator->paginate($ratings, $request->query->getInt('page', 1), 3);
+        $ratings = $paginator->paginate(
+            $ratings, /* query NOT result */
+            $request->query->getInt('page1', 1), /*page number*/
+            3 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page1',
+            )
+        );
 
         //Permet de paginer les séries vues par l'utilisateur
         $series = $paginator->paginate($series, $request->query->getInt('page', 1), 4);
 
-        //Permet de paginer les épisodes vues par l'utilisateur
-        $episodes = $paginator->paginate($userEpisode, $request->query->getInt('page', 1), 4);
+        $series = $paginator->paginate(
+            $series, /* query NOT result */
+            $request->query->getInt('page2', 1), /*page number*/
+            4 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page2',
+            )
+        );
+        $episodes = $paginator->paginate(
+            $userEpisode, /* query NOT result */
+            $request->query->getInt('page3', 1), /*page number*/
+            4 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page3',
+            )
+        );
 
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
@@ -130,6 +150,23 @@ class UserController extends AbstractController
         ]);
     }
 
+
+    #[Route('/user/suspended/{id}/{yesno}', name: 'app_user_suspended')]
+    public function suspended($id, $yesno, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
+        // if user is admin, he can't be suspended
+        if ($user->getisAdmin() == true) {
+            echo "<script>alert('Impossible de suspendre un administrateur')</script>";
+            return $this->redirectToRoute('admin');
+        }else{
+            $user->setSuspendu($yesno);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            echo "<script>alert('Utilisateur suspendu')</script>";
+            return $this->redirectToRoute('admin');
+        }
+    }
     #[Route('/user/admin/new', name: 'app_admin_user_new')]
     public function new(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -260,8 +297,23 @@ class UserController extends AbstractController
         }
 
         $entityManager->flush();
+
+
+
+
         return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
 
+    }
+
+
+    #[Route('/user/count/fake_account', name: 'app_admin_user_count_fake_accounts')]
+    public function count_fake_account(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+        echo "<script>
+        alert('Il y a " . count($user) . " comptes faux');
+        window.location.href='admin';
+        </script>";
     }
 
 

@@ -16,6 +16,9 @@
         {% include 'header.html.twig' %}
       </div>
     </header>
+      {% for message in app.flashes('danger') %}
+          {{ message }}
+        {% endfor %}
     <div id="content">
       <h1>Quelques séries de notre catalogue:</h1>
       <ul>

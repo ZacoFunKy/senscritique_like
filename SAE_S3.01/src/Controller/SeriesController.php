@@ -30,6 +30,8 @@ class SeriesController extends AbstractController
         $propertySearch = new PropertySearch();
         $form = $this->createForm(PropertySeachType::class, $propertySearch);
         $form->handleRequest($request);
+
+        $ratings = $entityManager->getRepository(Rating::class)->findAll();
         
         if ($form->isSubmitted() && $form->isValid()) {
             $genreFromForm = $propertySearch->getGenre();
@@ -107,7 +109,8 @@ class SeriesController extends AbstractController
             return $this->render('series/index.html.twig', [
                 'series' => $arrayIntersect,
                 'form' => $form->createView(),
-                'pagination' => true,
+                'pagination' => TRUE,
+                'ratings' => $ratings,
             ]);
         } else {
             $series = $entityManager
@@ -123,6 +126,7 @@ class SeriesController extends AbstractController
                 'form' => $form->createView(),
                 'pagination' => true,
                 'numPage' => $numPage,
+                'ratings' => $ratings,
             ]);
         }
     }
@@ -151,6 +155,7 @@ class SeriesController extends AbstractController
     public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
     PaginatorInterface $paginator): Response
     {
+
         $users = $series->getUser();
         $value = 0;
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['series' => $series]);
@@ -163,10 +168,10 @@ class SeriesController extends AbstractController
         }
         if (count($ranting_verified) != 0) {
             $avg = $sum / count($ranting_verified);
+            $avg = round($avg, 2);
         } else {
-            $avg = 0;
+            $avg = "Pas d'avis";
         }
-        $avg = round($avg, 2);
                 
         if ($numPage == null) {
             $numPage = 1;
@@ -196,6 +201,7 @@ class SeriesController extends AbstractController
             'rating' => $ratings,
             'allRatings' => $allRatings,
             'avg' => $avg,
+            'nbNotes' => $sum,
             'userRating' => $userRating,
         ]);
     }

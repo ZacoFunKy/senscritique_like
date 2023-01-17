@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -32,6 +33,9 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
+            BooleanField::new('Suspendu')
+                ->setRequired(true)
+                ->setPermission('ROLE_ADMIN'),
             BooleanField::new('isBot')
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
@@ -52,6 +56,41 @@ class UserCrudController extends AbstractCrudController
                 EmailField::new('email')
                     ->setRequired(true)
                     ->setFormTypeOptions(['disabled' => true]),
+                BooleanField::new('Suspendu')
+                    ->setRequired(true)
+                    ->setPermission('ROLE_ADMIN')
+                    ->addHtmlContentsToBody("<script>
+                    // Recuperer toute checkbox qui est dans le td avec le data-label='Suspendu' et  la div avec la class= form-check form-switch 
+                    //(plusieurs checkbox peuvent avoir cette class)
+                    // Pour chaque checkbox, on ajoute un event listener sur le click
+                    var checkboxes = document.querySelectorAll('td[data-label=Suspendu] div.form-check.form-switch input');
+                    checkboxes.forEach(checkbox => {
+                        // On ajoute un event listener sur le click
+                        checkbox.addEventListener('click', function(e) {
+                            if (checkbox.checked) {
+                                var rep = confirm('Voulez-vous vraiment suspendre cet utilisateur ?');
+                                // si on clique sur annuler
+                                if (rep == false) {
+                                    checkbox.checked = false;
+                                } else {
+                                    var id = checkbox.closest('tr').getAttribute('data-id');
+                                    window.location.href = '/user/suspended/' + id + '/' + 1;
+                                    checkbox.checked = true;
+                                }
+                            } else {
+                                var rep = confirm('Voulez-vous vraiment réactiver cet utilisateur ?');
+                                // si on clique sur annuler
+                                if (rep == false) {
+                                    checkbox.checked = true;
+                                } else {
+                                    var id = checkbox.closest('tr').getAttribute('data-id');
+                                    window.location.href = '/user/suspended/' + id + '/' + 0;
+                                    checkbox.checked = false;
+                                }
+                            }
+                        });
+                    });
+                    </script>"),
                 BooleanField::new('isBot')
                     ->setFormTypeOptions(['disabled' => true])
                     ->setSortable(true),
@@ -95,6 +134,12 @@ class UserCrudController extends AbstractCrudController
                 ->setIcon('fa fa-plus')
                 ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'))
                 ->linkToRoute('app_admin_user_new');
+        })
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action
+                ->setLabel('Nombre de faux comptes')
+                ->setIcon('fa fa-user-secret')
+                ->linkToRoute('app_admin_user_count_fake_accounts');
         });
     }
 }

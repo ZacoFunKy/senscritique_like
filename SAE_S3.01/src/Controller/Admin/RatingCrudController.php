@@ -7,6 +7,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use App\Entity\Series;
+use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
 class RatingCrudController extends AbstractCrudController
 {
@@ -26,4 +36,12 @@ class RatingCrudController extends AbstractCrudController
             TextField::new('getUserName'),
         ];
     }
+
+    public function configureActions(Actions $actions): Actions
+    {
+
+    return parent::configureActions($actions)
+        ->remove(Crud::PAGE_INDEX, Action::NEW);
+    }
 }
+

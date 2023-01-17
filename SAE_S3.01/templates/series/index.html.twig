@@ -73,9 +73,31 @@
 				{% for series in series %}
 					<div class="serie">
 						<div class="poster">
-							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
+							{% set sum = 0 %}
+							{% set nbNotes = 0 %}
+							{% for rating in ratings %}
+								{% if ((rating.series == series) and (rating.verified == 1)) %}
+									{% set sum = sum + rating.value %}
+									{% set nbNotes = nbNotes + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% if (nbNotes != 0) %}
+								{% set avg = sum  / nbNotes %}
+							{% else %}
+								{% set avg = 0 %}
+							{% endif %}
+							{% set avg = avg|round(2) %}
+
+							{% if (nbNotes > 0) %}
+								<h2 id="moyenne">{{ avg }}/5</h2>
+							{% else %}
+								<h2 id="moyenne">Null</h2>
+							{% endif %}
+
+							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image"/>
 							<p>{{ series.title }}</p>
 						</div>
+						<p>{{ series.title }}</p>
 						{% if numPage is defined %}
 							<a class="bouton" href="{{ path('app_series_show', {'id': series.id, 'numPage': numPage}) }}">Afficher</a>
 							<a class="nePasAfficher" href="{{ path('app_series_edit', {'id': series.id}) }}">Edit</a>
