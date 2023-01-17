@@ -570,7 +570,9 @@ class SeriesController extends AbstractController
                 }
             }
             $entityManager->flush();
-            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
+            echo "<script> alert('La série " . $obj->Title . " a bien été modifiée !');
+            window.location.href = 'http://127.0.0.1:8000/admin';
+            </script>";    
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
