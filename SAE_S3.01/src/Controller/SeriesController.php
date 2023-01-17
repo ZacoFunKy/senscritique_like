@@ -231,21 +231,23 @@ class SeriesController extends AbstractController
             }
 
             return $this->redirectToRoute(
-                'app_series_show',
-                ['id' => $episode
+                'app_series_show_adds',
+                ['series' => $episode
                     ->getSeason()
                     ->getSeries()
                     ->getId(),
-                'numPage' => $numPage],
+                'numPage' => $numPage,
+                'yesno' => 1,
+                'redirect' => 1],
                 Response::HTTP_SEE_OTHER
             );
-    } else {
-        return $this->redirectToRoute(
-            'app_series_show',
-            ['numPage' => $numPage],
-            Response::HTTP_SEE_OTHER
-        );
-    }
+        } else {
+            return $this->redirectToRoute(
+                'app_series_show',
+                ['numPage' => $numPage],
+                Response::HTTP_SEE_OTHER
+            );
+        }
     }
 
     #[Route('/{series}/set_following/{yesno}/{redirect}', name: 'app_series_show_adds', methods: ['GET'])]
@@ -469,9 +471,7 @@ class SeriesController extends AbstractController
             }
         }
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
-        Response::HTTP_SEE_OTHER
-        );
+        return $this->redirectToRoute('app_series_show_adds', ['series' => $series->getId(), 'numPage' => $numPage, 'yesno' => 1, 'redirect'=> 1]);
     }
 
 
