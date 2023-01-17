@@ -106,7 +106,7 @@ class PropertySearch
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
             foreach ($toutesLesSeries as $serie) {
-                if (str_starts_with($serie->getTitle(), $nameFromForm)) {
+                if (str_starts_with(strtolower($serie->getTitle()), strtolower($nameFromForm))) {
                     array_push($arrayName, $serie);
                 }
             }
