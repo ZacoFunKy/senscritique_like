@@ -30,7 +30,6 @@ class DashboardController extends AbstractDashboardController
         $routeBuilder = $this->adminUrlGenerator
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_INDEX);
-
         return $this->redirect($routeBuilder->generateUrl());
     }
 
@@ -38,8 +37,6 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Home');
-
-
     }
 
     public function configureMenuItems(): iterable
