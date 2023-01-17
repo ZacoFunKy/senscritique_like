@@ -54,7 +54,7 @@ class ExternalRating
      * })
      */
     private $source;
-    
+
     /**
      * Permet d'obtenir l'id de la note
      *

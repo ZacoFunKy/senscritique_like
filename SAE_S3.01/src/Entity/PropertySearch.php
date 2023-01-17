@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 class PropertySearch
 {
 
@@ -11,9 +12,9 @@ class PropertySearch
     private $genre;
     private $avis;
     private $suivi;
-    
+
     /**
-     * Permet d'obtenir le nom de la barre de recherche
+     * Permet d'obtenir le nom servant comme paramètre à la recherche par nom
      *
      * @return ?string
      */
@@ -21,23 +22,23 @@ class PropertySearch
     {
         return $this->nom;
     }
-    
+
     /**
-     * Permet de définir le nom de la barre de recherche
+     * Permet de définir la valeure du nom passé en paramètre
      *
-     * @param string $nom le nom de la barre de recherche
+     * @param string $nom le nom passé dans le filtre de la barre de recherche
      *
      * @return self
      */
     public function setNom(string $nom): self
     {
-        $this->nom = $nom    ;
- 
+        $this->nom = $nom;
+
         return $this;
     }
 
     /**
-     * Permet d'obtenir l'année de départ
+     * Permet d'obtenir la valeure du filtre de l'année de départ
      *
      * @return ?int
      */
@@ -45,23 +46,23 @@ class PropertySearch
     {
         return $this->anneeDepart;
     }
-    
+
     /**
-     * Permet de définir l'année de départ
+     * Permet de définir la valeure du filtre par année de départ
      *
-     * @param int $anneeDepart l'année de départ
+     * @param int $anneeDepart la valeure du filtre de l'année de départ
      *
      * @return self
      */
     public function setAnneeDepart(int $anneeDepart): self
     {
-        $this->anneeDepart = $anneeDepart    ;
- 
+        $this->anneeDepart = $anneeDepart;
+
         return $this;
     }
 
     /**
-     * Permet d'obtenir l'année de fin
+     * Permet d'obtenir la valeure du filtre par année de fin
      *
      * @return ?int
      */
@@ -69,23 +70,23 @@ class PropertySearch
     {
         return $this->anneeFin;
     }
-    
+
     /**
-     * Permet de définir l'année de fin
+     * Permet de définir l'année de fin servant de filtre
      *
-     * @param int $anneeFin l'annee de fin de la barre de recherche
+     * @param int $anneeFin l'annee de fin passé en filtre
      *
      * @return self
      */
     public function setAnneeFin(int $anneeFin): self
     {
-        $this->anneeFin = $anneeFin    ;
- 
+        $this->anneeFin = $anneeFin;
+
         return $this;
     }
 
     /**
-     * Permet d'obtenir le genre de la barre de recherche
+     * Permet d'obtenir le genre passé en filtre
      *
      * @return ?string
      */
@@ -93,35 +94,35 @@ class PropertySearch
     {
         return $this->genre;
     }
- 
+
     /**
-     * Permet de définir le nom de la barre de recherche
+     * Permet de définir l'état du filtre genre de la barre de recherche
      *
-     * @param string $genre le genre de la barre de recherche
+     * @param string $genre le genre selectionner comme filtre pour la recherche
      *
      * @return self
      */
     public function setGenre(string $genre): self
     {
         $this->genre = $genre;
- 
+
         return $this;
     }
-    
+
     /**
-     * Permet d'obtenir l'avis de la barre de recherche
+     * Permet d'obtenir l'état du filtre avis de la barre de recherche
      *
      * @return ?string
      */
     public function getAvis(): ?string
     {
-         return $this->avis;
+        return $this->avis;
     }
 
     /**
-     * Permet de définir l'avis de la barre de recherche
+     * Permet de définir l'état du filtre des séries par rapport aux avis
      *
-     * @param string $avis l'avis de la barre de recherche
+     * @param string $avis l'etat du filtre avis sélectionné
      *
      * @return self
      */
@@ -131,21 +132,21 @@ class PropertySearch
 
         return $this;
     }
-    
+
     /**
-     * Permet de savoir si la barre de commentaire est suivi
+     * Permet d'obtenir l'état du filtre suivi
      *
      * @return ?bool
      */
     public function getSuivi(): ?bool
     {
-         return $this->suivi;
+        return $this->suivi;
     }
 
     /**
-     * Permet de changer l'état de
+     * Permet de changer l'état du filtre suivi de la barre de recherche
      *
-     * @param string $nom le nom de la barre de recherche
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
      *
      * @return self
      */
@@ -156,7 +157,13 @@ class PropertySearch
         return $this;
     }
 
-
+    /**
+     * Permet de trier les séries par le genre sélectionner comme filtre dans la barre de recherche
+     *
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     *
+     * @return array
+     */
     public function triGenre($entityManager, $genreFromForm, $toutesLesSeries): array
     {
         if (strlen($genreFromForm) > 0) {
@@ -164,7 +171,7 @@ class PropertySearch
             $seriesByGenre = $genre->getSeries();
 
             $arrayGenre = array();
-            foreach ($seriesByGenre as $serie){
+            foreach ($seriesByGenre as $serie) {
                 array_push($arrayGenre, $serie);
             }
         } else {
@@ -173,6 +180,13 @@ class PropertySearch
         return $arrayGenre;
     }
 
+    /**
+     * Permet de changer l'état du filtre suivi de la barre de recherche
+     *
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     *
+     * @return array
+     */
     public function triName($nameFromForm, $toutesLesSeries): array
     {
         if (strlen($nameFromForm) > 0) {
@@ -188,7 +202,7 @@ class PropertySearch
         return $arrayName;
     }
 
-    public function triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries):array
+    public function triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
@@ -197,7 +211,7 @@ class PropertySearch
                 ->setParameter('date', $anneeDepartFromForm);
             $seriesByAnneeDebut = $queryBuilder->getQuery()->getResult();
             $arrayAnneeDebut = array();
-            foreach ($seriesByAnneeDebut as $serie){
+            foreach ($seriesByAnneeDebut as $serie) {
                 array_push($arrayAnneeDebut, $serie);
             }
         } else {
@@ -206,7 +220,7 @@ class PropertySearch
         return $arrayAnneeDebut;
     }
 
-    public function triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries):array
+    public function triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if (strlen($anneeFinFromForm) > 0) {
@@ -216,7 +230,7 @@ class PropertySearch
             $seriesByAnneeFin = $queryBuilder->getQuery()->getResult();
 
             $seriesAnneeFin = array();
-            foreach ($seriesByAnneeFin as $serie){
+            foreach ($seriesByAnneeFin as $serie) {
                 array_push($seriesAnneeFin, $serie);
             }
         } else {
@@ -225,7 +239,7 @@ class PropertySearch
         return $seriesAnneeFin;
     }
 
-    public function triAvis($entityManager, $avisFromForm, $toutesLesSeries):array
+    public function triAvis($entityManager, $avisFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Rating::class)->createQueryBuilder('r');
 
@@ -251,12 +265,12 @@ class PropertySearch
             $ratingByvalue = $queryBuilder->getQuery()->getResult();
 
             $seriesByAvis = array();
-            foreach ($ratingByvalue as $serie){
+            foreach ($ratingByvalue as $serie) {
                 array_push($seriesByAvis, $serie->getSeries());
             }
 
             $arrayAvis = array();
-            foreach ($seriesByAvis as $serie){
+            foreach ($seriesByAvis as $serie) {
                 array_push($arrayAvis, $serie);
             }
         } else {
@@ -264,13 +278,13 @@ class PropertySearch
         }
         return $arrayAvis;
     }
-    
-    public function triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect):array
+
+    public function triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect): array
     {
         if (strlen($avisFromForm) > 0) {
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
-                foreach ($arrayIntersect as $serie){
+                foreach ($arrayIntersect as $serie) {
                     $rating = $entityManager->getRepository(Rating::class)->findBy(['series' => $serie])[0];
                     $arrayRating[$serie->getId()] = $rating->getValue();
                 }
@@ -282,15 +296,15 @@ class PropertySearch
                 }
 
                 $arrayIntersect = array();
-                foreach ($arrayRating as $x=>$x_value) {
+                foreach ($arrayRating as $x => $x_value) {
                     array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
                 }
             }
         }
         return $arrayIntersect;
     }
-    
-    public function triSuivi($entityManager, $suiviFromForm, $arrayIntersect, $id):array
+
+    public function triSuivi($entityManager, $suiviFromForm, $arrayIntersect, $id): array
     {
         if ($suiviFromForm) {
             $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];

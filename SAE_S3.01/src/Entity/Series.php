@@ -589,13 +589,11 @@ class Series
     }
 
     /**
-     * Permet de définir l'année de fin de la série
+     * Permet d'obtenir le trailer youtube de la série
      *
-     * @param ?int $yearEnd
-     *
-     * @return self
+     * @return string
      */
-    public function getEmbedTrailerLink()
+    public function getEmbedTrailerLink(): string
     {
         return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer, '=')+1);
     }
