@@ -13,38 +13,41 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_default')]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        // si l'utilisateur est suspendu on affiche la page adéquate
         if ($this->getUser() && $this->getUser()->getSuspendu()) {
             return $this->render('default/suspended.html.twig');
         }
 
-        $a = rand(0,234);
-        $b = rand(0,234);
-        while ($b == $a) {
-            $b = rand(0, 234);
+        // on récupère 3 poster aléatoires
+        $poster1 = rand(0, 234);
+        $poster2 = rand(0, 234);
+        while ($poster2 == $poster1) {
+            $poster2 = rand(0, 234);
         }
-        $c = rand(0, 234);
-        while ($c == $a || $c == $b) {
-            $c = rand(0, 234);
+        $poster3 = rand(0, 234);
+        while ($poster3 == $poster1 || $poster3 == $poster2) {
+            $poster3 = rand(0, 234);
         }
 
         $series = $entityManager
             ->getRepository(Series::class)
-            ->findBy(['id' => [$a, $b, $c]], ['title' => 'ASC']);
+            ->findBy(['id' => [$poster1, $poster2, $poster3]], ['title' => 'ASC']);
 
+        // on récupère 3 posters aléatoires tant que les id récupérés existent dans la base
         while (sizeof($series) != 3) {
-            $a = rand(0, 234);
-            $b = rand(0, 234);
-            while ($b == $a) {
-                $b = rand(0, 234);
+            $poster1 = rand(0, 234);
+            $poster2 = rand(0, 234);
+            while ($poster2 == $poster1) {
+                $poster2 = rand(0, 234);
             }
-            $c = rand(0, 234);
-            while ($c == $a || $c == $b) {
-                $c = rand(0, 234);
+            $poster3 = rand(0, 234);
+            while ($poster3 == $poster1 || $poster3 == $poster2) {
+                $poster3 = rand(0, 234);
             }
 
             $series = $entityManager
                 ->getRepository(Series::class)
-                ->findBy(['id' => [$a, $b, $c]], ['title' => 'ASC']);
+                ->findBy(['id' => [$poster1, $poster2, $poster3]], ['title' => 'ASC']);
         }
 
         return $this->render('default/index.html.twig', [
@@ -60,6 +63,7 @@ class DefaultController extends AbstractController
             'controller_name' => 'DefaultController',
         ]);
     }
+    
     /**
      * @Route("/histogram.svg", name="histogram")
      */
