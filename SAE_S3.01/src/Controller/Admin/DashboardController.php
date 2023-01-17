@@ -45,7 +45,7 @@ class DashboardController extends AbstractDashboardController
         return [
             MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
             MenuItem::subMenu('Users', 'fa fa-users')->setSubItems([
-                MenuItem::linkToCrud('Permissions', 'fa fa-user', User::class),
+                MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', User::class),
                 MenuItem::linkToRoute('Ajouter', 'fa-solid fa-robot', 'app_admin_user_new'),
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_delete'),
             ]),
