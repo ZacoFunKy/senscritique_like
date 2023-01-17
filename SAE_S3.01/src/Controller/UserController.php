@@ -139,6 +139,23 @@ class UserController extends AbstractController
         ]);
     }
 
+
+    #[Route('/user/suspended/{id}/{yesno}', name: 'app_user_suspended')]
+    public function suspended($id, $yesno, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
+        // if user is admin, he can't be suspended
+        if ($user->getisAdmin() == true) {
+            echo "<script>alert('Impossible de suspendre un administrateur')</script>";
+            return $this->redirectToRoute('admin');
+        }else{
+            $user->setSuspendu($yesno);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            echo "<script>alert('Utilisateur suspendu')</script>";
+            return $this->redirectToRoute('admin');
+        }
+    }
     #[Route('/user/admin/new', name: 'app_admin_user_new')]
     public function new(EntityManagerInterface $entityManager, Request $request): Response
     {

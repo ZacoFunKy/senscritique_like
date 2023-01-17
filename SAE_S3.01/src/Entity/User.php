@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\DBAL\Types\Types;
 
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,14 +70,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="super_admin", type="boolean", nullable=false)
      */
     private $isSuperAdmin = 0;
-
+   /**
+     * @var bool
+     *
+     * @ORM\Column(name="Suspendu", type="boolean", nullable=true)
+     */
+    private $isSuspendu = 0;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="fake_account", type="boolean", nullable=true)
+     * @ORM\Column(name="bot", type="boolean", nullable=true)
      */
-    private $isBot= 0;
+    private $isBot = 0;
 
     /**
      * @var \DateTime|null
@@ -394,6 +400,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->isSuperAdmin,
             $this->photo,
         ] = $data;
+    }
+
+    public function getSuspendu(): ?bool
+    {
+        return $this->isSuspendu;
+    }
+
+    public function setSuspendu(bool $isSuspendu)
+    {
+        if ($this->getIsSuperAdmin() || $this->getisAdmin()) {
+            $isSuspendu = false;
+            $this->isSuspendu = $isSuspendu;
+            return $this;
+        }
+        $this->isSuspendu = $isSuspendu;
+        if ($isSuspendu) {
+            $this->emptyRoles();
+            $this->setRoles(['ROLE_SUSPENDU']);
+        } else {
+            $this->emptyRoles();
+            $this->setRoles(['ROLE_USER']);
+        }
+        return $this;
+    }
+
+    public function emptyRoles()
+    {
+        $this->roles = [];
     }
 
 }
