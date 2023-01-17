@@ -76,33 +76,19 @@ class UserController extends AbstractController
         $series = $user->getSeries();
         $userEpisode = $user->getEpisode();
 
+        //Permet de paginer les notes données par l'utilisateur
         $ratings = $paginator->paginate(
-            $ratings, /* query NOT result */
-            $request->query->getInt('page1', 1), /*page number*/
-            3 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page1',
-            )
-        );
+            $ratings, $request->query->getInt('page1', 1), 3, array('pageParameterName' => 'page1',));
 
         //Permet de paginer les séries vues par l'utilisateur
-        $series = $paginator->paginate($series, $request->query->getInt('page', 1), 4);
-
         $series = $paginator->paginate(
-            $series, /* query NOT result */
-            $request->query->getInt('page2', 1), /*page number*/
-            4 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page2',
-            )
+            $series, $request->query->getInt('page2', 1), 4, array('pageParameterName' => 'page2',)
         );
+
+        //Permet de paginer les épisodes vues par l'utilisateur
         $episodes = $paginator->paginate(
-            $userEpisode, /* query NOT result */
-            $request->query->getInt('page3', 1), /*page number*/
-            4 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page3',
-            )
+            $userEpisode, $request->query->getInt('page3', 1), 4 ,
+            array('pageParameterName' => 'page3',)
         );
 
         return $this->render('user/profile.html.twig', [
@@ -156,10 +142,10 @@ class UserController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
         // if user is admin, he can't be suspended
-        if ($user->getisAdmin() == true) {
+        if ($user->getisAdmin()) {
             echo "<script>alert('Impossible de suspendre un administrateur')</script>";
             return $this->redirectToRoute('admin');
-        }else{
+        } else {
             $user->setSuspendu($yesno);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -297,10 +283,6 @@ class UserController extends AbstractController
         }
 
         $entityManager->flush();
-
-
-
-
         return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
 
     }

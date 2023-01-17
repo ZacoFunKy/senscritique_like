@@ -109,7 +109,7 @@ class SeriesController extends AbstractController
             return $this->render('series/index.html.twig', [
                 'series' => $arrayIntersect,
                 'form' => $form->createView(),
-                'pagination' => TRUE,
+                'pagination' => true,
                 'ratings' => $ratings,
             ]);
         } else {
