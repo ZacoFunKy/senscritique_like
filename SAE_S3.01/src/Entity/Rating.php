@@ -24,7 +24,7 @@ class Rating
 
     /**
      * @var float
-     * 
+     *
      *
      * @ORM\Column(name="value", type="float", nullable=false)
      */

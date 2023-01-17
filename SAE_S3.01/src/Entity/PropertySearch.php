@@ -187,7 +187,7 @@ class PropertySearch
      * Permet de trier la liste des séries en fonction du nom de la série
      *
      * @param ?string $nameFromForm le nom avec lequel on tri la liste des séries
-     * @param array $toutesLesSeries
+     * @param array $toutesLesSeries la liste des séries
      *
      * @return array
      */
@@ -209,13 +209,15 @@ class PropertySearch
     /**
      * Permet de trier la liste des séries par rapport à l'année de départ renseigné dans le filtre
      *
-     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param EntityManagerInterface $entityManager vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?int $anneeDepartFromForm l'année de départ avec laquelle on tri la liste des séries
+     * @param array $toutesLesSeries la liste des séries
      *
      * @return array
      */
-    public function triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries): array
+    public function triAnneeDepart(EntityManagerInterface $entityManager, ?int $anneeDepartFromForm, array $toutesLesSeries): array
     {
-        $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
         if (strlen($anneeDepartFromForm) > 0) {
             $queryBuilder->where('s.yearStart >= :date')
@@ -234,11 +236,13 @@ class PropertySearch
     /**
      * Permet de trier la liste des films par rapport à l'année de fin renseigné dans le filtre
      *
-     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param EntityManagerInterface $entityManager vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?int $anneeFinFromForm l'année de fin avec laquelle on tri la liste des séries
+     * @param array $toutesLesSeries la liste des séries
      *
      * @return array
      */
-    public function triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries): array
+    public function triAnneeFin(EntityManagerInterface $entityManager, ?int $anneeFinFromForm, array $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
         if (strlen($anneeFinFromForm) > 0) {
@@ -260,14 +264,15 @@ class PropertySearch
      /**
      * Permet de trier la liste des films par rapport à l'année de fin renseigné dans le filtre
      *
-     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param EntityManagerInterface $entityManager vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?string $avisFromForm l'avis de avec lequel on tri la liste des séries
+     * @param array $toutesLesSeries la liste des séries
      *
      * @return array
      */
-    public function triAvis($entityManager, $avisFromForm, $toutesLesSeries): array
+    public function triAvis(EntityManagerInterface $entityManager, ?string $avisFromForm, array $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Rating::class)->createQueryBuilder('r');
-
         if (strlen($avisFromForm) > 0) {
             switch ($avisFromForm) {
                 case 1:
@@ -304,12 +309,21 @@ class PropertySearch
         return $arrayAvis;
     }
 
-    public function triCroissantDecroissant($entityManager, $avisFromForm, $arrayIntersect): array
+    /**
+     * Permet de trier la liste des films par rapport aux avis croissant ou décroissant
+     *
+     * @param EntityManagerInterface $entityManager vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?string $avisFromForm l'avis de avec lequel on tri la liste des séries
+     * @param array $arrayIntersect la liste de toutes les séries de tous les tris
+     *
+     * @return array
+     */
+    public function triCroissantDecroissant(EntityManagerInterface $entityManager, ?string $avisFromForm, array $arrayIntersect): array
     {
         if (strlen($avisFromForm) > 0) {
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
-                foreach ($arrayIntersect as $serie){
+                foreach ($arrayIntersect as $serie) {
                     $rating = $entityManager
                         ->getRepository(Rating::class)
                         ->findBy(['series' => $serie, 'verified' => '1']);
@@ -342,7 +356,17 @@ class PropertySearch
         return $arrayIntersect;
     }
 
-    public function triSuivi($entityManager, $suiviFromForm, $arrayIntersect, $id): array
+     /**
+     * Permet de trier la liste des films par rapport au série suivi par l'utilisateur
+     *
+     * @param EntityManagerInterface $entityManager vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?bool $suiviFromForm l'avis de avec lequel on tri la liste des séries
+     * @param array $arrayIntersect la liste de toutes les séries de tous les tris
+     * @param ?int $id l'id de l'utilisateur
+     *
+     * @return array
+     */
+    public function triSuivi(EntityManagerInterface $entityManager, ?bool $suiviFromForm, array $arrayIntersect, ?int $id): array
     {
         if ($suiviFromForm) {
             $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];

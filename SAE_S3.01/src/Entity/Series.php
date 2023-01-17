@@ -602,6 +602,4 @@ class Series
     {
         return $this->getId();
     }
-
-
 }
