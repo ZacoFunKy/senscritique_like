@@ -91,8 +91,10 @@
 							{% if (nbNotes > 0) %}
 								<h2 id="moyenne">{{ avg }}/5</h2>
 							{% else %}
-								<h2 id="moyenne">Null</h2>
+								<h2 id="moyenne">Aucun</h2>
 							{% endif %}
+
+							<h2 id="nbSuivi">{{ series.user|length}}</h2>
 
 							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image"/>
 							<p>{{ series.title }}</p>
