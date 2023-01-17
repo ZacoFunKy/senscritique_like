@@ -498,13 +498,18 @@ class SeriesController extends AbstractController
             $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $title ."&type=series&r=json";
             $obj = json_decode(file_get_contents($url));
             $series = [];
+            //obj to array
+            $array_obj = (array) $obj;
+            if($array_obj['Response'] == "False"){
+                echo "<script> alert('Il n'y a pas de série correspondant à cette recherche);</script>";
+            } else {
+            foreach ($obj->Search as $serie) {
+                    $series[$serie->Title]= $serie->imdbID;
+                }
+            } 
 
-            foreach($obj->Search as $serie){
-                $series[$serie->Title]= $serie->imdbID;
-            }
-
-            if($series == []){
-                $this->addFlash('error', 'No series found with this title');
+            if ($series == []) {
+                $this->addFlash('error', "Il n'y a pas de série correspondant à cette recherche");
                 return $this->redirectToRoute('admin', ['error' => "No series found with this title"], Response::HTTP_SEE_OTHER);
             }
             $form2 = $this->createFormBuilder();
