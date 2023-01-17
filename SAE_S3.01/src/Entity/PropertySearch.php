@@ -175,6 +175,7 @@ class PropertySearch
 
             $arrayGenre = array();
             foreach ($seriesByGenre as $serie) {
+            foreach ($seriesByGenre as $serie) {
                 array_push($arrayGenre, $serie);
             }
         } else {
@@ -196,7 +197,7 @@ class PropertySearch
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
             foreach ($toutesLesSeries as $serie) {
-                if (str_starts_with($serie->getTitle(), $nameFromForm)) {
+                if (str_starts_with(strtolower($serie->getTitle()), strtolower($nameFromForm))) {
                     array_push($arrayName, $serie);
                 }
             }
@@ -272,7 +273,7 @@ class PropertySearch
      */
     public function triAvis(EntityManagerInterface $entityManager, ?string $avisFromForm, array $toutesLesSeries): array
     {
-        $queryBuilder = $entityManager->getRepository(Rating::class)->createQueryBuilder('r');
+        $arrayAvis = array();
         if (strlen($avisFromForm) > 0) {
             switch ($avisFromForm) {
                 case 1:
@@ -280,28 +281,24 @@ class PropertySearch
                 case 3:
                 case 4:
                 case 5:
-                    $queryBuilder->where('r.value BETWEEN :rating-1 AND :rating')
-                        ->setParameter('rating', $avisFromForm);
-                    break;
-                case 'ASC':
-                    $queryBuilder->orderBy('r.value', 'ASC');
-                    break;
-                case 'DESC':
-                    $queryBuilder->orderBy('r.value', 'DESC');
+                    foreach ($toutesLesSeries as $serie) {
+                        $sum = 0;
+                        $nbNotes = 0;
+                        
+                        foreach ($serie->getRating() as $rate) {
+                            $sum += $rate->getValue();
+                            $nbNotes++;
+                        }
+                        if ($nbNotes != 0) {
+                            $avg = $sum / $nbNotes;
+                            if ($avg >= $avisFromForm-1 && $avg <= $avisFromForm) {
+                                array_push($arrayAvis, $serie);
+                            }
+                        }
+                    }
                     break;
                 default:
-                    break;
-            }
-            $ratingByvalue = $queryBuilder->getQuery()->getResult();
-
-            $seriesByAvis = array();
-            foreach ($ratingByvalue as $serie) {
-                array_push($seriesByAvis, $serie->getSeries());
-            }
-
-            $arrayAvis = array();
-            foreach ($seriesByAvis as $serie) {
-                array_push($arrayAvis, $serie);
+                    $arrayAvis = $toutesLesSeries;
             }
         } else {
             $arrayAvis = $toutesLesSeries;
@@ -324,6 +321,21 @@ class PropertySearch
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
                 foreach ($arrayIntersect as $serie) {
+                    $sum = 0;
+                    $nbNotes = 0;
+                    
+                    foreach ($serie->getRating() as $rate) {
+                        $sum += $rate->getValue();
+                        $nbNotes++;
+                    }
+                    
+                    if ($nbNotes != 0) {
+                        $avg = $sum / $nbNotes;
+                        $arrayRating[$serie->getId()] = $avg;
+                    }
+
+
+/*
                     $rating = $entityManager
                         ->getRepository(Rating::class)
                         ->findBy(['series' => $serie, 'verified' => '1']);
@@ -338,7 +350,7 @@ class PropertySearch
                     if ($nbNotes > 0) {
                         $moyenne = round($moyenne/$nbNotes, 2);
                         $arrayRating[$serie->getId()] = $moyenne;
-                    }
+                    }*/
                 }
 
                 if ($avisFromForm == 'ASC') {

@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    Ajouter une série
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
+{% endblock %}
+
+{% block javascripts %}
+        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block body %}
+	<div id="page">
+		<header>
+			<a href="{{path('app_default')}}" class="title">Netflop</a>
+        </header>
+        <div class="formulaire">
+            {% if form is defined %}
+                {{ form_start(form) }}
+                <div class="search">
+                    <h1>Ajouter une série</h1>
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+                {{ form_end(form) }}
+            {% else %}
+                {{ form_start(form2) }}
+                <div class="search">
+                    {{ form_widget(form2) }}
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(form2) }}
+                <script>
+                var submit = document.querySelector('button[type="submit"]');
+                submit.addEventListener('click', function() {
+                    var select = document.querySelector('select');
+                    var value = select.options[select.selectedIndex].value;
+                    window.location.href = '/series/series/add_series/' + value;
+                    });   
+                </script>
+            {% endif %}
+        </div> 
+    </div>
+{% endblock %}

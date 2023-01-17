@@ -5,11 +5,11 @@
 * {
   font-family: "Poppins", sans-serif;
   margin: 0;
-  color: white;
 }
 
 body {
   background-image: url("https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg");
+
 
 }
 
@@ -73,7 +73,20 @@ button {
   margin-bottom: 2%;
 }
 
-input {
+#form div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1,
+p,
+label {
+  color: white;
+}
+
+input,
+select {
   color: black;
 }
 

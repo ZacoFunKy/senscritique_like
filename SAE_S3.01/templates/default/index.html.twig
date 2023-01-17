@@ -9,30 +9,26 @@ Netflop France - Accueil
 {% endblock %}
 
 {% block body %}
-<div id="tout">
-  <header>
-    <a href="{{ path('app_default') }}" class="title">Netflop
-    </a>
-    <div id="id">
-      <!--Inclusion du menu-->
-      {% include 'header.html.twig' %}
-    </div>
-  </header>
-  {% for message in app.flashes('danger') %}
-    {{ message }}
-  {% endfor %}
-  <div id="content">
-    <h1>Quelques séries de notre catalogue:</h1>
-    <ul>
-      {% for serie in series %}
-        <li>{{ serie.displayPoster() }}</li>
-      {% endfor %}
-    </ul>
-    <div id="button">
-      <a href="{{ path('app_series_index') }}">
-        <input name="series" type="submit" value="Voir le catalogue" />
-      </a>
+  <div id="tout">
+    <header>
+      <a href="{{ path('app_default') }}" class="title">Netflop</a>
+      <div id="id">
+        {% include 'header.html.twig' %}
+      </div>
+    </header>
+      {% for message in app.flashes('danger') %}
+          {{ message }}
+        {% endfor %}
+    <div id="content">
+      <h1>Quelques séries de notre catalogue:</h1>
+      <ul>
+          {% for serie in series %}
+            <a href="{{ path('app_series_show', {'id': serie.id} ) }}" class="title"><li>{{ serie.displayPoster() }}</li></a>
+          {% endfor %}
+      </ul>
+      <div id="button">
+        <a href="{{ path('app_series_index') }}"><input name="series" type="submit" value="Voir le catalogue" /></a>
+      </div>
     </div>
   </div>
-</div>
 {% endblock %}

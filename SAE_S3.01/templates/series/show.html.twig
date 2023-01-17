@@ -227,76 +227,76 @@
                     <p>{{review.comment}}</p>
                   </div>
                 </div>
-              {% endif %}
-            {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-    <div id="partDroite">
-      <tr>
-        <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}" /></td>
-      </tr>
-      <h2>Saison(s)</h2>
-      <ul>
-        <td>
-          <div class="w-25 mb-3">
-            <select name="seasonSelect" id="season" class="form-select">
-              <option value="" selected></option>
-              {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
-                <option value="{{ season.number }}">Saison
-                  {{ season.number }}</option>
-                {% endfor %}
-            </select>
-            {% if app.user is defined and app.user is not null %}
-            <button class="btn btn-primary" id="seasonButton">Voir tous les épisodes d'une saison</button>
+                {% endif %}
+              {% endfor %}
             {% endif %}
-          </div>
+         </div>
+      </div>
+	     <div id="partDroite">
+		      <tr>
+			      <td><img src="{{ path('poster_series_show', {'id': series.id} ) }}"/></td>
+		      </tr>
+          <h2>Saison(s)</h2>
           <ul>
-            {% for season in series.seasons %}
-            {% set episodeVu = 0 %}
-            <div id="{{season.number}}" class="seasonEpisode">
-              {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
-                <li id="{{season.number}}" class="episode">
-                  Episode
-                  {{episode.number}}
-                  {{episode.title}}
-                  {% if app.user %}
-                  {% if episode in app.user.episode %}
-                  {% set episodeVu = episodeVu + 1 %}
-                  <a class="episode_see_button"
-                    href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
-                    <i class="fa-solid fa-eye fa-xl"></i>
-                  </a>
-                  {% else %}
-                  <a class="episode_see_button"
-                    href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage, 'all': 0}) }}">
-                    <i class="fa-solid fa-eye-slash fa-xl"></i>
-                  </a>
-                  {% endif %}
-                  {% endif %}
-                </li>
-                </br>
+            <td>
+              <div class="w-25 mb-3">
+                <select name="seasonSelect" id="season" class="form-select">
+                  <option value="" selected></option>
+                  {% for season in series.seasons|sort((a, b) => a.number <=> b.number) %}
+                    <option value="{{ season.number }}">Saison
+                      {{ season.number }}</option>
+                  {% endfor %}
+                </select>
+                {% if app.user is defined and app.user is not null %}
+                <button class="btn btn-primary" id="seasonButton">Voir tous les épisodes d'une saison</button>
+                {% endif %}
+              </div>
+              <ul>
+                {% for season in series.seasons %}
+                  {% set episodeVu = 0 %}
+                  <div id="{{season.number}}" class="seasonEpisode">
+                    {% for episode in season.episodes|sort((a,b) => a.number <=> b.number) %}
+                      <li id="{{season.number}}" class="episode">
+                        Episode
+                        {{episode.number}}
+                        {{episode.title}}
+                        {% if app.user %}
+                          {% if episode in app.user.episode %}
+                            {% set episodeVu = episodeVu + 1 %}
+                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '0', 'numPage': numPage, 'all': 0}) }}">
+                              <i class="fa-solid fa-eye fa-xl"></i>
+                            </a>
+                          {% else %}
+                            <a class="episode_see_button" href="{{ path('app_series_show_seen_adds', {'series': series.id, 'episode' : episode.id, 'yesno' : '1', 'numPage': numPage, 'all': 0}) }}">
+                              <i class="fa-solid fa-eye-slash fa-xl"></i>
+                            </a>
+                          {% endif %}
+                        {% endif %}
+                      </li>
+                      </br>
+                    {% endfor %}
+                    {# Affiche le pourcentage vu de la saison à modif #}
+                    <div id="pourcentageEpisodeVu">
+                      {% if season.episodes|length != 0 %}
+                        <p>Pourcentage d'épisodes vus</p>                      
+                        <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
+                      {% endif %}
+                    </div>
+                  </div>
                 {% endfor %}
-                {# Affiche le pourcentage vu de la saison à modif #}
-                <div id="pourcentageEpisodeVu">
-                  <p>Pourcentage d'épisodes vus</p>
-                  <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
-                </div>
-            </div>
-            {% endfor %}
-        </td>
-      </ul>
-    </div>
+            </td>
+          </ul>
+	      </div>
+     </div> 
+     <div id="bouton">
+	      <a href="{{ path('app_series_index') }}?page={{numPage}}">Retour à la liste</a>
+     </div>
   </div>
-  <div id="bouton">
-    <a href="{{ path('app_series_index') }}?page={{numPage}}">Retour à la liste</a>
-  </div>
-</div>
-{% if app.user.id is defined and app.user.id is not null %}
-<script>
-  {% if userRating.user is defined %}
-  document.querySelector(".give_rating").style.display = "none";
-  {% endif %}
+  {% if app.user.id is defined and app.user.id is not null %}
+    <script>
+      {% if userRating.user is defined %}
+        document.querySelector(".give_rating").style.display = "none";
+      {% endif %}
 
   var buttonModif = document.querySelector(".modifier");
   buttonModif.addEventListener("click", () => {

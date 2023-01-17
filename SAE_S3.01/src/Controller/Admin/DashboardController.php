@@ -51,7 +51,12 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Rating::class),
                 MenuItem::linkToCrud('Ajouter', 'fa-solid fa-robot', Series::class),
                 MenuItem::linkToRoute('Supprimer', 'fa fa-trash', 'app_admin_user_comment_delete'),
-            ]),
+            ])
+            ,
+            MenuItem::subMenu('Series', 'fa-solid fa-tv')->setSubItems([
+                MenuItem::linkToRoute('Ajouter', 'fa-solid fa-plus-large', 'app_admin_user_series_new'),
+            ])
+            ,
             MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', '/'),
 
         ];
