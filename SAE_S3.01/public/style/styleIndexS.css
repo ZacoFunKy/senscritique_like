@@ -176,17 +176,6 @@ h1 {
   margin: 10px;
 }
 
-.poster #nbSuivi {
-  z-index: 2;
-  position: relative;
-  top: 55px;
-  background: rgba(26, 26, 26, 0.7);
-  border: 1px solid rgb(255, 255, 255);
-  width: 25%;
-  color: #f7df1e;
-  margin: 10px;
-}
-
 .nePasAfficher {
   display: none;
 }
