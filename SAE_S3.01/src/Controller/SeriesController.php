@@ -489,7 +489,6 @@ class SeriesController extends AbstractController
             $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $title ."&type=series&r=json";
             $obj = json_decode(file_get_contents($url));
             $series = [];
-            //obj to array
             $array_obj = (array) $obj;
             if ($array_obj['Response'] == "False"){
                 echo "<script> alert('Il n'y a pas de série correspondant à cette recherche);</script>";
@@ -565,7 +564,9 @@ class SeriesController extends AbstractController
                 }
             }
             $entityManager->flush();
-            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
+            echo "<script> alert('La série " . $obj->Title . " a bien été modifiée !');
+            window.location.href = 'http://127.0.0.1:8000/admin';
+            </script>";    
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
