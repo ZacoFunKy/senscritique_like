@@ -579,7 +579,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = [];
     }
 
-}
 
     public function setregenPassowrd(string $password): void
     {
