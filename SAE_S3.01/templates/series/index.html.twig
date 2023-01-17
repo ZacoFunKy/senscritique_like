@@ -73,6 +73,7 @@
 				{% for series in series %}
 					<div class="serie">
 						<div class="poster">
+							{# calcul de la moyenne #}
 							{% set sum = 0 %}
 							{% set nbNotes = 0 %}
 							{% for rating in ratings %}
@@ -88,6 +89,7 @@
 							{% endif %}
 							{% set avg = avg|round(2) %}
 
+							{# affichage de la moyenne #}
 							{% if (nbNotes > 0) %}
 								<h2 id="moyenne">{{ avg }}/5</h2>
 							{% else %}
