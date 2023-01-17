@@ -19,6 +19,7 @@ class SecurityController extends AbstractController
         // Dernier nom d'utilisateur entrer par l'utilisateur
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // Redirige vers la page d'accueil
         if ($this->getUser()) {
             return $this->redirectToRoute('app_default');
         }
