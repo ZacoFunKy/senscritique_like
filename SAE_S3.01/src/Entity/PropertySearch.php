@@ -175,7 +175,6 @@ class PropertySearch
 
             $arrayGenre = array();
             foreach ($seriesByGenre as $serie) {
-            foreach ($seriesByGenre as $serie) {
                 array_push($arrayGenre, $serie);
             }
         } else {
@@ -323,42 +322,20 @@ class PropertySearch
                 foreach ($arrayIntersect as $serie) {
                     $sum = 0;
                     $nbNotes = 0;
-                    
                     foreach ($serie->getRating() as $rate) {
                         $sum += $rate->getValue();
                         $nbNotes++;
                     }
-                    
                     if ($nbNotes != 0) {
                         $avg = $sum / $nbNotes;
                         $arrayRating[$serie->getId()] = $avg;
                     }
-
-
-/*
-                    $rating = $entityManager
-                        ->getRepository(Rating::class)
-                        ->findBy(['series' => $serie, 'verified' => '1']);
-                    
-                    // Calcul de la moyenne
-                    $moyenne = 0;
-                    $nbNotes = 0;
-                    foreach ($rating as $note) {
-                        $nbNotes += 1;
-                        $moyenne += $note->getValue();
-                    }
-                    if ($nbNotes > 0) {
-                        $moyenne = round($moyenne/$nbNotes, 2);
-                        $arrayRating[$serie->getId()] = $moyenne;
-                    }*/
                 }
-
                 if ($avisFromForm == 'ASC') {
                     asort($arrayRating);
                 } else {
                     arsort($arrayRating);
                 }
-
                 $arrayIntersect = array();
                 foreach ($arrayRating as $x => $x_value) {
                     array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);

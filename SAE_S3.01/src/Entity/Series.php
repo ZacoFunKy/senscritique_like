@@ -607,6 +607,8 @@ class Series
     }
 
     /**
+     * Permet d'obtenir la liste des notes de la série
+     *
      * @return Collection<int, Rating>
      */
     public function getRating(): Collection
@@ -614,6 +616,13 @@ class Series
         return $this->rating;
     }
 
+    /**
+     * Permet d'ajouter une note à la liste des notes de la série
+     *
+     * @param Rating $rating
+     *
+     * @return self
+     */
     public function addRating(Rating $rating): self
     {
         if (!$this->rating->contains($rating)) {
@@ -624,6 +633,13 @@ class Series
         return $this;
     }
 
+    /**
+     * Permet de supprimer une note à la liste des notes de la série
+     *
+     * @param Rating $rating
+     *
+     * @return self
+     */
     public function removeRating(Rating $rating): self
     {
         if ($this->rating->removeElement($rating)) {

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Series;
+use App\Entity\Season;
 use App\Entity\User;
 use App\Entity\Rating;
 use App\Entity\PropertySearch;
@@ -328,7 +329,6 @@ class SeriesController extends AbstractController
     #[Route('/series/rating/{id}', name: 'rating_series_show', methods: ['GET', 'POST'])]
     public function showRating(Series $series, EntityManagerInterface $entityManager): Response
     {
-
         $numPage = Request::createFromGlobals()->query->get('numPage');
 
         if ($numPage == null) {
@@ -351,10 +351,8 @@ class SeriesController extends AbstractController
                 ['user' => $this->getUser(),
                 'series' => $series]
             );
-            
 
-        if ($ratings != null) {
-        }else {
+        if ($ratings == null) {
             $rating = new Rating();
             $rating->setUser($this->getUser());
             $rating->setSeries($series);
@@ -368,7 +366,6 @@ class SeriesController extends AbstractController
             $rating->setDate(new \DateTime());
             $entityManager->persist($rating);
             $entityManager->flush();
-
         }
 
         return $this->redirectToRoute(
@@ -472,7 +469,9 @@ class SeriesController extends AbstractController
             }
         }
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
+        Response::HTTP_SEE_OTHER
+        );
     }
 
 
@@ -492,17 +491,18 @@ class SeriesController extends AbstractController
             $series = [];
             //obj to array
             $array_obj = (array) $obj;
-            if($array_obj['Response'] == "False"){
+            if ($array_obj['Response'] == "False"){
                 echo "<script> alert('Il n'y a pas de série correspondant à cette recherche);</script>";
             } else {
-            foreach ($obj->Search as $serie) {
+                foreach ($obj->Search as $serie) {
                     $series[$serie->Title]= $serie->imdbID;
                 }
-            } 
-
+            }
             if ($series == []) {
                 $this->addFlash('error', "Il n'y a pas de série correspondant à cette recherche");
-                return $this->redirectToRoute('admin', ['error' => "No series found with this title"], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('admin', ['error' => "No series found with this title"],
+                Response::HTTP_SEE_OTHER
+                );
             }
             $form2 = $this->createFormBuilder();
             $form2->add('title', ChoiceType::class, [
@@ -545,7 +545,7 @@ class SeriesController extends AbstractController
             } else {
                 $obj->totalSeasons = (int)$obj->totalSeasons;
                 $i=0;
-                while($i < $obj->totalSeasons && $entityManager->getRepository(Season::class)->findOneBy(['number' => $i+1, 'series' => $serie]) == null){
+                while ($i < $obj->totalSeasons && $entityManager->getRepository(Season::class)->findOneBy(['number' => $i+1, 'series' => $serie]) == null){
                     $season = new Season();
                     $season->setNumber($i+1);
                     $season->setSeries($serie);

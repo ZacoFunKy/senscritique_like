@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            //Pemret de définir la date d'enregistrement
+            //Permet de définir la date d'enregistrement
             $user->setRegisterDate(new \DateTime('@'.strtotime('Europe/Paris')));
             $entityManager->persist($user);
             $entityManager->flush();
