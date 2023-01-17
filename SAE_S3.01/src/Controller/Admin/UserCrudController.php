@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -38,6 +39,9 @@ class UserCrudController extends AbstractCrudController
             BooleanField::new('isBot')
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
+            TextField::new('regenPassowrd')
+                ->setPermission('ROLE_ADMIN')
+                ->hideOnIndex(),
             BooleanField::new('isAdmin')
                 ->setRequired(true)
                 ->setFormTypeOptions(['disabled' => true])
@@ -93,6 +97,9 @@ class UserCrudController extends AbstractCrudController
                 BooleanField::new('isBot')
                     ->setFormTypeOptions(['disabled' => true])
                     ->setSortable(true),
+                TextField::new('regenPassowrd')
+                    ->setPermission('ROLE_ADMIN')
+                    ->hideOnIndex(),
                 BooleanField::new('isAdmin')
                     ->setRequired(true)
                     ->setPermission('ROLE_SUPER_ADMIN'),
