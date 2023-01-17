@@ -7,6 +7,7 @@ use App\Entity\Series;
 use App\Entity\Season;
 use App\Entity\User;
 use App\Entity\Rating;
+use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SerieAddFormType;
@@ -533,9 +534,14 @@ class SeriesController extends AbstractController
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
         if ($serie != null) {
             $serie->setTitle($obj->Title);
-            $years=explode("–", $obj->Year);
-            $yearStart = $years[0];
-            $yearEnd= $years[1];
+            if (str_contains($obj->Year, "–")) {
+                $years=explode("–", $obj->Year);
+                $yearStart = $years[0];
+                $yearEnd= $years[1];
+            } else {
+                $yearStart = $obj->Year;
+                $yearEnd= null;
+            }
             $serie->setAwards($obj->Awards);
             $serie->setYearEnd((int)$yearEnd);
             $yearStart = (int)$yearStart;
@@ -569,9 +575,14 @@ class SeriesController extends AbstractController
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
-            $years=explode("–", $obj->Year);
-            $yearStart = $years[0];
-            $yearEnd= $years[1];
+            if (str_contains($obj->Year, "–")) {
+                $years=explode("–", $obj->Year);
+                $yearStart = $years[0];
+                $yearEnd= $years[1];
+            } else {
+                $yearStart = $obj->Year;
+                $yearEnd= null;
+            }
             $serie->setAwards($obj->Awards);
             // Convert the years into int
             $yearEnd = (int)$yearEnd;
@@ -606,7 +617,7 @@ class SeriesController extends AbstractController
             $entityManager->flush();
             echo "<script> alert('La série " . $obj->Title . " a bien été ajoutée !');
             window.location.href = 'http://127.0.0.1:8000/admin';
-            </script>";      
+            </script>";
         }
       
     }
