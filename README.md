@@ -5,10 +5,15 @@
 
 ## Table des matières
 1.[Installation de symfony](#installation-de-symfony)
+
 2.[Configuration de la base de donnée](#configuration-BD)
+
 3.[Configuration de l’application](#configuration-de-lapplication)
+
 4.[Implémentation d’un super admin](#implem-super-admin)
+
 5.[Génération d'utilisateurs aléatoires](#generation-Utilisateur-Alea)
+
 6.[Génération de commentaires aléatoires](#generation-Commentaires-Alea)
 
 &nbsp;
