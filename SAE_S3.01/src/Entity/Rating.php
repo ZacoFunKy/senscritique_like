@@ -24,7 +24,7 @@ class Rating
 
     /**
      * @var float
-     * 
+     *
      *
      * @ORM\Column(name="value", type="float", nullable=false)
      */
@@ -67,7 +67,7 @@ class Rating
     /**
      * @var \Series
      *
-     * @ORM\ManyToOne(targetEntity="Series")
+     * @ORM\ManyToOne(targetEntity="Series", inversedBy="rating")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="series_id", referencedColumnName="id")
      * })

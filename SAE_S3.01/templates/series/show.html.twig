@@ -265,8 +265,10 @@
                     {% endfor %}
                     {# Affiche le pourcentage vu de la saison à modif #}
                     <div id="pourcentageEpisodeVu">
-                      <p>Pourcentage d'épisodes vus</p>
-                      <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
+                      {% if season.episodes|length != 0 %}
+                        <p>Pourcentage d'épisodes vus</p>                      
+                        <p id="pourcentageEpisodes"> {{ ((episodeVu * 100) / season.episodes|length)|round()}}%</p>
+                      {% endif %}
                     </div>
                   </div>
                 {% endfor %}

@@ -166,10 +166,8 @@ class PropertySearch
                     foreach ($toutesLesSeries as $serie) {
                         $sum = 0;
                         $nbNotes = 0;
-                        $rating_verified = $entityManager
-                            ->getRepository(Rating::class)
-                            ->findBy(['series' => $serie, 'verified' => 1]);
-                        foreach ($rating_verified as $rate) {
+                        
+                        foreach ($serie->getRating() as $rate) {
                             $sum += $rate->getValue();
                             $nbNotes++;
                         }
@@ -196,16 +194,14 @@ class PropertySearch
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
                 foreach ($arrayIntersect as $serie) {
-
                     $sum = 0;
                     $nbNotes = 0;
-                    $rating_verified = $entityManager
-                        ->getRepository(Rating::class)
-                        ->findBy(['series' => $serie, 'verified' => 1]);
-                    foreach ($rating_verified as $rate) {
+                    
+                    foreach ($serie->getRating() as $rate) {
                         $sum += $rate->getValue();
                         $nbNotes++;
                     }
+                    
                     if ($nbNotes != 0) {
                         $avg = $sum / $nbNotes;
                         $arrayRating[$serie->getId()] = $avg;
