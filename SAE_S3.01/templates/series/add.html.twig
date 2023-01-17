@@ -20,17 +20,18 @@
             {% if form is defined %}
                 {{ form_start(form) }}
                 <div class="search">
+                    <h1>Ajouter une série</h1>
                     {{ form_widget(form) }}
-                    <button type="submit" class="btn btn-primary">Rechercher la série</button>
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
                 </div>
                 {{ form_end(form) }}
             {% else %}
                 {{ form_start(form2) }}
                 <div class="search">
                     {{ form_widget(form2) }}
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
                 </div>
                 {{ form_end(form2) }}
-                <button type="submit" class="btn btn-primary">Rechercher</button>
                 <script>
                 var submit = document.querySelector('button[type="submit"]');
                 submit.addEventListener('click', function() {
