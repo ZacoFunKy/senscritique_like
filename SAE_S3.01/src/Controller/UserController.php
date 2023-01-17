@@ -126,8 +126,7 @@ class UserController extends AbstractController
     {
         $users = $entityManager->getRepository(User::class)->findAll();
         
-        $users = $paginator->paginate($users, $request
-        ->query->getInt('page', 1, 10));
+
 
         $userSearch = new UserSearch();
         $form = $this->createForm(UserSearchFormType::class, $userSearch);
@@ -141,6 +140,9 @@ class UserController extends AbstractController
             $users = $queryBuilder->getQuery()->getResult();
         }
     
+        $users = $paginator->paginate($users, $request
+        ->query->getInt('page', 1, 10));
+        
         return $this->render('user/all.html.twig', [
             'users' => $users,
             'form' => $form->createView(),
