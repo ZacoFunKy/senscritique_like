@@ -79,20 +79,29 @@ class UserController extends AbstractController
 
         $ratings = $paginator->paginate(
             $ratings, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            3 /*limit per page*/
+            $request->query->getInt('page1', 1), /*page number*/
+            3 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page1',
+            )
         );
 
 
         $series = $paginator->paginate(
             $series, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            4 /*limit per page*/
+            $request->query->getInt('page2', 1), /*page number*/
+            4 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page2',
+            )
         );
         $episodes = $paginator->paginate(
             $userEpisode, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            4 /*limit per page*/
+            $request->query->getInt('page3', 1), /*page number*/
+            4 /*limit per page*/,
+            array(
+                'pageParameterName' => 'page3',
+            )
         );
 
         return $this->render('user/profile.html.twig', [
