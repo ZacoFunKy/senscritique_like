@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -53,16 +52,33 @@ class Genre
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * Permet d'obtenir l'id du genre
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir le nom du genre
+     *
+     * @return ?string
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Permet de définir le nom d'un genre
+     *
+     * @param string $name le nom du genre
+     *
+     * @return self
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -71,6 +87,8 @@ class Genre
     }
 
     /**
+     * Permet d'obtenir la liste des séries qui ont ce lien
+     *
      * @return Collection<int, Series>
      */
     public function getSeries(): Collection
@@ -78,6 +96,13 @@ class Genre
         return $this->series;
     }
 
+    /**
+     * Permet d'ajouter une série à la liste des séries possédent ce genre
+     *
+     *@param Series $series ajoute une série à la liste des séries
+     *
+     * @return self
+     */
     public function addSeries(Series $series): self
     {
         if (!$this->series->contains($series)) {
@@ -87,11 +112,17 @@ class Genre
         return $this;
     }
 
+    /**
+     * Permet de supprimer une série de la liste
+     *
+     *@param Series $series la série à supprimer
+     *
+     * @return self
+     */
     public function removeSeries(Series $series): self
     {
         $this->series->removeElement($series);
 
         return $this;
     }
-
 }

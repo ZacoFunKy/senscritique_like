@@ -13,7 +13,6 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_default')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-
         if ($this->getUser() && $this->getUser()->getSuspendu()) {
             return $this->render('default/suspended.html.twig');
         }
@@ -21,11 +20,11 @@ class DefaultController extends AbstractController
         $a = rand(0,234);
         $b = rand(0,234);
         while ($b == $a) {
-            $b = rand(0,234);
+            $b = rand(0, 234);
         }
-        $c = rand(0,234);
+        $c = rand(0, 234);
         while ($c == $a || $c == $b) {
-            $c = rand(0,234);
+            $c = rand(0, 234);
         }
 
         $series = $entityManager
@@ -33,14 +32,14 @@ class DefaultController extends AbstractController
             ->findBy(['id' => [$a, $b, $c]], ['title' => 'ASC']);
 
         while (sizeof($series) != 3) {
-            $a = rand(0,234);
-            $b = rand(0,234);
+            $a = rand(0, 234);
+            $b = rand(0, 234);
             while ($b == $a) {
-                $b = rand(0,234);
+                $b = rand(0, 234);
             }
-            $c = rand(0,234);
+            $c = rand(0, 234);
             while ($c == $a || $c == $b) {
-                $c = rand(0,234);
+                $c = rand(0, 234);
             }
 
             $series = $entityManager
@@ -53,6 +52,7 @@ class DefaultController extends AbstractController
             'series' => $series,
         ]);
     }
+    
     #[Route('/about', name: 'app_about')]
     public function about(): Response
     {

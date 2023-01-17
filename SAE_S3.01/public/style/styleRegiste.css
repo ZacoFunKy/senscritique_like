@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
+/* CSS du fichier registration/register.html.twig */
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap');
 
@@ -101,28 +101,30 @@ label {
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
 
-
+    header {
+		font-size: 1.5vh;
+	}
     header a {
         font-size: 10vw;
     }
 
     #connection {
-		width: 700px;
-		font-size: 1.8vh;
-		padding:5% 0 ;
-	}
+        width: 700px;
+        font-size: 1.8vh;
+        padding: 5% 0;
+    }
 
-	.btn {
-		font-size: 2vh;
-	}
+    .btn {
+        font-size: 2vh;
+    }
 
-	input{
-		height: 2vh;
-	}
-    
-	input * {
-		font-size: 5vh;
-	}
+    input {
+        height: 2vh;
+    }
+
+    input * {
+        font-size: 5vh;
+    }
 }
 
 /*téléphone landscape*/

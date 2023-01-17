@@ -46,23 +46,23 @@ les utilisateurs
 		{% endif %}
 		<a class="bouton" href="{{ path('app_series_index') }}" style="margin-bottom: 15px">
 			Retour</a>
-			<div class="navigation" style="margin-top:30px">
-				{{ knp_pagination_render(users) }}
-			</div>
-			<div id="users">
+		<div class="navigation" style="margin-top:30px">
+			{{ knp_pagination_render(users) }}
+		</div>
+		<div id="users">
 			{% for user in users %}
-				<div class="user">
-					{% if user.photo is not null %}
-						<img src="{{ path('photo_user', { id: user.id }) }}" alt="photo de profil" style="border-radius: 50%"
-						width="400vh" />
-					{% else %}
-						<img src="../images/avatar.png" alt="photo de profil" />
-					{% endif %}
-					<p>{{ user.name }}</p>
-					<a class="bouton" href="{{ path('app_user_profile', { id: user.id }) }}">Afficher</a>
-				</div>
+			<div class="user">
+				{% if user.photo is not null %}
+				<img src="{{ path('photo_user', { id: user.id }) }}" alt="photo de profil" style="border-radius: 50%"
+					width="400vh" />
+				{% else %}
+				<img src="../images/avatar.png" alt="photo de profil" />
+				{% endif %}
+				<p>{{ user.name }}</p>
+				<a class="bouton" href="{{ path('app_user_profile', { id: user.id }) }}">Afficher</a>
+			</div>
 			{% else %}
-				<span colspan="11">Pas d'autres utilisateurs trouvées</span>
+			<span colspan="11">Pas d'autres utilisateurs trouvées</span>
 			{% endfor %}
 		</div>
 	</div>

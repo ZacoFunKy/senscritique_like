@@ -4,36 +4,40 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="style/styleLogin.css">
+<link rel="stylesheet" type="text/css" href="style/styleLogin.css">
 {% endblock %}
 
 {% block body %}
 
-	<div id="tout">
-		<header>
-			<a href="{{ path('app_default') }}">Netflop</a>
-			<div id="id">
-				{% include 'header.html.twig' %}
-			</div>
-		</header>
-		<div id="c">
-			<div id="connection">
-				<h1>Connexion</h1>
-				<form method="post">
-					<p>Email</p>
-					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-					<p>Mot de Passe</p>
-					<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-					<input class="btn" name="connexion" type="submit" value="Connexion">
-					{% if error %}
-						<div class="alert alert-danger">Identifiants invalides.<br/>
-							Voulez-vous vous
-							<a href="{{ path('app_register') }}">inscrire</a>
-							?</div>
-					{% endif %}
-				</form>
-			</div>
+<div id="tout">
+	<header>
+		<a href="{{ path('app_default') }}">Netflop</a>
+		<div id="id">
+			<!--Inclusion du menu-->
+			{% include 'header.html.twig' %}
+		</div>
+	</header>
+	<div id="c">
+		<div id="connection">
+			<h1>Connexion</h1>
+			<form method="post">
+				<p>Email</p>
+				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
+					autocomplete="email" required autofocus>
+				<p>Mot de Passe</p>
+				<input type="password" name="password" id="inputPassword" class="form-control"
+					autocomplete="current-password" required>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<input class="btn" name="connexion" type="submit" value="Connexion">
+				{% if error %}
+				<div class="alert alert-danger">Identifiants invalides.<br />
+					Voulez-vous vous
+					<a href="{{ path('app_register') }}">inscrire</a>
+					?
+				</div>
+				{% endif %}
+			</form>
 		</div>
 	</div>
-	{% endblock %}
+</div>
+{% endblock %}

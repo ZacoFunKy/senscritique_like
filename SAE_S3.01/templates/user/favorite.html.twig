@@ -4,34 +4,35 @@
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
+<link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
+<div id="tout">
 
-		<header>
-			<a href="{{path('app_default')}}" class="title">Netflop</a>
-			<div id="id">
-				{% include 'header.html.twig' %}
-			</div>
-		</header>
-		<div id="content">
-			<h1>Vos séries favorites</h1>
-			<a class="bouton" href="{{ path('app_series_index', {'page': numPage} ) }}">
-				Retour</a>
-			<div id="series">
-				{% for series in app.user.series %}
-					<div class="serie">
-						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
-						<p>{{ series.title }}</p>
-						<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-						<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
-					</div>
-				{% else %}
-					<span colspan="11">Pas encore de séries favorites.</span>
-				{% endfor %}
-			</div>
+	<header>
+		<a href="{{path('app_default')}}" class="title">Netflop</a>
+		<div id="id">
+			{% include 'header.html.twig' %}
+		</div>
+	</header>
+	<div id="content">
+		<h1>Vos séries favorites</h1>
+		<a class="bouton" href="{{ path('app_series_index', {'page': numPage} ) }}">
+			Retour</a>
+		<div id="series">
+			{% for series in app.user.series %}
+				<div class="serie">
+					<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" />
+					<p>{{ series.title }}</p>
+					<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+					<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': " 0", 'redirect'
+						: "0" }) }}">Supprimer</a>
+				</div>
+			{% else %}
+				<span colspan="11">Pas encore de séries favorites.</span>
+			{% endfor %}
 		</div>
 	</div>
+</div>
 {% endblock %}

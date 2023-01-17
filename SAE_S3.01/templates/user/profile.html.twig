@@ -1,222 +1,225 @@
 {% extends "base.html.twig" %}
 {% block title %}
-	{{ user.name }}
+{{ user.name }}
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
-	<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
+<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
+<link rel="stylesheet" type="text/css" href="../../style/star-rating-svg.css">
 {% endblock %}
 
 {% block javascripts %}
-	<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-	<script src="../../js/jquery.star-rating-svg.js"></script>
+<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="../../js/jquery.star-rating-svg.js"></script>
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
-		<header>
-			<a href="{{path('app_default')}}" class="title">Netflop</a>
-			<div id="id">
-				{% include 'header.html.twig' %}
-			</div>
-		</header>
-		<div class="infos-utilisateur">
-			<div class="resume">
-				<div class="avatar">
-					{% if user.photo is not null %}
-						<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}" alt="Avatar">
-					{% else %}
-						<img width="150px" src="../images/avatar.png" alt="Avatar">
-					{% endif %}
-				</div>
-				<span>{{user.name}}</span>
-				<span>{{user.email}}</span>
-				{# <span></span> #}
-				<a href="{{ path('app_series_index')}}">
-					<button class="bouton" type="button">Retour</button>
-				</a>
-			</div>
-			<div class="compte">
-				{% if app.user is defined and app.user is not null%}
-					{% if user == app.user %}
-						<h3>Mon compte</h3>
-					{% else %}
-						<h3>Utilisateur</h3>
-					{% endif %}
+<div id="tout">
+	<header>
+		<a href="{{path('app_default')}}" class="title">Netflop</a>
+		<div id="id">
+			{% include 'header.html.twig' %}
+		</div>
+	</header>
+	<div class="infos-utilisateur">
+		<div class="resume">
+			<div class="avatar">
+				{% if user.photo is not null %}
+					<img width="150px" src="{{ path('photo_user', {'id': user.id} ) }}" alt="Avatar">
+				{% else %}
+					<img width="150px" src="../images/avatar.png" alt="Avatar">
 				{% endif %}
-				<div class="info">
-					<p class="label">Nom :</p>
-					<p>{{user.name}}</p>
-					<p class="label">Email :</p>
-					<p>{{user.email}}</p>
-					<p class="label">Pays :</p>
-					<p>{{user.country}}</p>
-				</div>
-				{% if is_granted('IS_IMPERSONATOR') %}
-					{% else %}
-						<div class="frorm">
-							<div class="formulaire">
-								{{form_start(form)}}
-								<p>Nom</p>
-								{{form_row(form.name)}}
-								<p>Pays</p>
-								{{form_row(form.country)}}
-								<p>Mot de passe</p>
-								{{form_row(form.plainPassword)}}
-								<p>Photo de profil</p>
-								{{form_row(form.photo)}}
-								<div class="checkbox">
-									<label>Valider</label>
-									{{form_row(form.agreeTerms)}}
-								</div>
-							</div>
-							<div class="modifier-annuler">
-								<div class="submit">
-									{{form_row(form.submit)}}
-									<button class="bouton stop" type="button">Annuler</button>
-								</div>
-							</div>
-							{{form_end(form)}}
+			</div>
+			<span>{{user.name}}</span>
+			<span>{{user.email}}</span>
+			{# <span></span> #}
+			<a href="{{ path('app_series_index')}}">
+				<button class="bouton" type="button">Retour</button>
+			</a>
+		</div>
+		<div class="compte">
+			{% if app.user is defined and app.user is not null%}
+				{% if user == app.user %}
+					<h3>Mon compte</h3>
+				{% else %}
+					<h3>Utilisateur</h3>
+				{% endif %}
+			{% endif %}
+			<div class="info">
+				<p class="label">Nom :</p>
+				<p>{{user.name}}</p>
+				<p class="label">Email :</p>
+				<p>{{user.email}}</p>
+				<p class="label">Pays :</p>
+				<p>{{user.country}}</p>
+			</div>
+			{% if is_granted('IS_IMPERSONATOR') %}
+			{% else %}
+				<div class="frorm">
+					<div class="formulaire">
+						{{form_start(form)}}
+						<p>Nom</p>
+						{{form_row(form.name)}}
+						<p>Pays</p>
+						{{form_row(form.country)}}
+						<p>Mot de passe</p>
+						{{form_row(form.plainPassword)}}
+						<p>Photo de profil</p>
+						{{form_row(form.photo)}}
+						<div class="checkbox">
+							<label>Valider</label>
+							{{form_row(form.agreeTerms)}}
 						</div>
-						{% if app.user is defined and app.user is not null%}
-							{% if user == app.user %}
-								<button class="bouton profile-button" type="button">Modifier</button>
-							{% endif %}
-						{% endif %}
+					</div>
+					<div class="modifier-annuler">
+						<div class="submit">
+							{{form_row(form.submit)}}
+							<button class="bouton stop" type="button">Annuler</button>
+						</div>
+					</div>
+					{{form_end(form)}}
+				</div>
+			{% if app.user is defined and app.user is not null%}
+				{% if user == app.user %}
+					<button class="bouton profile-button" type="button">Modifier</button>
 				{% endif %}
+			{% endif %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="contenu">
+		<div id="critiques">
+			<h2>Récapitulatifs des critiques</h2>
+			<div class="navigation">
+				{{ knp_pagination_render(ratings) }}
+			</div>
+			<div id="ratings">
+				{% for rating in ratings %}
+					{% if rating.verified == 1 %}
+						<div class="rating">
+							<h3>{{ rating.series.title }}</h3>
+							<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80"
+								alt="Poster" />
+							<p>{{ rating.comment }}</p>
+							<div class="{{rating.id}} jq-stars"></div>
+						</div>
+					{% endif %}
+				{% else %}
+					<p>Aucune critique trouvée.</p>
+				{% endfor %}
 			</div>
 		</div>
-		<div class="contenu">
-			<div id="critiques">
-				<h2>Récapitulatifs des critiques</h2>
-				<div class="navigation">
-					{{ knp_pagination_render(ratings) }}
-				</div>
-				<div id="ratings">
-					{% for rating in ratings %}
-						{% if rating.verified == 1 %}
-							<div class="rating">
-								<h3>{{ rating.series.title }}</h3>
-								<img src="{{ path('poster_series_show', {'id': rating.series.id} ) }}" width="50" height="80" alt="Poster"/>
-								<p>{{ rating.comment }}</p>
-								<div class="{{rating.id}} jq-stars"></div>
-							</div>
+		<div id="series-favorites">
+			<h2>Séries favorites</h2>
+			<div class="navigation">
+				{{ knp_pagination_render(series) }}
+			</div>
+			<div id="series">
+
+				{% for series in series %}
+					<div class="serie">
+						<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" />
+						<p>{{ series.title }}</p>
+						<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
+					{% if app.user is defined and app.user is not null%}
+						{% if user == app.user %}
+						<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "
+							0", 'redirect' : "0" }) }}">Supprimer</a>
 						{% endif %}
-					{% else %}
-						<p>Aucune critique trouvée.</p>
-					{% endfor %}
-				</div>
+					{% endif %}
+					</div>
+				{% else %}
+					<span colspan="11">Aucune série trouvée.</span>
+				{% endfor %}
 			</div>
-			<div id="series-favorites">
-				<h2>Séries favorites</h2>
-				<div class="navigation">
-					{{ knp_pagination_render(series) }}
-				</div>
-				<div id="series">
-					
-					{% for series in series %}
-						<div class="serie">
-							<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster"/>
-							<p>{{ series.title }}</p>
-							<a class="bouton" href="{{ path('app_series_show', {'id': series.id}) }}">Afficher</a>
-							{% if app.user is defined and app.user is not null%}
-								{% if user == app.user %}
-									<a class="bouton" href="{{ path('app_series_show_adds', {'series': series.id, 'yesno': "0", 'redirect': "0" }) }}">Supprimer</a>
-								{% endif %}
-							{% endif %}
-						</div>
-					{% else %}
-						<span colspan="11">Aucune série trouvée.</span>
-					{% endfor %}
-				</div>
+		</div>
+		<div id="historique">
+			<h2>Épisodes vus</h2>
+			<div class="navigation">
+				{{ knp_pagination_render(episodes) }}
 			</div>
-			<div id="historique">
-				<h2>Épisodes vus</h2>
-				<div class="navigation">
-					{{ knp_pagination_render(episodes) }}
-				</div>
-				<div id="episodes">
-					
-					{% for episode in episodes %}
-						<div class="episode">
-							<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" alt="Poster"/>
-							<p>{{ episode.season.series.title }}</p>
-							<p>Épisode
-								{{ episode.number }}</p>
-							<p>"{{ episode.title }}"</p>
-							<a class="bouton" href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
-							{% if app.user is defined and app.user is not null%}
-								{% if user == app.user %}
-									<a class="bouton" href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "0"}) }}">Supprimer</a>
-								{% endif %}
-							{% endif %}
-						</div>
-					{% else %}
-						<td colspan="11">Aucun épisode trouvé.</td>
-					{% endfor %}
-				
-				</div>
+			<div id="episodes">
+				{% for episode in episodes %}
+					<div class="episode">
+						<img src="{{ path('poster_series_show', {'id': episode.season.series.id} ) }}" alt="Poster" />
+						<p>{{ episode.season.series.title }}</p>
+						<p>Épisode
+							{{ episode.number }}</p>
+						<p>"{{ episode.title }}"</p>
+						<a class="bouton"
+							href="{{ path('app_series_show', {'id': episode.season.series.id}) }}">Afficher</a>
+					{% if app.user is defined and app.user is not null%}
+						{% if user == app.user %}
+						<a class="bouton"
+							href="{{ path('app_series_show_seen_adds', {'series': episode.season.series.id, 'episode': episode.id, 'yesno': "
+							0"}) }}">Supprimer</a>
+					{% endif %}
+				{% endif %}
+					</div>
+				{% else %}
+					<td colspan="11">Aucun épisode trouvé.</td>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
+</div>
 
-	<script>
-		{% for rating in ratings %}
-$(".{{ rating.id }}").starRating({
-totalStars: 5,
-starShape: 'rounded',
-starSize: 20,
-emptyColor: 'lightgray',
-hoverColor: 'red',
-ratedColor: 'yellow',
-initialRating: {{ rating.value }},
-readOnly: true
+<script>
+	{% for rating in ratings %}
+	$(".{{ rating.id }}").starRating({
+		totalStars: 5,
+		starShape: 'rounded',
+		starSize: 20,
+		emptyColor: 'lightgray',
+		hoverColor: 'red',
+		ratedColor: 'yellow',
+		initialRating: {{ rating.value }},
+		readOnly: true
 });
 
-// change the width of the star rating
-var width = $(".{{ rating.id }}").width();
-$(".{{ rating.id }}").width(width + 20);{% endfor %}
-	</script>
+	// change the width of the star rating
+	var width = $(".{{ rating.id }}").width();
+	$(".{{ rating.id }}").width(width + 20); {% endfor %}
+</script>
 
-	<script>
+<script>
 
 
-		var country = document.querySelector('select');
-country.value = {{ user.country.id }};
+	var country = document.querySelector('select');
+	country.value = {{ user.country.id }};
 
-var form = document.querySelector('.frorm').style.display = 'none';
-var div = document.querySelector('.info').style.display = 'block';
-var stop = document.querySelector('.stop').style.display = 'none';
-var button = document.querySelector('.profile-button');
-button.addEventListener('click', function () {
-stop = document.querySelector('.stop').style.display = 'block';
-form = document.querySelector('.frorm').style.display = 'block';
-div = document.querySelector('.info').style.display = 'none';
-button.style.display = 'none';
-})
+	var form = document.querySelector('.frorm').style.display = 'none';
+	var div = document.querySelector('.info').style.display = 'block';
+	var stop = document.querySelector('.stop').style.display = 'none';
+	var button = document.querySelector('.profile-button');
+	button.addEventListener('click', function () {
+		stop = document.querySelector('.stop').style.display = 'block';
+		form = document.querySelector('.frorm').style.display = 'block';
+		div = document.querySelector('.info').style.display = 'none';
+		button.style.display = 'none';
+	})
 
-var stop = document.querySelector('.stop');
-stop.addEventListener('click', function () {
-stop = document.querySelector('.stop').style.display = 'none';
-form = document.querySelector('.frorm').style.display = 'none';
-div = document.querySelector('.info').style.display = 'block';
-button.style.display = 'block';
-})
+	var stop = document.querySelector('.stop');
+	stop.addEventListener('click', function () {
+		stop = document.querySelector('.stop').style.display = 'none';
+		form = document.querySelector('.frorm').style.display = 'none';
+		div = document.querySelector('.info').style.display = 'block';
+		button.style.display = 'block';
+	})
 
-var input = document.querySelector('input[type=file]');
-input.addEventListener('change', function () {
-var file = this.files[0];
-var reader = new FileReader();
-reader.addEventListener('load', function () {
-var img = document.querySelector('img');
-img.src = reader.result;
-});
-reader.readAsDataURL(file);
-})
+	var input = document.querySelector('input[type=file]');
+	input.addEventListener('change', function () {
+		var file = this.files[0];
+		var reader = new FileReader();
+		reader.addEventListener('load', function () {
+			var img = document.querySelector('img');
+			img.src = reader.result;
+		});
+		reader.readAsDataURL(file);
+	})
 
-var submit = document.querySelector('.submit');
-submit.style.marginRight = '10px';
-	</script>
+	var submit = document.querySelector('.submit');
+	submit.style.marginRight = '10px';
+</script>
 {% endblock %}

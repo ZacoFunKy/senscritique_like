@@ -53,16 +53,33 @@ class Country
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * Permet de récupérer l'id d'un pays
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet de récupérer le nom d'un pays
+     *
+     * @return self
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Permet de définir le nom d'un pays
+     *
+     * @param string $name le nom du pays
+     *
+     * @return self
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -71,6 +88,8 @@ class Country
     }
 
     /**
+     * Permet d'obtenir la liste des séries liés au pays
+     *
      * @return Collection<int, Series>
      */
     public function getSeries(): Collection
@@ -78,6 +97,13 @@ class Country
         return $this->series;
     }
 
+    /**
+     * Permet d'ajouter une série à la liste des series du pays
+     *
+     * @param Series $series la série à ajouter
+     *
+     * @return self
+     */
     public function addSeries(Series $series): self
     {
         if (!$this->series->contains($series)) {
@@ -87,6 +113,13 @@ class Country
         return $this;
     }
 
+    /**
+     * Permet de supprimer une série à la liste des series du pays
+     *
+     * @param Series $series La série à supprimer
+     *
+     * @return self
+     */
     public function removeSeries(Series $series): self
     {
         $this->series->removeElement($series);
@@ -94,7 +127,8 @@ class Country
         return $this;
     }
 
-    public function __toString(){
+    public function __toString(): string
+    {
         return $this->getName();
     }
 }

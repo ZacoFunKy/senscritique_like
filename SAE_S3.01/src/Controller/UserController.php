@@ -33,16 +33,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/history', name: 'app_user_history')]
-    public function history(EntityManagerInterface $entityManager, Request $request,
-    PaginatorInterface $paginator): Response
+    public function history(Request $request, PaginatorInterface $paginator): Response
     {
         $episodes = $this->getUser()->getEpisode();
-        $episodes = $paginator->paginate($episodes, $request
-        ->query->getInt('page', 1, 10));
+        $episodes = $paginator->paginate($episodes, $request->query->getInt('page', 1, 10));
 
         $numPage = Request::createFromGlobals()->query->get('numPage');
         $numPage = $numPage ? $numPage : 1;
-
 
         return $this->render('user/history.html.twig', [
             'episodes' => $episodes,
@@ -51,7 +48,9 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/profile/{id}', name: 'app_user_profile')]
-    public function profile( $id, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    public function profile($id, EntityManagerInterface $entityManager,
+     Request $request, PaginatorInterface $paginator
+     ): Response
     {
         $form = $this->createForm(UpdateFormType::class, $this->getUser());
         $form->handleRequest($request);
@@ -77,31 +76,19 @@ class UserController extends AbstractController
         $series = $user->getSeries();
         $userEpisode = $user->getEpisode();
 
+        //Permet de paginer les notes données par l'utilisateur
         $ratings = $paginator->paginate(
-            $ratings, /* query NOT result */
-            $request->query->getInt('page1', 1), /*page number*/
-            3 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page1',
-            )
-        );
+            $ratings, $request->query->getInt('page1', 1), 3, array('pageParameterName' => 'page1',));
 
-
+        //Permet de paginer les séries vues par l'utilisateur
         $series = $paginator->paginate(
-            $series, /* query NOT result */
-            $request->query->getInt('page2', 1), /*page number*/
-            4 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page2',
-            )
+            $series, $request->query->getInt('page2', 1), 4, array('pageParameterName' => 'page2',)
         );
+
+        //Permet de paginer les épisodes vues par l'utilisateur
         $episodes = $paginator->paginate(
-            $userEpisode, /* query NOT result */
-            $request->query->getInt('page3', 1), /*page number*/
-            4 /*limit per page*/,
-            array(
-                'pageParameterName' => 'page3',
-            )
+            $userEpisode, $request->query->getInt('page3', 1), 4 ,
+            array('pageParameterName' => 'page3',)
         );
 
         return $this->render('user/profile.html.twig', [
@@ -122,7 +109,9 @@ class UserController extends AbstractController
 
 
     #[Route('/user/all', name: 'app_user_show_all')]
-    public function allUser(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    public function allUser(EntityManagerInterface $entityManager,
+     PaginatorInterface $paginator, Request $request
+     ): Response
     {
         $users = $entityManager->getRepository(User::class)->findAll();
         
@@ -133,7 +122,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // get the users that contain the search string in their name
+            //Permet d'obtenir les utilisateurs qui possède le string recherché dans leur nom
             $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u');
             $queryBuilder->where('u.name LIKE :name')
                 ->setParameter('name', '%' . $userSearch->getNom() . '%');
@@ -156,10 +145,10 @@ class UserController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
         // if user is admin, he can't be suspended
-        if ($user->getisAdmin() == true) {
+        if ($user->getisAdmin()) {
             echo "<script>alert('Impossible de suspendre un administrateur')</script>";
             return $this->redirectToRoute('admin');
-        }else{
+        } else {
             $user->setSuspendu($yesno);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -183,21 +172,21 @@ class UserController extends AbstractController
                 $email = explode('@', $email);
                 $new_email = $email[0] . $i . '@' . $email[1];
                 $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
-                while($new_email_check){
+                while ($new_email_check){
                     $new_email = $email[0] . rand(0, 1000) . '@' . $email[1];
                     $new_email_check = $entityManager->getRepository(User::class)->findBy(['email' => $new_email]);
                 }
                 $user->setEmail($new_email);
-                $hash = password_hash($name, PASSWORD_BCRYPT);       
+                $hash = password_hash($name, PASSWORD_BCRYPT);
                 $user->setPassword($hash);
                 $user->setRoles(['ROLE_USER']);
                 $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
-                if($country){
+                if ($country) {
                     $user->setCountry($country);
                     $user->setIsBot(true);
                     $entityManager->persist($user);
                 }else {
-                    while(!$country){
+                    while (!$country) {
                         $country = $entityManager->getRepository(Country::class)->find(rand(1, 19));
                     }
                     $user->setCountry($country);
@@ -222,7 +211,7 @@ class UserController extends AbstractController
     #[Route('/user/admin/delete', name: 'app_admin_user_delete')]
     public function delete(EntityManagerInterface $entityManager, Request $request): Response
     {
-
+        // Supprime tous les utilisateurs avec avec isBot à vrai
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         foreach ($user as $u) {
             $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
@@ -268,18 +257,18 @@ class UserController extends AbstractController
                 window.location.href = 'http://127.0.0.1:8000/admin/';
                 </script>";
             }
-            // get the serie id in the url 
+            // get the serie id in the url
             $serie = $request->query->get('id');
             $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $serie]);
             for ($i = 0; $i < $data['number']; $i++) {
                 $rating = $entityManager->getRepository(Rating::class)->findOneBy(['user' => $user[$i], 'series' => $serie]);
-                if($rating==null){
+                if ($rating==null){
                     $comment = new Rating();
                     $comment->setUser($user[$i]);
                     $comment->setSeries($serie);
-                    $comment->setValue(rand(0,5));
+                    $comment->setValue(rand(0, 5));
                     $comment->setDate(new \DateTime());
-                    $comment->setComment($comment_exemple[rand(0,3)]);
+                    $comment->setComment($comment_exemple[rand(0, 3)]);
                     $entityManager->persist($comment);
                 }
             }
@@ -308,10 +297,7 @@ class UserController extends AbstractController
         }
 
         $entityManager->flush();
-
-        echo "<script> alert('Commentaires supprimés');
-        window.location.href = 'http://127.0.0.1:8000/admin/';
-        </script>";
+        return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
 
     }
 

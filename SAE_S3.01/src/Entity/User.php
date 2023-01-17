@@ -157,16 +157,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->photo = file_get_contents(__DIR__.'/../../public/images/avatar.png');
     }
 
+    /**
+     * Permet d'obtenir l'id de l'utilisateur
+     *
+     * @return ?int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Permet d'obtenir le nom de l'utilisateur
+     *
+     * @return ?string
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Permet de définir le nom de l'utilisateur
+     *
+     * @param string $name le nom de l'utilsateur
+     *
+     * @return self
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -174,11 +191,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet d'obtenir l'email de l'utilisateur
+     *
+     * @return ?string
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * Permet de définir le mail de l'utilisateur
+     *
+     * @param string $email l'email de l'utilisateur
+     *
+     * @return self
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -186,11 +215,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet d'obtenir le mot de passe de l'utilisateur
+     *
+     * @return ?string
+     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    /**
+     * Permet de changer le mot de passe de l'utilisateur
+     *
+     * @param string $password le mot de passe de l'utilisateur
+     *
+     * @return self
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -198,10 +239,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet d'obtenir la date d'inscription de l'utilisateur
+     *
+     * @return ?\DateTimeInterface
+     */
     public function getRegisterDate(): ?\DateTimeInterface
     {
         return $this->registerDate;
     }
+
+    /**
+     * Permet de changer la date de création du compte de l'utilisateur
+     *
+     * @param ?\DateTimeInterface $registerDate la nouvelle date de création du compte de l'utilisateur
+     *
+     * @return self
+     */
     public function setRegisterDate(?\DateTimeInterface $registerDate): self
     {
         $this->registerDate = $registerDate;
@@ -209,24 +263,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?string $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
+    /**
+     * Permet d'obtenir le pays de l'utilisateur
+     *
+     * @return ?Country
+     */
     public function getCountry(): ?Country
     {
         return $this->country;
     }
 
+    /**
+     * Permet de changer le pays de l'utilisateur
+     *
+     * @param ?Country $country le pays de l'utilisateur
+     *
+     * @return self
+     */
     public function setCountry(?Country $country): self
     {
         $this->country = $country;
@@ -235,6 +288,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Permet d'obtenir la liste des séries suivis par l'utilisateur
+     *
      * @return Collection<int, Series>
      */
     public function getSeries(): Collection
@@ -242,6 +297,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->series;
     }
 
+    /**
+     * Permet d'ajouter une série à la liste des séries suivis par l'utilisateur
+     *
+     * @param Series $series la série à ajouter
+     *
+     * @return self
+     */
     public function addSeries(Series $series): self
     {
         if (!$this->series->contains($series)) {
@@ -251,6 +313,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de supprimer une série de la liste des séries suivis par l'utilisateur
+     *
+     * @param string $password le mot de passe de l'utilisateur
+     *
+     * @return ?string
+     */
     public function removeSeries(Series $series): self
     {
         $this->series->removeElement($series);
@@ -259,6 +328,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Permet d'obtenir la liste des épisodes vus par l'utilisateur
+     *
      * @return Collection<int, Episode>
      */
     public function getEpisode(): Collection
@@ -266,6 +337,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->episode;
     }
 
+    /**
+     * Permet d'ajouter un épisode à la liste des épisodes vus par l'utilisateur
+     *
+     * @param Episode $episode l'épisode à ajouter
+     *
+     * @return self
+     */
     public function addEpisode(Episode $episode): self
     {
         if (!$this->episode->contains($episode)) {
@@ -275,6 +353,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de supprimer un épisode de la liste des épisodes vus par l'utilisateur
+     *
+     * @param Episode $episode l'episode à supprimer de la liste
+     *
+     * @return self
+     */
     public function removeEpisode(Episode $episode): self
     {
         $this->episode->removeElement($episode);
@@ -282,11 +367,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
-
     public function getUserIdentifier(): string { return $this->getEmail(); }
     public function eraseCredentials() { }
 
+    /**
+     * Permet d'obtenir le rôle d'un utilisateur
+     *
+     * @return array
+     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -296,6 +384,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * Permet de définir le ou les rôles d'un utilisateur
+     *
+     * @param array $roles la liste des rôles à ajouter à l'utilisateur
+     *
+     * @return self
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -303,14 +398,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de savoir si l'utilisateur est un administrateur ou non
+     *
+     * @return ?bool
+     */
     public function getisAdmin(): ?bool
     {
         return $this->admin;
     }
 
+    /**
+     * Permet de définir un utilisateur comme adminsitrateur ou non
+     *
+     * @param bool $admin 1 si l'utilisateur doit etre admin, sinon 0
+     *
+     * @return self
+     */
     public function setisAdmin(bool $admin): self
     {
-        // if the user is SuperAdmin, he is also Admin
+        // si l'utilisateur est super-admin il est aussi administrateur
         if ($this->getIsSuperAdmin()) {
             $admin = true;
             $this->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
@@ -326,12 +433,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de savoir si l'utilisateur est un super-administrateur ou non
+     *
+     * @return ?bool
+     */
     public function getIsSuperAdmin(): ?bool
     {
         return $this->isSuperAdmin;
     }
+
     /**
-     * $isSuperAdmin 1 si il est admin sinon 0
+     * Permet de définir un utilisateur comme super-adminsitrateur ou non
+     *
+     * @param bool $isSuperAdmin 1 si l'utilisateur doit etre super-admin, sinon 0
+     *
+     * @return self
      */
     public function setIsSuperAdmin(bool $isSuperAdmin): self
     {
@@ -339,11 +456,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet d'obtenir la photo d'un utilisateur
+     */
     public function getPhoto()
     {
         return $this->photo;
     }
 
+    /**
+     * Permet de définir la photo d'un utilisateur
+     *
+     * @param $photo le lien de la photo
+     *
+     * @return self
+     */
     public function setPhoto($photo): self
     {
         $this->photo = $photo;
@@ -352,11 +479,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
+    /**
+     * Permet de savoir si l'utilisateur est un compte fake ou nono
+     *
+     * @return ?bool
+     */
     public function getIsBot(): ?bool
     {
         return $this->isBot;
     }
 
+    /**
+     * Permet de définir un utilisateur comme compte fake ou non
+     *
+     * @param bool $isBot 1 si l'utilisateur est un compte fake, sinon 0
+     *
+     * @return self
+     */
     public function setIsBot(bool $isBot): self
     {
         $this->isBot = $isBot;
@@ -402,11 +541,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ] = $data;
     }
 
+    /**
+     * Permet de définir si un utilisateur a été suspendu ou non
+     *
+     * @return ?bool
+     */
     public function getSuspendu(): ?bool
     {
         return $this->isSuspendu;
     }
 
+    /**
+     * Permet de suspendre le compte de l'utilisateur ou de le réactivé
+     *
+     * @param bool $isSuspendus 1 si l'utilisateur est suspendu, sinon 0
+     */
     public function setSuspendu(bool $isSuspendu)
     {
         if ($this->getIsSuperAdmin() || $this->getisAdmin()) {

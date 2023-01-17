@@ -1,126 +1,126 @@
-@import url('https://fonts.googleapis.com/css2?family=Rancho &display=swap');
-@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap%27');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap%27');
+/* CSS du fichier default/about.html.twig */
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap%27");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Concert+One&display=swap%27");
 
 * {
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    margin: 0;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  margin: 0;
 }
 
 body {
-    background-image: url('https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg');
+  background-image: url("https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg");
 }
 
 #tout {
-    background-color: rgba(0, 0, 0, 0.534);
-    height: 100vh;
-    padding-bottom: 2%;
-
+  background-color: rgba(0, 0, 0, 0.534);
+  height: 100vh;
+  padding-bottom: 2%;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    background: linear-gradient(black 10%, transparent);
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(black 10%, transparent);
 }
 
 header * {
-    margin: 2%;
+  margin: 2%;
 }
 
 header .title {
-    color: #f44336;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3vw;
-    letter-spacing: 4px;
-    text-shadow: 5px 3px 10px rgb(0, 0, 0);
-    text-decoration: none;
+  color: #f44336;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 3vw;
+  letter-spacing: 4px;
+  text-shadow: 5px 3px 10px rgb(0, 0, 0);
+  text-decoration: none;
 }
 
 #id {
-    display: flex;
+  display: flex;
 }
 
 #id input {
-    background-color: #f44336;
-    border: none;
-    color: black;
-    padding: 10px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 4px;
-    margin-right: 10%;
-    cursor: pointer;
+  background-color: #f44336;
+  border: none;
+  color: black;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  margin-right: 10%;
+  cursor: pointer;
 }
 
 #id a {
-    margin-right: 20px;
-}
-
-#button {
-    display: flex;
-    justify-content: center;
-    margin-top: 2%;
-    margin-bottom: 2%;
-}
-
-#button input {
-    background-color: #f44336;
-    border: none;
-    color: black;
-    padding: 10px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 4px;
-    margin-right: 10%;
-    cursor: pointer;
-}
-
-#button a {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 #content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.63);
-    margin: 2%;
-    height: fit-content;
-    padding: 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.63);
+  margin: 2%;
+  height: fit-content;
+  padding: 6%;
 }
 
 #content p {
-    font-size: 120%;
+  font-size: 120%;
+}
+
+/* Bouton */
+#button {
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+#button input {
+  background-color: #f44336;
+  border: none;
+  color: black;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+#button a {
+  margin-right: 20px;
 }
 
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
-    header .title {
-        font-size: 8vh;
-    }
+  header .title {
+    font-size: 8vh;
+  }
 
-    .navigation * * {
-        font-size: 1em;
-    }
+  .navigation * * {
+    font-size: 1em;
+  }
 
-    #content p {
-        font-size: 2vh;
-    }
+  #content p {
+    font-size: 2vh;
+  }
 }
 
 /*téléphone landscape*/
-@media screen and (min-width: 340px) and (min-height:200px) and (max-height:500px) and (orientation: landscape) {
-    header .title {
-        font-size: 8vw;
-    }
+@media screen and (min-width: 340px) and (min-height: 200px) and (max-height: 500px) and (orientation: landscape) {
+  header .title {
+    font-size: 8vw;
+  }
 
-    #tout {
-        height: 180vh;
-    }
+  #tout {
+    height: 180vh;
+  }
 }
