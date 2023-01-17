@@ -4,12 +4,11 @@
 * {
   font-family: "Poppins", sans-serif;
   margin: 0;
-  color: white;
 }
 
 body {
   background-image: url("https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/movies/36/9c3533c613349257.jpg");
-  
+
 }
 
 #page {
@@ -71,16 +70,31 @@ button {
   margin-left: 2%;
   margin-bottom: 2%;
 }
-input {
-    color: black;
+
+#form div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1,
+p,
+label {
+  color: white;
+}
+
+input,
+select {
+  color: black;
 }
 
 /*téléphone en portrait*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
-  header .title{
-	font-size: 10vw;
+  header .title {
+    font-size: 10vw;
   }
-    .infos-utilisateur {
+
+  .infos-utilisateur {
     flex-direction: column;
     margin-right: 20%;
     margin-left: 20%;
@@ -127,9 +141,10 @@ input {
     margin-bottom: 2%;
   }
 }
+
 /*téléphone landscape*/
 @media screen and (min-width: 340px) and (orientation: portrait) {
-    #page {
-        height: 150vh;
-    }
+  #page {
+    height: 150vh;
+  }
 }
