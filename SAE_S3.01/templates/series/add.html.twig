@@ -1,9 +1,10 @@
 {% extends "base.html.twig" %}
 {% block title %}
+    Ajouter une série
 {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="/style/styleProfil.css">
+	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -11,14 +12,16 @@
 {% endblock %}
 
 {% block body %}
-	<div id="tout">
+	<div id="page">
 		<header>
 			<a href="{{path('app_default')}}" class="title">Netflop</a>
+        </header>
+        <div class="formulaire">
             {% if form is defined %}
                 {{ form_start(form) }}
                 <div class="search">
                     {{ form_widget(form) }}
-                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                    <button type="submit" class="btn btn-primary">Rechercher la série</button>
                 </div>
                 {{ form_end(form) }}
             {% else %}
@@ -27,20 +30,16 @@
                     {{ form_widget(form2) }}
                 </div>
                 {{ form_end(form2) }}
-
                 <button type="submit" class="btn btn-primary">Rechercher</button>
-
-
-            <script>
-            var submit = document.querySelector('button[type="submit"]');
-            submit.addEventListener('click', function() {
-                var select = document.querySelector('select');
-                var value = select.options[select.selectedIndex].value;
-                window.location.href = '/series/series/add_series/' + value;
-                });   
-            </script>
+                <script>
+                var submit = document.querySelector('button[type="submit"]');
+                submit.addEventListener('click', function() {
+                    var select = document.querySelector('select');
+                    var value = select.options[select.selectedIndex].value;
+                    window.location.href = '/series/series/add_series/' + value;
+                    });   
+                </script>
             {% endif %}
-
-
-
+        </div> 
+    </div>
 {% endblock %}
