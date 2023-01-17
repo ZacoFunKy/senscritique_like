@@ -356,10 +356,6 @@ class SeriesController extends AbstractController
             
 
         if ($ratings != null) {
-            $ratings->setValue($rate);
-            $ratings->setComment($comment);
-            $ratings->setDate(new \DateTime());
-            $entityManager->flush();
         }else {
             $rating = new Rating();
             $rating->setUser($this->getUser());
@@ -416,7 +412,6 @@ class SeriesController extends AbstractController
                 'series' => $series]
             );
             
-
         $ratings->setValue($rate);
         $ratings->setComment($comment);
         $ratings->setDate(new \DateTime());
