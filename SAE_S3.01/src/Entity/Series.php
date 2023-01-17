@@ -124,6 +124,13 @@ class Series
     private $genre = array();
 
     /**
+     * @var \Rating 
+     *
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
+     */
+    private $rating;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -133,6 +140,7 @@ class Series
         $this->actor = new \Doctrine\Common\Collections\ArrayCollection();
         $this->genre = new \Doctrine\Common\Collections\ArrayCollection();
         $this->seasons = new ArrayCollection();
+        $this->rating = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -394,6 +402,36 @@ class Series
 
     public function getEmbedTrailerLink() {
         return "https://youtube.com/embed/".substr($this->youtubeTrailer, strrpos($this->youtubeTrailer,'=')+1);
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRating(): Collection
+    {
+        return $this->rating;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->rating->contains($rating)) {
+            $this->rating->add($rating);
+            $rating->setSeries($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->rating->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getSeries() === $this) {
+                $rating->setSeries(null);
+            }
+        }
+
+        return $this;
     }
 
     public function __toString(): string

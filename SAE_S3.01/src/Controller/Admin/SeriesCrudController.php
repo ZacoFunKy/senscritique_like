@@ -60,7 +60,12 @@ class SeriesCrudController extends AbstractCrudController
                 ->setIcon('fa fa-plus')
                 ->linkToRoute('app_admin_user_new');
         })
-        ->remove(Crud::PAGE_INDEX, Action::NEW);
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action
+                ->setLabel('Nombre de faux comptes')
+                ->setIcon('fa fa-user-secret')
+                ->linkToRoute('app_admin_user_count_fake_accounts');
+        });
     }
         
 }

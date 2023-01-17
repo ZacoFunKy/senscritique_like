@@ -94,7 +94,7 @@ class SeriesController extends AbstractController
             } else {
                 $arraySuivi = $toutesLesSeries;
             }
-
+            
             // Intersect du tout
             $arrayIntersect = array_intersect(
                 $arrayGenre,
@@ -607,8 +607,9 @@ class SeriesController extends AbstractController
             }
             $entityManager->persist($serie);
             $entityManager->flush();
-            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
-        
+            echo "<script> alert('La série " . $obj->Title . " a bien été ajoutée !');
+            window.location.href = 'http://127.0.0.1:8000/admin';
+            </script>";      
         }
       
     }
