@@ -7,10 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="/style/styleAdminCreationCompte.css">
 {% endblock %}
 
-{% block javascripts %}
-        <script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
-{% endblock %}
-
 {% block body %}
 	<div id="page">
 		<header>
@@ -31,7 +27,8 @@
                     {{ form_widget(form2) }}
                 </div>
                 {{ form_end(form2) }}
-                <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+
                 <script>
                 var submit = document.querySelector('button[type="submit"]');
                 submit.addEventListener('click', function() {
