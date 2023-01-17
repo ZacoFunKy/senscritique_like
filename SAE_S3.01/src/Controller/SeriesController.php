@@ -94,7 +94,7 @@ class SeriesController extends AbstractController
             } else {
                 $arraySuivi = $toutesLesSeries;
             }
-
+            
             // Intersect du tout
             $arrayIntersect = array_intersect(
                 $arrayGenre,
