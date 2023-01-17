@@ -126,8 +126,7 @@ class UserController extends AbstractController
     {
         $users = $entityManager->getRepository(User::class)->findAll();
         
-        $users = $paginator->paginate($users, $request
-        ->query->getInt('page', 1, 10));
+
 
         $userSearch = new UserSearch();
         $form = $this->createForm(UserSearchFormType::class, $userSearch);
@@ -141,6 +140,9 @@ class UserController extends AbstractController
             $users = $queryBuilder->getQuery()->getResult();
         }
     
+        $users = $paginator->paginate($users, $request
+        ->query->getInt('page', 1, 10));
+        
         return $this->render('user/all.html.twig', [
             'users' => $users,
             'form' => $form->createView(),
@@ -205,7 +207,10 @@ class UserController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin');
+            $bot = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
+            echo "<script> alert('Utilisateurs créés, Il y a " . count($bot) . " faux comptes');
+                window.location.href = 'http://127.0.0.1:8000/admin';
+            </script>";
         }
 
         return $this->render('user/new.html.twig', [
@@ -217,7 +222,6 @@ class UserController extends AbstractController
     #[Route('/user/admin/delete', name: 'app_admin_user_delete')]
     public function delete(EntityManagerInterface $entityManager, Request $request): Response
     {
-        // delete all the users with isBot to true
 
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         foreach ($user as $u) {
@@ -233,7 +237,10 @@ class UserController extends AbstractController
             $entityManager->remove($u);
         }
         $entityManager->flush();
-        return $this->redirectToRoute('admin', ['error' => 'Les utilisateurs ont bien été supprimés']);
+
+        echo "<script> alert('Utilisateurs supprimés');
+        window.location.href = 'http://127.0.0.1:8000/admin';
+        </script>";
     }
 
 
@@ -252,10 +259,14 @@ class UserController extends AbstractController
             $data = $form->getData();
             $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
             if($user==null){
-                return $this->redirectToRoute('admin', ['error' => 'No bot user']);
+                echo "<script> alert('Pas de bot user');
+                window.location.href = 'http://127.0.0.1:8000/admin/';
+                </script>";
             }
             if(count($user)<$data['number']){
-                return $this->redirectToRoute('admin', ['error' => 'Not enough users']);
+                echo "<script> alert('Pas assez d'utilisateurs');
+                window.location.href = 'http://127.0.0.1:8000/admin/';
+                </script>";
             }
             // get the serie id in the url 
             $serie = $request->query->get('id');
@@ -274,7 +285,9 @@ class UserController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin', ['error' => 'Commentaires ajoutés']);
+            echo "<script> alert('Commentaires ajoutés');
+            window.location.href = 'http://127.0.0.1:8000/admin/';
+            </script>";
         }
 
         return $this->render('user/commentaire_new.html.twig', [
@@ -286,7 +299,6 @@ class UserController extends AbstractController
     #[Route('/user/comment/delete', name: 'app_admin_user_comment_delete')]
     public function delete_comment(EntityManagerInterface $entityManager, Request $request): Response
     {
-        // delete all the comments publish by the users which isBot is true
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         foreach ($user as $u) {
             $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
@@ -297,10 +309,9 @@ class UserController extends AbstractController
 
         $entityManager->flush();
 
-
-
-
-        return $this->redirectToRoute('admin', ['error' => 'Commentaires supprimés']);
+        echo "<script> alert('Commentaires supprimés');
+        window.location.href = 'http://127.0.0.1:8000/admin/';
+        </script>";
 
     }
 
@@ -310,7 +321,7 @@ class UserController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         echo "<script>
-        alert('Il y a " . count($user) . " comptes faux');
+        alert('Il y a " . count($user) . " faux comptes');
         window.location.href='admin';
         </script>";
     }
