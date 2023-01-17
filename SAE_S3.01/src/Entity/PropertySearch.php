@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\EntityManagerInterface;
 
 class PropertySearch
 {
@@ -160,11 +161,13 @@ class PropertySearch
     /**
      * Permet de trier les séries par le genre sélectionner comme filtre dans la barre de recherche
      *
-     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param EntityManagerInterface $entityManager ll'accés à la base de données
+     * @param ?string $genreFromForm le genre avec lequel on tri
+     * @param array $toutesLesSeries la liste des séries
      *
      * @return array
      */
-    public function triGenre($entityManager, $genreFromForm, $toutesLesSeries): array
+    public function triGenre(EntityManagerInterface $entityManager, ?string $genreFromForm, array $toutesLesSeries): array
     {
         if (strlen($genreFromForm) > 0) {
             $genre = $entityManager->getRepository(Genre::class)->findBy(['name' => $genreFromForm])[0];
@@ -181,13 +184,14 @@ class PropertySearch
     }
 
     /**
-     * Permet de changer l'état du filtre suivi de la barre de recherche
+     * Permet de trier la liste des séries en fonction du nom de la série
      *
-     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     * @param ?string $nameFromForm le nom avec lequel on tri la liste des séries
+     * @param array $toutesLesSeries
      *
      * @return array
      */
-    public function triName($nameFromForm, $toutesLesSeries): array
+    public function triName(?string $nameFromForm, array $toutesLesSeries): array
     {
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
@@ -202,6 +206,13 @@ class PropertySearch
         return $arrayName;
     }
 
+    /**
+     * Permet de trier la liste des séries par rapport à l'année de départ renseigné dans le filtre
+     *
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     *
+     * @return array
+     */
     public function triAnneeDepart($entityManager, $anneeDepartFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
@@ -220,6 +231,13 @@ class PropertySearch
         return $arrayAnneeDebut;
     }
 
+    /**
+     * Permet de trier la liste des films par rapport à l'année de fin renseigné dans le filtre
+     *
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     *
+     * @return array
+     */
     public function triAnneeFin($entityManager, $anneeFinFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
@@ -239,6 +257,13 @@ class PropertySearch
         return $seriesAnneeFin;
     }
 
+     /**
+     * Permet de trier la liste des films par rapport à l'année de fin renseigné dans le filtre
+     *
+     * @param bool $suivi vrai pour afficher les séries suivis par un utilisateur sinon faux
+     *
+     * @return array
+     */
     public function triAvis($entityManager, $avisFromForm, $toutesLesSeries): array
     {
         $queryBuilder = $entityManager->getRepository(Rating::class)->createQueryBuilder('r');
