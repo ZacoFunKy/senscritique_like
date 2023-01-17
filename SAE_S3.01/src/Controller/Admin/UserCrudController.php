@@ -30,21 +30,21 @@ class UserCrudController extends AbstractCrudController
             return [
             IdField::new('id')
                 ->onlyOnIndex()
-                ->setSortable(true), 
+                ->setSortable(false), 
             TextField::new('name'),
             EmailField::new('email')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
             TextField::new('regenPassowrd')
                 ->setPermission('ROLE_ADMIN')
                 ->hideOnIndex(),
             BooleanField::new('isAdmin')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(false),
             BooleanField::new('isSuperAdmin')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true]),
             CollectionField::new('roles'),
          ];
@@ -55,16 +55,16 @@ class UserCrudController extends AbstractCrudController
                     ->onlyOnIndex(),
                 TextField::new('name'),
                 EmailField::new('email')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setFormTypeOptions(['disabled' => true]),
                 TextField::new('regenPassowrd')
                     ->setPermission('ROLE_ADMIN')
                     ->hideOnIndex(),
                 BooleanField::new('isAdmin')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setPermission('ROLE_SUPER_ADMIN'),
                 BooleanField::new('isSuperAdmin')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setFormTypeOptions(['disabled' => true]),
                 CollectionField::new('roles')
                     ->setFormTypeOptions(['disabled' => true])
@@ -91,6 +91,11 @@ class UserCrudController extends AbstractCrudController
                 ->displayIf(fn (User $user) => $this->isGranted('ROLE_SUPER_ADMIN'));
         })
         ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action
+                ->setLabel('Modifier')
+                ->setIcon('fa fa-edit');
+        })
+        ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
             return $action
                 ->setLabel('Modifier')
                 ->setIcon('fa fa-edit');
