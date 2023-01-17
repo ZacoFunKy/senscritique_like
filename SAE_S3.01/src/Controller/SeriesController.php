@@ -216,32 +216,41 @@ class SeriesController extends AbstractController
     {
         if ($this->getUser() != null) {
 
-
-            if ($yesno == "1") {
-                $this->getUser()->addEpisode($episode);
-                $entityManager->flush();
-            } else {
-                $this->getUser()->removeEpisode($episode);
-                $entityManager->flush();
-            }
-
             $numPage = Request::createFromGlobals()->query->get('numPage');
 
             if ($numPage == null) {
                 $numPage = 1;
             }
 
-            return $this->redirectToRoute(
-                'app_series_show_adds',
-                ['series' => $episode
-                    ->getSeason()
-                    ->getSeries()
-                    ->getId(),
-                'numPage' => $numPage,
-                'yesno' => 1,
-                'redirect' => 1],
-                Response::HTTP_SEE_OTHER
-            );
+            if ($yesno == "1") {
+                $this->getUser()->addEpisode($episode);
+                $entityManager->flush();
+                return $this->redirectToRoute(
+                    'app_series_show_adds',
+                    ['series' => $episode
+                        ->getSeason()
+                        ->getSeries()
+                        ->getId(),
+                    'numPage' => $numPage,
+                    'yesno' => 1,
+                    'redirect' => 1],
+                    Response::HTTP_SEE_OTHER
+                );
+            } else {
+                $this->getUser()->removeEpisode($episode);
+                $entityManager->flush();
+                return $this->redirectToRoute(
+                    'app_series_show',
+                    ['id' => $episode
+                        ->getSeason()
+                        ->getSeries()
+                        ->getId(),
+                    'numPage' => $numPage],
+                );
+            }
+
+
+
         } else {
             return $this->redirectToRoute(
                 'app_series_show',
@@ -472,7 +481,11 @@ class SeriesController extends AbstractController
             }
         }
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_show_adds', ['series' => $series->getId(), 'numPage' => $numPage, 'yesno' => 1, 'redirect'=> 1]);
+        if(!$alreadyIn){
+            return $this->redirectToRoute('app_series_show_adds', ['series' => $series->getId(), 'numPage' => $numPage, 'yesno' => 1, 'redirect'=> 1]);
+        } else {
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage]);
+        }
     }
 
 
