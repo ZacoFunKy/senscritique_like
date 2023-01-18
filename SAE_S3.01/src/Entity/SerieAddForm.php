@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class SerieAddForm  
+class SerieAddForm
 {
 
 
