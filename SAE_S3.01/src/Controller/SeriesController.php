@@ -78,7 +78,6 @@ class SeriesController extends AbstractController
 
             // Avis
             $arrayAvis=$propertySearch->triAvis(
-                $entityManager,
                 $avisFromForm,
                 $toutesLesSeries
             );

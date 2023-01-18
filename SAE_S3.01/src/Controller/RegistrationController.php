@@ -16,9 +16,12 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,
-    UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator,
-    EntityManagerInterface $entityManager
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        EntityManagerInterface $entityManager
     ): Response
     {
         $user = new User();
@@ -46,6 +49,7 @@ class RegistrationController extends AbstractController
             );
         }
 
+        // Redirige vers la page d'accueil
         if ($this->getUser()) {
             return $this->redirectToRoute('app_default');
         }
