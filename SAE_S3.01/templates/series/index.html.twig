@@ -7,6 +7,10 @@
 <link rel="stylesheet" type="text/css" href="../style/styleIndexS.css">
 {% endblock %}
 
+{% block javascripts %}
+<script src="https://kit.fontawesome.com/5bfa30b5d1.js" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block body %}
 	<div id="tout">
 		<header>
@@ -114,8 +118,9 @@
 								<h2 id="moyenne">Aucun</h2>
 							{% endif %}
 
-							<h2 id="nbSuivi">{{ series.user|length}}</h2>
-
+							<h2 id="nbSuivi">{{ series.user|length}} 
+								<i class="fa-solid fa-heart fa-1xl" style="color:#f44336"></i>
+							</h2>
 					<img src="{{ path('poster_series_show', {'id': series.id} ) }}" alt="Poster" id="image" />
 					<p>{{ series.title }}</p>
 				</div>

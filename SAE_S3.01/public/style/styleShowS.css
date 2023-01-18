@@ -108,6 +108,17 @@ button {
 	margin: 2% 0%;
 	cursor: pointer;
 }
+/* Notes */
+#noteSerie {
+	display: flex;
+	align-items: center;
+}
+
+#noteSerie h2 {
+	margin-left: 2%;
+	color: rgb(216, 159, 2);
+
+}
 
 /* Commentaire */
 

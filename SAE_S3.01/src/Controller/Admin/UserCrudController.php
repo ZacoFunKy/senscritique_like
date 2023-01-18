@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -27,23 +28,27 @@ class UserCrudController extends AbstractCrudController
             IdField::new('id')
                 ->onlyOnIndex()
                 ->setSortable(true),
-            TextField::new('name'),
+            TextField::new('name')
+            ->setFormTypeOptions(['disabled' => true]),
             EmailField::new('email')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
             BooleanField::new('Suspendu')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setPermission('ROLE_ADMIN'),
             BooleanField::new('isBot')
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
+            TextField::new('regenPassowrd')
+                ->setPermission('ROLE_ADMIN')
+                ->hideOnIndex(),
             BooleanField::new('isAdmin')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(false),
             BooleanField::new('isSuperAdmin')
-                ->setRequired(true)
+                ->setRequired(false)
                 ->setFormTypeOptions(['disabled' => true]),
             CollectionField::new('roles'),
             ];
@@ -51,12 +56,13 @@ class UserCrudController extends AbstractCrudController
             return [
                 IdField::new('id')
                     ->onlyOnIndex(),
-                TextField::new('name'),
+                TextField::new('name')
+                    ->setFormTypeOptions(['disabled' => true]),
                 EmailField::new('email')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setFormTypeOptions(['disabled' => true]),
                 BooleanField::new('Suspendu')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setPermission('ROLE_ADMIN')
                     ->addHtmlContentsToBody("<script>
                     // Recuperer toute checkbox qui est dans le td avec le data-label='Suspendu' et  la div avec la class= form-check form-switch 
@@ -93,11 +99,14 @@ class UserCrudController extends AbstractCrudController
                 BooleanField::new('isBot')
                     ->setFormTypeOptions(['disabled' => true])
                     ->setSortable(true),
+                TextField::new('regenPassowrd')
+                    ->setPermission('ROLE_ADMIN')
+                    ->hideOnIndex(),
                 BooleanField::new('isAdmin')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setPermission('ROLE_SUPER_ADMIN'),
                 BooleanField::new('isSuperAdmin')
-                    ->setRequired(true)
+                    ->setRequired(false)
                     ->setFormTypeOptions(['disabled' => true]),
                 CollectionField::new('roles')
                     ->setFormTypeOptions(['disabled' => true])

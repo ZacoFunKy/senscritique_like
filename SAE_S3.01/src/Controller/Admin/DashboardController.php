@@ -12,6 +12,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
+use Symfony\Component\Security\Core\User\UserInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 
 class DashboardController extends AbstractDashboardController
@@ -27,7 +30,6 @@ class DashboardController extends AbstractDashboardController
         $routeBuilder = $this->adminUrlGenerator
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_INDEX);
-
         return $this->redirect($routeBuilder->generateUrl());
     }
 
@@ -35,7 +37,6 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Home');
-
     }
 
     public function configureMenuItems(): iterable
@@ -60,6 +61,11 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', '/'),
 
         ];
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()->addCssFile('style/admin.css');
     }
     
 }

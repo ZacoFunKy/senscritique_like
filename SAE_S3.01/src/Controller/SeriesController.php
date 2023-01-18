@@ -7,6 +7,7 @@ use App\Entity\Series;
 use App\Entity\Season;
 use App\Entity\User;
 use App\Entity\Rating;
+use App\Entity\Genre;
 use App\Entity\PropertySearch;
 use App\Form\PropertySeachType;
 use App\Form\SerieAddFormType;
@@ -214,37 +215,48 @@ class SeriesController extends AbstractController
     {
         if ($this->getUser() != null) {
 
-
-            if ($yesno == "1") {
-                $this->getUser()->addEpisode($episode);
-                $entityManager->flush();
-            } else {
-                $this->getUser()->removeEpisode($episode);
-                $entityManager->flush();
-            }
-
             $numPage = Request::createFromGlobals()->query->get('numPage');
 
             if ($numPage == null) {
                 $numPage = 1;
             }
 
+            if ($yesno == "1") {
+                $this->getUser()->addEpisode($episode);
+                $entityManager->flush();
+                return $this->redirectToRoute(
+                    'app_series_show_adds',
+                    ['series' => $episode
+                        ->getSeason()
+                        ->getSeries()
+                        ->getId(),
+                    'numPage' => $numPage,
+                    'yesno' => 1,
+                    'redirect' => 1],
+                    Response::HTTP_SEE_OTHER
+                );
+            } else {
+                $this->getUser()->removeEpisode($episode);
+                $entityManager->flush();
+                return $this->redirectToRoute(
+                    'app_series_show',
+                    ['id' => $episode
+                        ->getSeason()
+                        ->getSeries()
+                        ->getId(),
+                    'numPage' => $numPage],
+                );
+            }
+
+
+
+        } else {
             return $this->redirectToRoute(
                 'app_series_show',
-                ['id' => $episode
-                    ->getSeason()
-                    ->getSeries()
-                    ->getId(),
-                'numPage' => $numPage],
+                ['numPage' => $numPage],
                 Response::HTTP_SEE_OTHER
             );
-    } else {
-        return $this->redirectToRoute(
-            'app_series_show',
-            ['numPage' => $numPage],
-            Response::HTTP_SEE_OTHER
-        );
-    }
+        }
     }
 
     #[Route('/{series}/set_following/{yesno}/{redirect}', name: 'app_series_show_adds', methods: ['GET'])]
@@ -468,9 +480,11 @@ class SeriesController extends AbstractController
             }
         }
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage],
-        Response::HTTP_SEE_OTHER
-        );
+        if(!$alreadyIn){
+            return $this->redirectToRoute('app_series_show_adds', ['series' => $series->getId(), 'numPage' => $numPage, 'yesno' => 1, 'redirect'=> 1]);
+        } else {
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId(), 'numPage' => $numPage]);
+        }
     }
 
 
@@ -488,7 +502,6 @@ class SeriesController extends AbstractController
             $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $title ."&type=series&r=json";
             $obj = json_decode(file_get_contents($url));
             $series = [];
-            //obj to array
             $array_obj = (array) $obj;
             if ($array_obj['Response'] == "False"){
                 echo "<script> alert('Il n'y a pas de série correspondant à cette recherche);</script>";
@@ -532,9 +545,14 @@ class SeriesController extends AbstractController
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdb]);
         if ($serie != null) {
             $serie->setTitle($obj->Title);
-            $years=explode("–", $obj->Year);
-            $yearStart = $years[0];
-            $yearEnd= $years[1];
+            if (str_contains($obj->Year, "–")) {
+                $years=explode("–", $obj->Year);
+                $yearStart = $years[0];
+                $yearEnd= $years[1];
+            } else {
+                $yearStart = $obj->Year;
+                $yearEnd= -10;
+            }
             $serie->setAwards($obj->Awards);
             $serie->setYearEnd((int)$yearEnd);
             $yearStart = (int)$yearStart;
@@ -564,13 +582,20 @@ class SeriesController extends AbstractController
                 }
             }
             $entityManager->flush();
-            return $this->redirectToRoute('admin', [], Response::HTTP_SEE_OTHER);
+            echo "<script> alert('La série " . $obj->Title . " a bien été modifiée !');
+            window.location.href = 'http://127.0.0.1:8000/admin';
+            </script>";    
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
-            $years=explode("–", $obj->Year);
-            $yearStart = $years[0];
-            $yearEnd= $years[1];
+            if (str_contains($obj->Year, "–")) {
+                $years=explode("–", $obj->Year);
+                $yearStart = $years[0];
+                $yearEnd= $years[1];
+            } else {
+                $yearStart = $obj->Year;
+                $yearEnd= -10;
+            }
             $serie->setAwards($obj->Awards);
             // Convert the years into int
             $yearEnd = (int)$yearEnd;
@@ -605,7 +630,7 @@ class SeriesController extends AbstractController
             $entityManager->flush();
             echo "<script> alert('La série " . $obj->Title . " a bien été ajoutée !');
             window.location.href = 'http://127.0.0.1:8000/admin';
-            </script>";      
+            </script>";
         }
       
     }

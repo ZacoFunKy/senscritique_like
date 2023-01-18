@@ -24,10 +24,7 @@ class UpdateFormType extends AbstractType
             ->add('name', null, [
                 'label' => false,
             ])
-            ->add('email', null, [
-                'label' => false,
-            ])
-            //make the password field empty
+            //Fait que l'encoche du mot de passe soit vide
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -39,7 +36,7 @@ class UpdateFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
+                        // Taille maximale donnée par symfony pour des questions de sécurité
                         'max' => 4096,
                     ]),
                 ],
