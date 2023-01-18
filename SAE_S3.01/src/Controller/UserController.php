@@ -134,7 +134,6 @@ class UserController extends AbstractController
         );
     }
 
-
     #[Route('/user/all', name: 'app_user_show_all')]
     public function allUser(
         EntityManagerInterface $entityManager,
@@ -173,7 +172,6 @@ class UserController extends AbstractController
         ]);
     }
 
-
     #[Route('/user/suspended/{id}/{yesno}', name: 'app_user_suspended')]
     public function suspended($id, $yesno, EntityManagerInterface $entityManager): Response
     {
@@ -190,6 +188,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('admin');
         }
     }
+
     #[Route('/user/admin/new', name: 'app_admin_user_new')]
     public function new(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -250,7 +249,6 @@ class UserController extends AbstractController
         ]);
     }
 
-
     #[Route('/user/admin/delete', name: 'app_admin_user_delete')]
     public function delete(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -280,7 +278,6 @@ class UserController extends AbstractController
         window.location.href = 'http://127.0.0.1:8000/admin';
         </script>";
     }
-
 
     #[Route('/user/comment/new', name: 'app_admin_user_comment_new')]
     public function new_comment(EntityManagerInterface $entityManager, Request $request): Response
@@ -366,7 +363,6 @@ class UserController extends AbstractController
 
     }
 
-
     #[Route('/user/count/fake_account', name: 'app_admin_user_count_fake_accounts')]
     public function count_fake_account(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -377,7 +373,4 @@ class UserController extends AbstractController
         window.location.href='admin';
         </script>";
     }
-
-
-    
 }
