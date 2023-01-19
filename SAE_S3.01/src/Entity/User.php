@@ -114,7 +114,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * })
      */
     private $country;
-
+    
+    /**
+     * @var \Rating
+     *
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
+     */
+    private $rating;
 
 
     /**
@@ -155,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
         $this->photo = file_get_contents(__DIR__.'/../../public/images/avatar.png');
+        $this->rating = new ArrayCollection();
     }
 
     /**
@@ -589,6 +596,82 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getregenPassowrd(): string
     {
         return $this->password;
+    }
+
+    public function isAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(bool $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function isIsSuperAdmin(): ?bool
+    {
+        return $this->isSuperAdmin;
+    }
+
+    public function isIsSuspendu(): ?bool
+    {
+        return $this->isSuspendu;
+    }
+
+    public function setIsSuspendu(?bool $isSuspendu): self
+    {
+        $this->isSuspendu = $isSuspendu;
+
+        return $this;
+    }
+
+    public function isIsBot(): ?bool
+    {
+        return $this->isBot;
+    }
+
+    public function getUserId(): ?string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?string $userId): self
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRating(): Collection
+    {
+        return $this->rating;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->rating->contains($rating)) {
+            $this->rating->add($rating);
+            $rating->setSeries($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->rating->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getSeries() === $this) {
+                $rating->setSeries(null);
+            }
+        }
+
+        return $this;
     }
 
 }

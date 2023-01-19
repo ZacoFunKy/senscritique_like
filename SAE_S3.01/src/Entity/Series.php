@@ -123,7 +123,7 @@ class Series
     private $genre = array();
 
     /**
-     * @var \Rating 
+     * @var \Rating
      *
      * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
      */

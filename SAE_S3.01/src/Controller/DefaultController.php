@@ -13,12 +13,12 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_default')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        // si l'utilisateur est suspendu on affiche la page adéquate
+        // Si l'utilisateur est suspendu on affiche la page adéquate
         if ($this->getUser() && $this->getUser()->getSuspendu()) {
             return $this->render('default/suspended.html.twig');
         }
 
-        // on récupère 3 poster aléatoires
+        // On récupère 3 posters aléatoires
         $poster1 = rand(0, 234);
         $poster2 = rand(0, 234);
         while ($poster2 == $poster1) {
@@ -33,7 +33,7 @@ class DefaultController extends AbstractController
             ->getRepository(Series::class)
             ->findBy(['id' => [$poster1, $poster2, $poster3]], ['title' => 'ASC']);
 
-        // on récupère 3 posters aléatoires tant que les id récupérés existent dans la base
+        // On récupère 3 posters aléatoires tant que les id récupérés existent dans la base
         while (sizeof($series) != 3) {
             $poster1 = rand(0, 234);
             $poster2 = rand(0, 234);

@@ -214,14 +214,13 @@ class SeriesController extends AbstractController
     public function addSeen(Episode $episode, $yesno, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser() != null) {
-
             $numPage = Request::createFromGlobals()->query->get('numPage');
-
             if ($numPage == null) {
                 $numPage = 1;
             }
 
             if ($yesno == "1") {
+                //Permet d'ajouter un épisode dans la liste des épisodes vus par l'utilisateur
                 $this->getUser()->addEpisode($episode);
                 $entityManager->flush();
                 return $this->redirectToRoute(
@@ -236,6 +235,7 @@ class SeriesController extends AbstractController
                     Response::HTTP_SEE_OTHER
                 );
             } else {
+                //Lorsque $yesno = 0 l'épisode est retiré de la liste des épisodes vus par l'utilisateur
                 $this->getUser()->removeEpisode($episode);
                 $entityManager->flush();
                 return $this->redirectToRoute(
@@ -247,9 +247,6 @@ class SeriesController extends AbstractController
                     'numPage' => $numPage],
                 );
             }
-
-
-
         } else {
             return $this->redirectToRoute(
                 'app_series_show',
@@ -268,12 +265,14 @@ class SeriesController extends AbstractController
             $numPage = 1;
         }
 
-        if ($this->getUser() != null){
+        if ($this->getUser() != null) {
 
             if ($yesno == "1") {
+                //Permet d'ajouter une série dans la liste des séries suivis par l'utilisateur
                 $this->getUser()->addSeries($series);
                 $entityManager->flush();
             } else {
+                //Lorsque $yesno = 0 la série est retiré de la liste des séries suivis par l'utilisateur
                 $this->getUser()->removeSeries($series);
                 $entityManager->flush();
             }
@@ -584,7 +583,7 @@ class SeriesController extends AbstractController
             $entityManager->flush();
             echo "<script> alert('La série " . $obj->Title . " a bien été modifiée !');
             window.location.href = 'http://127.0.0.1:8000/admin';
-            </script>";    
+            </script>";
         }else {
             $serie = new Series();
             $serie->setTitle($obj->Title);
