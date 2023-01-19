@@ -29,23 +29,7 @@ class UpdateFormType extends AbstractType
             ->add('name', null, [
                 'label' => false,
             ])
-            /*
-            //Fait que l'encoche du mot de passe soit vide
-            ->add('password', PasswordType::class, [
-                'mapped' => false,
-                'required' => false,
-                'label' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // Taille maximale donnée par symfony pour des questions de sécurité
-                        'max' => 4096,
-                    ]),
-                ],
-            ])*/
-            
+                 
             // Permet de changer de mot de passe
             ->add('password', RepeatedType::class, [
                 'mapped' => false,
@@ -59,7 +43,7 @@ class UpdateFormType extends AbstractType
                 'constraints' => [
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères.',
                         // Taille maximale donnée par symfony pour des questions de sécurité
                         'max' => 4096,
                     ]),
@@ -92,7 +76,7 @@ class UpdateFormType extends AbstractType
                             'image/jpg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
+                        'mimeTypesMessage' => "Merci d'insérer une image valide",
                     ])
                 ],
             ])
