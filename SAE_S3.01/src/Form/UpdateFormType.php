@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -28,16 +29,21 @@ class UpdateFormType extends AbstractType
             ->add('name', null, [
                 'label' => false,
             ])
-            //Fait que l'encoche du mot de passe soit vide
-            ->add('password', PasswordType::class, [
+                 
+            // Permet de changer de mot de passe
+            ->add('password', RepeatedType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'type' => PasswordType::class,
+                'options' => ['attr' => ['autocomplete' => 'new-password']],
+                'first_options'  => ['label' => false],
+                'second_options' => ['label' => false],
+                'invalid_message' => 'Les mots de passe doivent être identiques',
                 'constraints' => [
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères.',
                         // Taille maximale donnée par symfony pour des questions de sécurité
                         'max' => 4096,
                     ]),
@@ -70,7 +76,7 @@ class UpdateFormType extends AbstractType
                             'image/jpg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
+                        'mimeTypesMessage' => "Merci d'insérer une image valide",
                     ])
                 ],
             ])

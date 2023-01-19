@@ -63,8 +63,14 @@
 						{{form_row(form.name)}}
 						<p>Pays</p>
 						{{form_row(form.country)}}
-						<p>Mot de passe</p>
-						{{form_row(form.password)}}
+						<p>Nouveau mot de passe</p>
+						<div id="first_password">
+							{{ form_row(form.password.first) }}
+						</div>
+						<p>Confirmation du mot de passe</p>
+						<div id="second_password">
+							{{ form_row(form.password.second) }}
+						</div>
 						<p>Photo de profil</p>
 						{{form_row(form.photo)}}
 						<div class="checkbox">
@@ -221,5 +227,14 @@
 
 	var submit = document.querySelector('.submit');
 	submit.style.marginRight = '10px';
+	var first = document.getElementById('update_form_password_first');
+	var second = document.getElementById('update_form_password_second');
+	submit.addEventListener('click', function () {
+		if (first.value != second.value) {
+			alert('Les mots de passe ne correspondent pas, veuillez recommencer');
+		}
+		
+	})
+	
 </script>
 {% endblock %}
