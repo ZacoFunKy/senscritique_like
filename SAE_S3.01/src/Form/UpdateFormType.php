@@ -25,7 +25,7 @@ class UpdateFormType extends AbstractType
             ->add('name', null, [
                 'label' => false,
             ])
-            
+            /*
             //Fait que l'encoche du mot de passe soit vide
             ->add('password', PasswordType::class, [
                 // instead of being set onto the object directly,
@@ -42,19 +42,18 @@ class UpdateFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-            /*
+            ])*/
+            
             // Permet de changer de mot de passe
             ->add('password', RepeatedType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent être identiques',
                 'options' => ['attr' => ['autocomplete' => 'new-password']],
-                'required' => true,
-                'first_options'  => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
+                'first_options'  => ['label' => false],
+                'second_options' => ['label' => false],
+                'invalid_message' => 'Les mots de passe doivent être identiques',
                 'constraints' => [
                     new Length([
                         'min' => 6,
@@ -63,7 +62,7 @@ class UpdateFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])*/
+            ])
             ->add('country', null, [
                 'label' => false,
             ])

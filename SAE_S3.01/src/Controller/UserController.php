@@ -84,7 +84,7 @@ class UserController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('app_user_profile', [
                 'id' => $id
-                ]);
+            ]);
         }
 
         // séries suivies de l'utilisateur
