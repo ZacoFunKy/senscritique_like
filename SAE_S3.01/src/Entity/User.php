@@ -594,7 +594,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @param bool $isSuspendus 1 si l'utilisateur est suspendu, sinon 0
      */
-    public function setregenPassowrd(string $password): void
+    public function setregenPassword(string $password): void
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $this->setPassword($hash);
@@ -604,7 +604,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Permet de suspendre le compte de l'utilisateur ou de le réactivé
      *
      */
-    public function getregenPassowrd(): string
+    public function getregenPassword(): string
     {
         return $this->password;
     }

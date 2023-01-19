@@ -40,7 +40,7 @@ class UserCrudController extends AbstractCrudController
             BooleanField::new('isBot')
                 ->setFormTypeOptions(['disabled' => true])
                 ->setSortable(true),
-            TextField::new('regenPassowrd')
+            TextField::new('regenPassword')
                 ->setPermission('ROLE_ADMIN')
                 ->hideOnIndex(),
             BooleanField::new('isAdmin')
@@ -100,7 +100,7 @@ class UserCrudController extends AbstractCrudController
                 BooleanField::new('isBot')
                     ->setFormTypeOptions(['disabled' => true])
                     ->setSortable(true),
-                TextField::new('regenPassowrd')
+                TextField::new('regenPassword')
                     ->setPermission('ROLE_ADMIN')
                     ->hideOnIndex(),
                 BooleanField::new('isAdmin')

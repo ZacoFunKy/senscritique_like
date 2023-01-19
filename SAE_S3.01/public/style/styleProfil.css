@@ -99,6 +99,10 @@ header .title {
     display: flex;
 }
 
+#update_form_country option:nth-of-type(1) {
+    display: none;
+}
+
 input,
 select {
     color: black;
