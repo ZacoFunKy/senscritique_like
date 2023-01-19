@@ -35,6 +35,9 @@ class UserController extends AbstractController
     #[Route('/user/history', name: 'app_user_history')]
     public function history(Request $request, PaginatorInterface $paginator): Response
     {
+        if($this->getUser() == null){
+            return $this->redirectToRoute('app_home');
+        }
         $episodes = $this->getUser()->getEpisode();
         $episodes = $paginator->paginate($episodes, $request->query->getInt('page', 1, 10));
 
