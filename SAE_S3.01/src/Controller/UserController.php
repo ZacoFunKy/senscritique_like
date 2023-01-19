@@ -181,13 +181,31 @@ class UserController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
         // si l'utilisateur est admin, il ne peut pas être suspendu
         if ($user->getisAdmin()) {
-            echo "<script>alert('Impossible de suspendre un administrateur')</script>";
             return $this->redirectToRoute('admin');
         } else {
             $user->setSuspendu($yesno);
             $entityManager->persist($user);
             $entityManager->flush();
-            echo "<script>alert('Utilisateur suspendu')</script>";
+            // si on suspend
+            if ($yesno == 1) {
+                // toutes les critiques de l'utilisateur
+                $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $id]);
+                // pour toutes les critiques
+                foreach ($ratings as $rating) {
+                    echo $rating->getUser()->getId();
+                    // supprimer les critiques
+                    $entityManager->remove($rating);
+                }
+                // valide la supression
+                $entityManager->flush();
+            }
+            // toutes les critiques de l'utilisateur
+            $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => 655]);
+            // pour toutes les critiques
+            foreach ($ratings as $rating) {
+                // supprimer les critiques
+                $entityManager->remove($rating);
+            }
             return $this->redirectToRoute('admin');
         }
     }

@@ -81,6 +81,7 @@ class UserCrudController extends AbstractCrudController
                                     var id = checkbox.closest('tr').getAttribute('data-id');
                                     window.location.href = '/user/suspended/' + id + '/' + 1;
                                     checkbox.checked = true;
+                                    
                                 }
                             } else {
                                 var rep = confirm('Voulez-vous vraiment réactiver cet utilisateur ?');
