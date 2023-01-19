@@ -350,7 +350,6 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
-        //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
         $respond->send();
@@ -401,7 +400,6 @@ class SeriesController extends AbstractController
         $rate = $data['value'];
         $comment = $data['text'];
 
-        //Respond to the fetch for it to be a 200
         $respond = new Response();
         $respond->setStatusCode(200);
         $respond->send();
@@ -495,7 +493,7 @@ class SeriesController extends AbstractController
             $data = $form->getData();
             $title = $data['title'];
             $title = str_replace(" ", "&", $title);
-            // Ask the api http://www.omdbapi.com/ for the serie with the title apiKey = 42404c61
+            // Demande à l'api http://www.omdbapi.com/ pour les series avec le code apiKey = 42404c61
             $url = "http://www.omdbapi.com/?apikey=42404c61&s=" . $title ."&type=series&r=json";
             $obj = json_decode(file_get_contents($url));
             $series = [];
@@ -535,7 +533,7 @@ class SeriesController extends AbstractController
     #[Route('/series/add_series/{imdb}', name: 'app_series_add', methods: ['GET', 'POST'])]
     public function newSeries(Request $request, EntityManagerInterface $entityManager, $imdb): Response
     {
-        // Check if a serie in the database already exist it it does then update it
+        // Vérifie si une serie est déjà dans la base de données, si c'est le cas alors elle est mise à jour
 
         $url = "http://www.omdbapi.com/?apikey=42404c61&i=" . $imdb ."&type=series&r=json";
         $obj = json_decode(file_get_contents($url));
@@ -594,7 +592,7 @@ class SeriesController extends AbstractController
                 $yearEnd= -10;
             }
             $serie->setAwards($obj->Awards);
-            // Convert the years into int
+            // Converti l'année en entier
             $yearEnd = (int)$yearEnd;
             $yearStart = (int)$yearStart;
             $serie->setYearStart($yearStart);
