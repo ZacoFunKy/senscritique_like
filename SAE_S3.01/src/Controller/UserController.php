@@ -35,6 +35,9 @@ class UserController extends AbstractController
     #[Route('/user/history', name: 'app_user_history')]
     public function history(Request $request, PaginatorInterface $paginator): Response
     {
+        if($this->getUser() == null){
+            return $this->redirectToRoute('app_home');
+        }
         $episodes = $this->getUser()->getEpisode();
         $episodes = $paginator->paginate($episodes, $request->query->getInt('page', 1, 10));
 
@@ -70,6 +73,11 @@ class UserController extends AbstractController
             if ($file) {
                 $fileContent = file_get_contents($file);
                 $this->getUser()->setPhoto($fileContent);
+            }
+            $password = $form->get('password')->getData();
+            if($password != null){
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $this->getUser()->setPassword($hash);
             }
             $entityManager->persist($this->getUser());
             
@@ -178,13 +186,31 @@ class UserController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
         // si l'utilisateur est admin, il ne peut pas être suspendu
         if ($user->getisAdmin()) {
-            echo "<script>alert('Impossible de suspendre un administrateur')</script>";
             return $this->redirectToRoute('admin');
         } else {
             $user->setSuspendu($yesno);
             $entityManager->persist($user);
             $entityManager->flush();
-            echo "<script>alert('Utilisateur suspendu')</script>";
+            // si on suspend
+            if ($yesno == 1) {
+                // toutes les critiques de l'utilisateur
+                $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $id]);
+                // pour toutes les critiques
+                foreach ($ratings as $rating) {
+                    echo $rating->getUser()->getId();
+                    // supprimer les critiques
+                    $entityManager->remove($rating);
+                }
+                // valide la supression
+                $entityManager->flush();
+            }
+            // toutes les critiques de l'utilisateur
+            $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => 655]);
+            // pour toutes les critiques
+            foreach ($ratings as $rating) {
+                // supprimer les critiques
+                $entityManager->remove($rating);
+            }
             return $this->redirectToRoute('admin');
         }
     }

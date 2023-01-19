@@ -27,9 +27,9 @@ class UpdateFormType extends AbstractType
             ])
             
             //Fait que l'encoche du mot de passe soit vide
-            ->add('plainPassword', PasswordType::class, [
-                // au lieu d'être fixé sur l'objet directement,
-                // ceci est lu et encodé dans le contrôleur
+            ->add('password', PasswordType::class, [
+                // instead of being set onto the object directly,
+                // this is read and encoded in the controller
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
