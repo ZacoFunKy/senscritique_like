@@ -18,31 +18,28 @@ class DefaultController extends AbstractController
             return $this->render('default/suspended.html.twig');
         }
 
-        // on récupère 3 poster aléatoires
-        $poster1 = rand(0, 234);
-        $poster2 = rand(0, 234);
-        while ($poster2 == $poster1) {
-            $poster2 = rand(0, 234);
-        }
-        $poster3 = rand(0, 234);
-        while ($poster3 == $poster1 || $poster3 == $poster2) {
-            $poster3 = rand(0, 234);
-        }
-
+        // On récupère la valeur max des IDs des séries
         $series = $entityManager
             ->getRepository(Series::class)
-            ->findBy(['id' => [$poster1, $poster2, $poster3]], ['title' => 'ASC']);
+            ->findAll();
+        $seriesIds = array();
+        foreach ($series as $serie) {
+            array_push($seriesIds, $serie->getId());
+        }
+        $max = max($seriesIds);
+
+        $series = array();
 
         // on récupère 3 posters aléatoires tant que les id récupérés existent dans la base
         while (sizeof($series) != 3) {
-            $poster1 = rand(0, 234);
-            $poster2 = rand(0, 234);
+            $poster1 = rand(0, $max);
+            $poster2 = rand(0, $max);
             while ($poster2 == $poster1) {
-                $poster2 = rand(0, 234);
+                $poster2 = rand(0, $max);
             }
-            $poster3 = rand(0, 234);
+            $poster3 = rand(0, $max);
             while ($poster3 == $poster1 || $poster3 == $poster2) {
-                $poster3 = rand(0, 234);
+                $poster3 = rand(0, $max);
             }
 
             $series = $entityManager
