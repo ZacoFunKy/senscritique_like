@@ -9,8 +9,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserCreateFormType extends AbstractType
 {
+    /*
+    * Formulaire de création d'utilisatuer
+    */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /*
+        * name : le nom
+        * email : l'email
+        * number : le nombre d'utilisateurs à créer
+        */
         $builder
             ->add('name')
             ->add('email')

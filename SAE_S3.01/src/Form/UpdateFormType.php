@@ -18,8 +18,12 @@ use Symfony\Component\Form\FormInterface;
 
 class UpdateFormType extends AbstractType
 {
+    /*
+    * Formulaire de mise à jour de commentaire
+    */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // name : le nom de l'utilisateur
         $builder
             ->add('name', null, [
                 'label' => false,
@@ -41,9 +45,11 @@ class UpdateFormType extends AbstractType
                     ]),
                 ],
             ])
+            // country : le pays de l'utilisateur
             ->add('country', null, [
                 'label' => false,
             ])
+            // agreeTerms : vérifie si l'utilisateur accepte les termes d'inscription
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => false,
@@ -53,7 +59,7 @@ class UpdateFormType extends AbstractType
                     ]),
                 ],
             ])
-            // add a photo field to the form which is a file type where the user can upload a photo
+            // photo : la photo de profil de l'utilisateur
             ->add('photo', FileType::class, [
                 'label' => false,
                 'mapped' => false,
@@ -70,12 +76,13 @@ class UpdateFormType extends AbstractType
                     ])
                 ],
             ])
+            // submit : le bouton d'envoie
             ->add('submit', SubmitType::class, [
                 'label' => 'Modifier',
                 'attr' => ['class' => 'btn btn-primary'],
             ])
         ;
-    }   
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {

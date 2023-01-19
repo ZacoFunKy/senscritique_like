@@ -15,11 +15,17 @@ use Gregwar\CaptchaBundle\Type\CaptchaType;
 
 class RegistrationFormType extends AbstractType
 {
+    /*
+    * Formulaire d'inscription
+    */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // name : nom de l'utilisateur
             ->add('name')
+            // email : email de l'utilisatuer
             ->add('email')
+            // agreeTerms : vérifie si l'utilisateur accepte les termes d'inscription
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
@@ -28,6 +34,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            // plainPassword : mot de passe du compte créé 
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -45,7 +52,9 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            // country : le pays de l'utilisateur
             ->add('country')
+            // captcha : le captcha à valider pour s'inscrire
             ->add('captcha', CaptchaType::class)
         ;
     }
