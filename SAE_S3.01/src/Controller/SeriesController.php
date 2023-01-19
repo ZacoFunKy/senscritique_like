@@ -133,26 +133,6 @@ class SeriesController extends AbstractController
             ]);
         }
     }
-    
-    #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $series = new Series();
-        $form = $this->createForm(SeriesType::class, $series);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($series);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('series/new.html.twig', [
-            'series' => $series,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series, EntityManagerInterface $entityManager, Request $request,
@@ -299,24 +279,6 @@ class SeriesController extends AbstractController
                 Response::HTTP_SEE_OTHER
             );
         }
-    }
-
-    #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Series $series, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(SeriesType::class, $series);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('series/edit.html.twig', [
-            'series' => $series,
-            'form' => $form,
-        ]);
     }
 
     #[Route('/{id}', name: 'app_series_delete', methods: ['POST'])]
