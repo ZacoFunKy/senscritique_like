@@ -29,7 +29,7 @@ class UpdateFormType extends AbstractType
                 'label' => false,
             ])
             //Fait que l'encoche du mot de passe soit vide
-            ->add('plainPassword', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
