@@ -145,7 +145,7 @@ class UserController extends AbstractController
         PaginatorInterface $paginator,
         Request $request
      ): Response
-    {
+    {   
         // Permet d'obtenir la liste de tous les utilisateurs
         $users = $entityManager->getRepository(User::class)->findAll();
 
@@ -214,14 +214,12 @@ class UserController extends AbstractController
                 $newEmailCheck = $entityManager
                     ->getRepository(User::class)
                     ->findBy(['email' => $newEmail]);
-                
                 while ($newEmailCheck) {
                     $newEmail = $email[0] . rand(0, 1000) . '@' . $email[1];
                     $newEmailCheck = $entityManager
                         ->getRepository(User::class)
                         ->findBy(['email' => $newEmail]);
                 }
-                
                 $user->setEmail($newEmail);
                 $hash = password_hash($name, PASSWORD_BCRYPT);
                 $user->setPassword($hash);
@@ -229,7 +227,6 @@ class UserController extends AbstractController
                 $country = $entityManager
                     ->getRepository(Country::class)
                     ->find(rand(1, 19));
-                
                 if ($country) {
                     $user->setCountry($country);
                     $user->setIsBot(true);
@@ -266,13 +263,15 @@ class UserController extends AbstractController
             ->getRepository(User::class)
             ->findBy(['isBot' => true]);
         foreach ($user as $u) {
-            $comment = $u->getRating();
+            $comment = $entityManager
+                ->getRepository(Rating::class)
+                ->findBy(['user' => $u]);
             foreach ($comment as $c) {
-                $u->removeRating($c);
+                $entityManager->remove($c);
             }
         }
-        $entityManager->flush();
 
+        $entityManager->flush();
         $user = $entityManager
             ->getRepository(User::class)
             ->findBy(['isBot' => true]);
@@ -329,7 +328,7 @@ class UserController extends AbstractController
                     $comment->setValue(rand(0, 5));
                     $comment->setDate(new \DateTime());
                     $comment->setComment($commentExemple[rand(0, 3)]);
-                    $user[$i]->addRating($comment);
+                    $entityManager->persist($comment);
                 }
             }
             $entityManager->flush();
@@ -357,7 +356,8 @@ class UserController extends AbstractController
 
         foreach ($user as $u) {
             // Permet d'obtenir tous les commentaires du bot
-            $comment = $u->getRating();
+            $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
+
             foreach ($comment as $c) {
                 // Supprime le commentaire
                 $entityManager->remove($c);

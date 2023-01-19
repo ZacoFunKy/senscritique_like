@@ -502,7 +502,7 @@ class SeriesController extends AbstractController
             $obj = json_decode(file_get_contents($url));
             $series = [];
             $array_obj = (array) $obj;
-            if ($array_obj['Response'] == "False"){
+            if ($array_obj['Response'] == "False") {
                 echo "<script> alert('Il n'y a pas de série correspondant à cette recherche);</script>";
             } else {
                 foreach ($obj->Search as $serie) {

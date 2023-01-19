@@ -118,10 +118,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var \Rating
      *
-     * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="user")
      */
-    private $rating;
-
+    private $userRating;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -161,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
         $this->photo = file_get_contents(__DIR__.'/../../public/images/avatar.png');
-        $this->rating = new ArrayCollection();
+        $this->userRating = new ArrayCollection();
     }
 
     /**
@@ -647,27 +646,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Rating>
      */
-    public function getRating(): Collection
+    public function getUserRating(): Collection
     {
-        return $this->rating;
+        return $this->userRating;
     }
 
-    public function addRating(Rating $rating): self
+    public function addUserRating(Rating $userRating): self
     {
-        if (!$this->rating->contains($rating)) {
-            $this->rating->add($rating);
-            $rating->setSeries($this);
+        if (!$this->userRating->contains($userRating)) {
+            $this->userRating->add($userRating);
+            $userRating->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeRating(Rating $rating): self
+    public function removeUserRating(Rating $userRating): self
     {
-        if ($this->rating->removeElement($rating)) {
+        if ($this->userRating->removeElement($userRating)) {
             // set the owning side to null (unless already changed)
-            if ($rating->getSeries() === $this) {
-                $rating->setSeries(null);
+            if ($userRating->getUser() === $this) {
+                $userRating->setUser(null);
             }
         }
 
