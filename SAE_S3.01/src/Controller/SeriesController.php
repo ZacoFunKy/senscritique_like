@@ -386,8 +386,6 @@ class SeriesController extends AbstractController
         );
     }
 
-
-
     #[Route('/series/rating/modify/{id}', name: 'modifify_rating_series_show', methods: ['GET', 'POST'])]
     public function showModifyRating(Series $series, EntityManagerInterface $entityManager): Response
     {

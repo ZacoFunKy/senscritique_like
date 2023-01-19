@@ -580,28 +580,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de mettre aucun rôle à l'utilisateur
+     *
+     */
     public function emptyRoles()
     {
         $this->roles = [];
     }
 
-
+    /**
+     * Permet de suspendre le compte de l'utilisateur ou de le réactivé
+     *
+     * @param bool $isSuspendus 1 si l'utilisateur est suspendu, sinon 0
+     */
     public function setregenPassowrd(string $password): void
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $this->setPassword($hash);
     }
 
+    /**
+     * Permet de suspendre le compte de l'utilisateur ou de le réactivé
+     *
+     */
     public function getregenPassowrd(): string
     {
         return $this->password;
     }
 
+    /**
+     * Permet de savoir si un utilisateur est un admin ou non
+     *
+     * @return ?bool
+     */
     public function isAdmin(): ?bool
     {
         return $this->admin;
     }
 
+    /**
+     * Permet de définir ou non un utilisateur comme admin
+     *
+     * @param bool $admin 1 si l'utilisateur devient admin sinon 0
+     *
+     * @return self
+     */
     public function setAdmin(bool $admin): self
     {
         $this->admin = $admin;
@@ -609,16 +633,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de savoir si un utilisateur est un super-admin
+     *
+     * @return ?bool
+     */
     public function isIsSuperAdmin(): ?bool
     {
         return $this->isSuperAdmin;
     }
 
+    /**
+     * Permet de savoir si un compte est suspendu ou non
+     *
+     * @return self
+     */
     public function isIsSuspendu(): ?bool
     {
         return $this->isSuspendu;
     }
 
+      /**
+     * Permet de définir un utilisateur comme suspendu
+     *
+     * @param bool $isSuspendu 1 si l'utilisateur est suspendu sinon 0
+     *
+     * @return self
+     */
     public function setIsSuspendu(?bool $isSuspendu): self
     {
         $this->isSuspendu = $isSuspendu;
@@ -626,16 +667,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Permet de savoir si un utilisateur est faux ou un vrai
+     *
+     * @return ?bool
+     */
     public function isIsBot(): ?bool
     {
         return $this->isBot;
     }
 
+    /**
+     * Permet d'obtenir l'id d'un utilisateur
+     *
+     * @return ?string
+     */
     public function getUserId(): ?string
     {
         return $this->userId;
     }
 
+    /**
+     * Permet de définir l'ID d'un utilisateur
+     *
+     * @param ?string $userId l'id de l'utilisateur
+     */
     public function setUserId(?string $userId): self
     {
         $this->userId = $userId;
@@ -664,7 +720,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeUserRating(Rating $userRating): self
     {
         if ($this->userRating->removeElement($userRating)) {
-            // set the owning side to null (unless already changed)
             if ($userRating->getUser() === $this) {
                 $userRating->setUser(null);
             }

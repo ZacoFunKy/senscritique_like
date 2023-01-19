@@ -30,8 +30,6 @@ class UpdateFormType extends AbstractType
             ])
             //Fait que l'encoche du mot de passe soit vide
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
@@ -65,7 +63,7 @@ class UpdateFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new File ([
+                    new File([
                         'maxSize' => '1024k',
                         'mimeTypes' => [
                             'image/jpeg',
@@ -96,7 +94,7 @@ class UpdateFormType extends AbstractType
     {
         $entity = $form->getData();
 
-        if($entity != null && $entity->getPhoto()){
+        if ($entity != null && $entity->getPhoto()) {
             $view->vars['photo'] = $entity->getPhoto();
         }
     }
