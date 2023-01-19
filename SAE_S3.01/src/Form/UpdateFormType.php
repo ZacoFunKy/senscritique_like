@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,10 +25,11 @@ class UpdateFormType extends AbstractType
             ->add('name', null, [
                 'label' => false,
             ])
+            
             //Fait que l'encoche du mot de passe soit vide
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                // au lieu d'être fixé sur l'objet directement,
+                // ceci est lu et encodé dans le contrôleur
                 'mapped' => false,
                 'required' => false,
                 'label' => false,
@@ -41,6 +43,27 @@ class UpdateFormType extends AbstractType
                     ]),
                 ],
             ])
+            /*
+            // Permet de changer de mot de passe
+            ->add('password', RepeatedType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => false,
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les mots de passe doivent être identiques',
+                'options' => ['attr' => ['autocomplete' => 'new-password']],
+                'required' => true,
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
+                'constraints' => [
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // Taille maximale donnée par symfony pour des questions de sécurité
+                        'max' => 4096,
+                    ]),
+                ],
+            ])*/
             ->add('country', null, [
                 'label' => false,
             ])
@@ -75,7 +98,7 @@ class UpdateFormType extends AbstractType
                 'attr' => ['class' => 'btn btn-primary'],
             ])
         ;
-    }   
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
