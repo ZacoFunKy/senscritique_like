@@ -35,7 +35,8 @@ class UserController extends AbstractController
     #[Route('/user/history', name: 'app_user_history')]
     public function history(Request $request, PaginatorInterface $paginator): Response
     {
-        if($this->getUser() == null){
+        // Permet d'obtenir l'ensembles des épisodes vus par l'utilisateur
+        if ($this->getUser() == null) {
             return $this->redirectToRoute('app_home');
         }
         $episodes = $this->getUser()->getEpisode();
@@ -61,11 +62,13 @@ class UserController extends AbstractController
         $form = $this->createForm(UpdateFormType::class, $this->getUser());
         $form->handleRequest($request);
 
-        // tous les country
+        // Permet d'obtenir tous les pays
         $countries = $entityManager->getRepository(Country::class)->findAll();
-        // le user qui a pour id : $id
+        
+        // Permet d'obtenir le user pour qui on veut consulter le profil
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-        // tous les rating qui ont pour user : $user et qui sont vérifiés
+        
+        // Permet de récupérer tous les commentaires du user et qui sont vérifiés
         $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $user, 'verified' => true]);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -87,12 +90,13 @@ class UserController extends AbstractController
             ]);
         }
 
-        // séries suivies de l'utilisateur
+        // Séries suivies de l'utilisateur
         $series = $user->getSeries();
-        // épisodes vus de l'utilisateur
+
+        // Episodes vus de l'utilisateur
         $userEpisode = $user->getEpisode();
 
-        //Permet de paginer les notes données par l'utilisateur
+        // Permet de paginer les notes données par l'utilisateur
         $ratings = $paginator->paginate(
             $ratings,
             $request
@@ -102,7 +106,7 @@ class UserController extends AbstractController
             array('pageParameterName' => 'page1',)
         );
 
-        //Permet de paginer les séries vues par l'utilisateur
+        // Permet de paginer les séries vues par l'utilisateur
         $series = $paginator->paginate(
             $series,
             $request
@@ -135,6 +139,7 @@ class UserController extends AbstractController
     #[Route('/photo/{id}', name: 'photo_user', methods: ['GET'])]
     public function showPoster(User $user): Response
     {
+        // Permet d'obtenir l'image de profil d'un utilisateur
         return new Response(
             stream_get_contents($user->getPhoto()),
             200,
@@ -149,16 +154,16 @@ class UserController extends AbstractController
         Request $request
      ): Response
     {
+        // Permet d'obtenir la liste de tous les utilisateurs
         $users = $entityManager->getRepository(User::class)->findAll();
-        
 
-
+        // Permet de générer une barre de recherche pour trouver des utilisateurs
         $userSearch = new UserSearch();
         $form = $this->createForm(UserSearchFormType::class, $userSearch);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            //Permet d'obtenir les utilisateurs qui possède le string recherché dans leur nom
+            // Permet d'obtenir les utilisateurs qui possèdent le string recherché dans leur nom
             $queryBuilder = $entityManager
                 ->getRepository(User::class)
                 ->createQueryBuilder('u');
@@ -184,31 +189,32 @@ class UserController extends AbstractController
     public function suspended($id, $yesno, EntityManagerInterface $entityManager): Response
     {
         $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-        // si l'utilisateur est admin, il ne peut pas être suspendu
+        
+        // Si l'utilisateur est admin, il ne peut pas être suspendu
         if ($user->getisAdmin()) {
             return $this->redirectToRoute('admin');
         } else {
             $user->setSuspendu($yesno);
             $entityManager->persist($user);
             $entityManager->flush();
-            // si on suspend
+            // Si on suspend
             if ($yesno == 1) {
-                // toutes les critiques de l'utilisateur
+                // Toutes les critiques de l'utilisateur
                 $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => $id]);
-                // pour toutes les critiques
+                // Pour toutes les critiques
                 foreach ($ratings as $rating) {
                     echo $rating->getUser()->getId();
-                    // supprimer les critiques
+                    // Supprimer les critiques
                     $entityManager->remove($rating);
                 }
-                // valide la supression
+                // Valide la supression
                 $entityManager->flush();
             }
-            // toutes les critiques de l'utilisateur
+            // Toutes les critiques de l'utilisateur
             $ratings = $entityManager->getRepository(Rating::class)->findBy(['user' => 655]);
-            // pour toutes les critiques
+            // Pour toutes les critiques
             foreach ($ratings as $rating) {
-                // supprimer les critiques
+                // Supprimer les critiques
                 $entityManager->remove($rating);
             }
             return $this->redirectToRoute('admin');
@@ -223,7 +229,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            // création des nouveaux bots
+            // Création des nouveaux bots
             for ($i = 0; $i < $data['number']; $i++) {
                 $user = new User();
                 $name = $data['name'] . $i;
@@ -332,7 +338,7 @@ class UserController extends AbstractController
                 window.location.href = 'http://127.0.0.1:8000/admin/';
                 </script>";
             }
-            // récupère l'id de la série depuis l'url
+            // Récupère l'id de la série depuis l'url
             $serie = $request->query->get('id');
             $serie = $entityManager
                 ->getRepository(Series::class)
@@ -369,17 +375,17 @@ class UserController extends AbstractController
     #[Route('/user/comment/delete', name: 'app_admin_user_comment_delete')]
     public function delete_comment(EntityManagerInterface $entityManager, Request $request): Response
     {
-        // supprime tous les commentaires des bots
+        // Supprime tous les commentaires des bots
 
-        // tous les bots
+        // Permet d'obtenir tous le bots
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
-        // pour tous les bots
+
         foreach ($user as $u) {
-            // tous les commentaires du bot
+            // Permet d'obtenir tous les commentaires du bot
             $comment = $entityManager->getRepository(Rating::class)->findBy(['user' => $u]);
-            // pour tous les commentaires du bot
+
             foreach ($comment as $c) {
-                // supprime le commentaire
+                // Supprime le commentaire
                 $entityManager->remove($c);
             }
         }
@@ -392,7 +398,7 @@ class UserController extends AbstractController
     #[Route('/user/count/fake_account', name: 'app_admin_user_count_fake_accounts')]
     public function count_fake_account(EntityManagerInterface $entityManager, Request $request): Response
     {
-        // tous les bots
+        // Permet d'obtenir tous les bots
         $user = $entityManager->getRepository(User::class)->findBy(['isBot' => true]);
         echo "<script>
         alert('Il y a " . count($user) . " faux comptes');

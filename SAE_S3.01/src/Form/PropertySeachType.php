@@ -13,8 +13,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PropertySeachType extends AbstractType
 {
+    /*
+    * Formulaire pour effectuer une recherche avancée
+    */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // genre : le genre des séries recherchées
         $builder
         ->add('genre', ChoiceType::class, [
             'required' => false,
@@ -43,6 +47,7 @@ class PropertySeachType extends AbstractType
                 'Talk-Show'=>'Talk-Show'
             ],
         ])
+        // anneeDepart : l'année après laquelle les séries sont sorties
         ->add('anneeDepart', IntegerType::class, [
             'required' => false,
             'label' => false,
@@ -51,6 +56,7 @@ class PropertySeachType extends AbstractType
             ]
         ]
         )
+        // anneeFin : l'année avant laquelle les séries sont sorties
         ->add('anneeFin', IntegerType::class, [
             'required' => false,
             'label' => false,
@@ -59,6 +65,7 @@ class PropertySeachType extends AbstractType
             ]
         ]
         )
+        // avis : pour avoir les séries avec une certaine note
         ->add('avis', ChoiceType::class, [
             'required' => false,
             'choices' => [
@@ -72,11 +79,13 @@ class PropertySeachType extends AbstractType
             ],
         ]
         )
+        // suivi : pour avoir les séries suivies par l'utilisateur
         ->add('suivi', CheckboxType::class, [
             'required' => false,
             'label' => "Suivis",
         ]
         )
+        // nom : pour avoir les séries commençant par "nom"
         ->add('nom', TextType::class, [
             'required' => false,
             'label' => false,

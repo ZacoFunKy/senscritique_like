@@ -25,6 +25,7 @@ class CreateSuperAdminCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
+        //Permet d'accéder à la base de donnée
         $this->entityManager = $entityManager;
         $this->userPasswordHasher = $userPasswordHasher;
 
@@ -33,6 +34,7 @@ class CreateSuperAdminCommand extends Command
 
     protected function configure(): void
     {
+        //Permet d'ajouter à la suite de la commande symfony plusieurs champs
         $this
             ->addArgument('email', InputArgument::REQUIRED, 'email')
             ->addArgument('nom', InputArgument::REQUIRED, 'nom')
@@ -49,8 +51,14 @@ class CreateSuperAdminCommand extends Command
         $nom = $input->getArgument('nom');
         $mdp = $input->getArgument('mot_de_passe');
         $pays = $input->getArgument('pays');
+
+        //Permet à partir du nom du pays, d'obtenir le pays en lui même
         $pays = $entityManager->getRepository(Country::class)->findBy(['name' => $pays])[0];
+        
+        //Permet de créer un nouvel utilisateur qui sera ici un super-admin
         $user = new User();
+
+        //Permet de hasher le mot de passe
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user,

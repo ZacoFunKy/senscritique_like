@@ -173,22 +173,22 @@ class PropertySearch
         array $toutesLesSeries
         ): array
     {
-        // si on a rentré un filtre de genre
+        // Si on a rentré un filtre de genre
         if (strlen($genreFromForm) > 0) {
-            // tous les genres qui ont pour nom de genre $genreFromForm
+            // Tous les genres qui ont pour nom de genre $genreFromForm
             $genre = $entityManager
                 ->getRepository(Genre::class)
                 ->findBy(['name' => $genreFromForm])[0];
-            // toutes les séries qui ont le bon genre
+            // Toutes les séries qui ont le bon genre
             $seriesByGenre = $genre->getSeries();
 
-            // on ajoute toutes les séries qui ont le bon genre dans l'array
+            // On ajoute toutes les séries qui ont le bon genre dans l'array
             $arrayGenre = array();
             foreach ($seriesByGenre as $serie) {
                 array_push($arrayGenre, $serie);
             }
         } else {
-            // sinon on sélectionne toutes les séries de la base
+            // Sinon on sélectionne toutes les séries de la base
             $arrayGenre = $toutesLesSeries;
         }
         return $arrayGenre;
@@ -204,18 +204,18 @@ class PropertySearch
      */
     public function triName(?string $nameFromForm, array $toutesLesSeries): array
     {
-        // si on a rentré un filtre de nom
+        // Si on a rentré un filtre de nom
         if (strlen($nameFromForm) > 0) {
             $arrayName = array();
-            // pour toutes les séries
+            // Pour toutes les séries
             foreach ($toutesLesSeries as $serie) {
-                // si le nom de la série commence par le nom $nameFromForm
+                // Si le nom de la série commence par le nom $nameFromForm
                 if (str_starts_with(strtolower($serie->getTitle()), strtolower($nameFromForm))) {
                     array_push($arrayName, $serie);
                 }
             }
         } else {
-            // sinon on sélectionne toutes les séries de la base
+            // Sinon on sélectionne toutes les séries de la base
             $arrayName = $toutesLesSeries;
         }
         return $arrayName;
@@ -236,25 +236,25 @@ class PropertySearch
         array $toutesLesSeries
         ): array
     {
-        // si on a rentré un filtre "année après"
+        // Si on a rentré un filtre "année après"
         if (strlen($anneeDepartFromForm) > 0) {
-            // on crée un queryBuilder
+            // On crée un queryBuilder
             $queryBuilder = $entityManager
                 ->getRepository(Series::class)
                 ->createQueryBuilder('s');
-            // on sélectionne toutes les séries qui ont une date de sortie après l'année $anneeDepartFromForm
+            // On sélectionne toutes les séries qui ont une date de sortie après l'année $anneeDepartFromForm
             $queryBuilder
                 ->where('s.yearStart >= :date')
                 ->setParameter('date', $anneeDepartFromForm);
             $seriesByAnneeDebut = $queryBuilder->getQuery()->getResult();
 
-            // on ajoute toutes les séries trouvées dans l'array
+            // On ajoute toutes les séries trouvées dans l'array
             $arrayAnneeDebut = array();
             foreach ($seriesByAnneeDebut as $serie) {
                 array_push($arrayAnneeDebut, $serie);
             }
         } else {
-            // sinon on sélectionne toutes les séries de la base
+            // Sinon on sélectionne toutes les séries de la base
             $arrayAnneeDebut = $toutesLesSeries;
         }
         return $arrayAnneeDebut;
@@ -275,25 +275,25 @@ class PropertySearch
         array $toutesLesSeries
         ): array
     {
-        // si on a rentré un filtre "année avant"
+        // Si on a rentré un filtre "année avant"
         if (strlen($anneeFinFromForm) > 0) {
-            // on crée un queryBuilder
+            // On crée un queryBuilder
             $queryBuilder = $entityManager
                 ->getRepository(Series::class)
                 ->createQueryBuilder('s');
-            // on sélectionne toutes les séries qui ont une date de sortie avant l'année $anneeFinFromForm
+            // On sélectionne toutes les séries qui ont une date de sortie avant l'année $anneeFinFromForm
             $queryBuilder
                 ->where('s.yearStart <= :date')
                 ->setParameter('date', $anneeFinFromForm);
             $seriesByAnneeFin = $queryBuilder->getQuery()->getResult();
 
-            // on ajoute toutes les séries trouvées dans l'array
+            // On ajoute toutes les séries trouvées dans l'array
             $seriesAnneeFin = array();
             foreach ($seriesByAnneeFin as $serie) {
                 array_push($seriesAnneeFin, $serie);
             }
         } else {
-            // sinon on sélectionne toutes les séries de la base
+            // Sinon on sélectionne toutes les séries de la base
             $seriesAnneeFin = $toutesLesSeries;
         }
         return $seriesAnneeFin;
@@ -311,18 +311,18 @@ class PropertySearch
     public function triAvis(?string $avisFromForm, array $toutesLesSeries): array
     {
         $arrayAvis = array();
-        // si on a rentré un filtre d'avis
+        // Si on a rentré un filtre d'avis
         if (strlen($avisFromForm) > 0) {
             switch ($avisFromForm) {
-                // si on cherche à trier dans une plage de note
+                // Si on cherche à trier dans une plage de note
                 case 1:
                 case 2:
                 case 3:
                 case 4:
                 case 5:
-                    // pour toutes les séries de la base
+                    // Pour toutes les séries de la base
                     foreach ($toutesLesSeries as $serie) {
-                        // on calcule la moyenne des notes validées de cette série
+                        // On calcule la moyenne des notes validées de cette série
                         $sum = 0;
                         $nbNotes = 0;
                         foreach ($serie->getRating() as $rate) {
@@ -331,19 +331,19 @@ class PropertySearch
                         }
                         if ($nbNotes != 0) {
                             $avg = $sum / $nbNotes;
-                            // si on est dans la bonne plage, on ajoute la série à l'array
+                            // Si on est dans la bonne plage, on ajoute la série à l'array
                             if ($avg >= $avisFromForm-1 && $avg <= $avisFromForm) {
                                 array_push($arrayAvis, $serie);
                             }
                         }
                     }
                     break;
-                // sinon on sélectionne toutes les séries de la base
+                // Sinon on sélectionne toutes les séries de la base
                 default:
                     $arrayAvis = $toutesLesSeries;
             }
         } else {
-            // sinon on sélectionne toutes les séries de la base
+            // Sinon on sélectionne toutes les séries de la base
             $arrayAvis = $toutesLesSeries;
         }
         return $arrayAvis;
@@ -364,14 +364,14 @@ class PropertySearch
         array $arrayIntersect
         ): array
     {
-        // si on a rentré un filtre d'avis
+        // Si on a rentré un filtre d'avis
         if (strlen($avisFromForm) > 0) {
-            // si on cherche à trier par ordre croissant ou décroissant
+            // Si on cherche à trier par ordre croissant ou décroissant
             if ($avisFromForm == 'ASC' || $avisFromForm == 'DESC') {
                 $arrayRating = array();
-                // pour toutes les séries de l'array finale
+                // Pour toutes les séries de l'array finale
                 foreach ($arrayIntersect as $serie) {
-                    // on calcule la moyenne des notes validées de cette série
+                    // On calcule la moyenne des notes validées de cette série
                     $sum = 0;
                     $nbNotes = 0;
                     foreach ($serie->getRating() as $rate) {
@@ -380,18 +380,18 @@ class PropertySearch
                     }
                     if ($nbNotes != 0) {
                         $avg = $sum / $nbNotes;
-                        // on ajoute à l'array de tri la série associée à sa moyenne
+                        // On ajoute à l'array de tri la série associée à sa moyenne
                         $arrayRating[$serie->getId()] = $avg;
                     }
                 }
                 if ($avisFromForm == 'ASC') {
-                    // si on cherche à trier par ordre croissant
+                    // Si on cherche à trier par ordre croissant
                     asort($arrayRating);
                 } else {
-                    // si on cherche à trier par ordre décroissant
+                    // Si on cherche à trier par ordre décroissant
                     arsort($arrayRating);
                 }
-                // on ajoute à l'array de retour les séries
+                // On ajoute à l'array de retour les séries
                 $arrayIntersect = array();
                 foreach ($arrayRating as $x => $x_value) {
                     array_push($arrayIntersect, $entityManager->getRepository(Series::class)->findBy(['id' => $x])[0]);
@@ -418,17 +418,17 @@ class PropertySearch
         ?int $id
         ): array
     {
-        // si on a rentré un filtre de série suivie
+        // Si on a rentré un filtre de série suivie
         if ($suiviFromForm) {
-            // l'utilisateur actuel
+            // L'utilisateur actuel
             $user = $entityManager->getRepository(User::class)->findBy(['id' => $id])[0];
-            // les séries suivies de l'utilisateur actuel
+            // Les séries suivies de l'utilisateur actuel
             $seriesBySuivi = $user->getSeries();
 
-            // pour toutes les séries suivies par l'utilisateur
+            // Pour toutes les séries suivies par l'utilisateur
             $arrayIntersect = array();
             foreach ($seriesBySuivi as $serie) {
-                // on ajoute la série à l'array
+                // On ajoute la série à l'array
                 array_push($arrayIntersect, $serie);
             }
         }
