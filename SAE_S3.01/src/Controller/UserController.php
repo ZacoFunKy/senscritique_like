@@ -74,6 +74,11 @@ class UserController extends AbstractController
                 $fileContent = file_get_contents($file);
                 $this->getUser()->setPhoto($fileContent);
             }
+            $password = $form->get('password')->getData();
+            if($password != null){
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $this->getUser()->setPassword($hash);
+            }
             $entityManager->persist($this->getUser());
             
             $entityManager->flush();
