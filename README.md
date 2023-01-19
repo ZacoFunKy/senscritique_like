@@ -29,6 +29,7 @@ Pour ajoutez ce dossier dans votre $PATH il faut tout d'abord accéder à votre 
 export PATH=$PATH:$HOME/symfony
 ```
 Voici un exemple ci-dessous:
+
 ![](img/InstallationSymfony.png "Installation Symfony")
 
 Symfony et les commandes symfony devraient maintenant fonctionner.
@@ -44,6 +45,7 @@ Cette base de données est nommée shows et elle est contenu, au format .zip, da
 
 Maintenant que vous posséder la base de données, il faut l'importer dans votre base MySQL. Pour cela accéder à votre système de gestion de base de données. On prendra comme exemple phpMyAdmin.
 Lorsque vous vous êtes connecté, en haut de votre page faites importer comme le montre l’image ci-dessous:
+
 ![](img/base_de_donnees.png "Déploiement base de données")
 
 Sélectionner la base shows.sql.zip comme fichier à importer.
@@ -56,6 +58,7 @@ DATABASE_URL=mysql://[identifiant]:[motdepasse]@[serveur de la base de données]
 ```
 Les mots entre crochet sont à remplacer par de vrai variables.
 Exemple ci-dessous :
+
 ![](img/configEnv.png "Déploiement base de données")
 
 &nbsp;
@@ -84,6 +87,7 @@ $ symfony console create:super-admin [email] [nom] [mot de passe] [pays]
 ```
 Les mots entre crochet sont à remplacer par de vrai variables.
 Voici un exemple ci-dessous:
+
 ![](img/commandeSuperAdmin.png "Commande super-admin")
 
 &nbsp;
@@ -95,6 +99,7 @@ L'application permet aux administrateurs de générer des utilisateurs aléatoir
 Pour cela il faut se connecter à un compte administrateur puis aller dans le Dashboard administrateur.
 
 Ensuite il faut aller dans l'onglet users et aller dans ajouter comme indiquez dans l'image ci-dessous:
+
 ![](img/GenerationUtilisateurAleatoire.png "Génération d'utilisateur aléatoire")
 
 Pour ajouter les utilisateurs il faut renseigner le nom et l'email que les utilisateurs auront. Un numéro s'ajoutera à la suite du nom ainsi qu'a la suite de l'email avant le @.
@@ -102,6 +107,7 @@ Pour ajouter les utilisateurs il faut renseigner le nom et l'email que les utili
 Puis dans la catégorie nombre il faut renseigner le nombre de faux que vous voulez générer.
 
 Exemple de faux comptes:
+
 ![](img/ExempleFauxCompte.png "Exemple de faux comptes")
 
 Pour pouvoir supprimer **tous les faux comptes utilisateurs** vous disposez d'un bouton se situant en dessous de celui de l'ajout de faux comptes.
@@ -126,6 +132,7 @@ Puis ajoutez le nombre de faux commentaires que vous souhaitez.
 ***
 Pour ajouter des séries à la base de données il faut se rendre dans le dashboard admin et cliquer sur l'onglet série puis dans ajouter.
 Vous vous retrouverez normalement sur cette page:
+
 ![](img/ImageAjoutSerie.png "Ajout de série")
 
 Sur cette page, chercher le nom de la série à ajouter puis ajouter là.
